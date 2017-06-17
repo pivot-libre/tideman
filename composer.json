@@ -1,6 +1,6 @@
 {
     "name": "pivot-libre/tideman",
-    "description": "Implementation of the tideman ranked pair algorithm",
+    "description": "Implementation of the Tideman ranked pair algorithm",
     "type": "library",
     "require": {
     },
