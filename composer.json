@@ -1,0 +1,17 @@
+{
+    "name": "pivot-libre/tideman",
+    "description": "Implementation of the tideman ranked pair algorithm",
+    "type": "library",
+    "require": {
+    },
+    "require-dev": {
+        "pds/skeleton": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "PivotLibre\\Tideman\\": "src/"
+        }
+    },
+    "license": "Apache-2.0",
+    "minimum-stability": "dev"
+}
