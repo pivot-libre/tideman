@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<project name="tideman" default="build">
+    <target name="build" description="Checks for syntax errors and common bugs">
+        <phplint>
+          <fileset dir="src">
+            <include name="**/*.php"/>
+          </fileset>
+        </phplint>
+    </target>
+</project>
