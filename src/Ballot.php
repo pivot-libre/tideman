@@ -1,15 +1,10 @@
 <?php
 namespace PivotLibre\Tideman;
 
-class Ballot
+class Ballot extends GenericCollection
 {
-    /**
-     * @todo #4 Implement ballot logic
-     */
-    private $listOfListOfCandidates;
-
-    public function __construct(CandidateListList /*...*/$listOfListOfCandidates)
+    public function __construct(CandidateList ...$listsOfCandidates)
     {
-        $this->listOfListOfCandidates = $listOfListOfCandidates;
+        $this->values = $listsOfCandidates;
     }
 }
