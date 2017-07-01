@@ -1,11 +1,65 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <project name="tideman" default="build">
-    <target name="build" description="Checks for syntax errors and common bugs">
+
+    <target name="build" depends="lint,phpstan,phpcs,phpunit" />
+    <target name="build-ci" depends="lint,phpstan,phpcs,phpunit-ci" />
+    <target name="test" depends="phpunit" />
+    <target name="coverage" depends="phpunit-coverage" />
+
+    <target name="clean" description="Cleanup build artifacts">
+        <delete dir="build/coverage"/>
+    </target>
+
+    <target name="prepare" depends="clean" description="Prepare for build">
+        <mkdir dir="build/coverage"/>
+    </target>
+
+    <target name="lint" description="Perform syntax check of sourcecode files">
         <phplint>
-          <fileset dir="src">
-            <include name="**/*.php"/>
-          </fileset>
+            <fileset dir="src">
+                <include name="**/*.php" />
+            </fileset>
+
+            <fileset dir="tests">
+                <include name="**/*.php" />
+            </fileset>
         </phplint>
     </target>
+
+    <target name="phpcs" description="Find coding standard violations using PHP_CodeSniffer">
+        <exec executable="vendor/bin/phpcs" passthru="true" checkreturn="true">
+            <arg value="--standard=PSR2" />
+            <arg path="src" />
+            <arg path="tests" />
+        </exec>
+    </target>
+
+    <target name="phpstan" description="Statically analyze php code">
+        <exec executable="vendor/bin/phpstan" passthru="true" checkreturn="true">
+            <arg value="analyse" />
+            <arg value="--no-progress" />
+            <arg value="--level=4" />
+            <arg path="src" />
+            <arg path="tests" />
+        </exec>
+    </target>
+
+    <target name="phpunit" description="Run all tests with PHPUnit">
+        <exec executable="vendor/bin/phpunit" passthru="true" checkreturn="true" />
+    </target>
+
+    <target name="phpunit-ci" description="Run all tests with PHPUnit">
+        <exec executable="vendor/bin/phpunit" passthru="true" checkreturn="true">
+            <arg value="--coverage-text" />
+            <arg value="--colors=never" />
+        </exec>
+    </target>
+
+    <target name="phpunit-coverage" depends="prepare" description="Run all tests and generate html coverage report">
+        <exec executable="vendor/bin/phpunit" passthru="true" checkreturn="true">
+            <arg value="--coverage-html=build/coverage" />
+        </exec>
+    </target>
+
 </project>

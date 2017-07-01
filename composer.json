@@ -6,11 +6,15 @@
     },
     "require-dev": {
         "pds/skeleton": "~1.0",
-        "phing/phing": "2.16.0"
+        "phing/phing": "2.16.0",
+        "phpunit/phpunit": "^6.0",
+        "squizlabs/php_codesniffer": "^3.0@RC",
+        "phpstan/phpstan": "^0.6.3"
     },
     "autoload": {
         "psr-4": {
-            "PivotLibre\\Tideman\\": "src/"
+            "PivotLibre\\Tideman\\": "src/",
+            "PHP_CodeSniffer\\": "vendor/squizlabs/php_codesniffer/src/"
         }
     },
     "license": "Apache-2.0",
