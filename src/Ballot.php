@@ -8,10 +8,8 @@ class Ballot
      */
     private $listOfListOfCandidates;
 
-    public function __construct(CandidateListList /*...*/$listOfListOfCandidates) 
+    public function __construct(CandidateListList /*...*/$listOfListOfCandidates)
     {
         $this->listOfListOfCandidates = $listOfListOfCandidates;
     }
-
-
 }
