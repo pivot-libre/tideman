@@ -5,7 +5,7 @@ abstract class GenericCollection implements \IteratorAggregate
 {
     protected $values;
 
-    public function toArray() /*: array*/
+    public function toArray() : array
     {
         return $this->values;
     }
