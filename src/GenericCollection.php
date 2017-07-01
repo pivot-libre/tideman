@@ -1,7 +1,7 @@
 <?php
 namespace PivotLibre\Tideman;
 
-abstract class GenericCollection implements IteratorAggregate
+abstract class GenericCollection implements \IteratorAggregate
 {
   protected $values;
 
@@ -10,7 +10,7 @@ abstract class GenericCollection implements IteratorAggregate
   }
 
   public function getIterator() {
-    return new ArrayIterator($this->values);
+    return new \ArrayIterator($this->values);
   }
 }
 
