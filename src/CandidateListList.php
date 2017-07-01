@@ -6,9 +6,10 @@ namespace PivotLibre\Tideman;
  */ 
 class CandidateListList extends GenericCollection
 {
-  public function __construct(CandidateList /*...*/$listsOfCandidates) {
-    $this->values = $listsOfCandidates;
-  }
+    public function __construct(CandidateList /*...*/$listsOfCandidates) 
+    {
+        $this->values = $listsOfCandidates;
+    }
 
 }
 

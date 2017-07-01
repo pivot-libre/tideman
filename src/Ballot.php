@@ -6,11 +6,12 @@ class Ballot
     /**
      * @todo #4 Implement ballot logic
      */
-	private $listOfListOfCandidates;
+    private $listOfListOfCandidates;
 
-  	public function __construct(CandidateListList /*...*/$listOfListOfCandidates) {
-		$this->listOfListOfCandidates = $listOfListOfCandidates;
-	}
+    public function __construct(CandidateListList /*...*/$listOfListOfCandidates) 
+    {
+        $this->listOfListOfCandidates = $listOfListOfCandidates;
+    }
 
 
 }
