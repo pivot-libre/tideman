@@ -46,7 +46,9 @@
     </target>
 
     <target name="phpunit" description="Run all tests with PHPUnit">
-        <exec executable="vendor/bin/phpunit" passthru="true" checkreturn="true" />
+        <exec executable="vendor/bin/phpunit" passthru="true" checkreturn="true" >
+            <arg path="tests" />
+        </exec>
     </target>
 
     <target name="phpunit-ci" description="Run all tests with PHPUnit">
