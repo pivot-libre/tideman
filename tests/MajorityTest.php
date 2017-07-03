@@ -40,4 +40,14 @@ class MajorityTest extends TestCase
         $actualMargin = $majority->getMargin();
         $this->assertEquals($margin, $actualMargin);
     }
+
+    public function testToString()
+    {
+        $margin = 21;
+        $majority = new Majority($this->bob, $this->alice, $margin);
+
+        $expectedToString = $this->bob->getId() . " --" . $margin . "--> " . $this->alice->getId();
+        $actualToString = $majority->__toString();
+        $this->assertEquals($expectedToString, $actualToString);
+    }
 }
