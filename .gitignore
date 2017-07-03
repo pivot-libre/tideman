@@ -1,4 +1,4 @@
-/vendor/
-/build/
 *.swp
-
+/build/
+/composer.lock
+/vendor/
