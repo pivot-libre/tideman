@@ -13,7 +13,12 @@
     },
     "autoload": {
         "psr-4": {
-            "PivotLibre\\Tideman\\": "src/",
+            "PivotLibre\\Tideman\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PivotLibre\\Tideman\\": "tests/",
             "PHP_CodeSniffer\\": "vendor/squizlabs/php_codesniffer/src/"
         }
     },
