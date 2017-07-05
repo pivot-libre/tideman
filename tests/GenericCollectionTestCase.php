@@ -76,7 +76,7 @@ abstract class GenericCollectionTestCase extends TestCase
 
         //special case:
         try {
-            //should fail when passed an arary of Candidates WITHOUT using ""..."
+            //should fail when passed an array of Candidates WITHOUT using "..."
             $instance = new $this->concreteType($this->values);
             //this should never run
             $this->assertEquals(true, false);
