@@ -30,10 +30,13 @@ abstract class GenericCollectionTestCase extends TestCase
     ) : void {
         $valuesFromIterator = array();
         $iterator = $collection->getIterator();
+        $counter = 0;
         while ($iterator->valid()) {
-            $value = $iterator->next();
-            $valuesFromIterator[] = $value;
+            $value = $iterator->current();
+            $this->assertEquals($originalValues[$counter], $value);
+            $iterator->next();
+            $counter++;
         }
-        $this->assertEquals($originalValues, $valuesFromIterator);
+        $this->assertEquals(count($originalValues), $counter);
     }
 }
