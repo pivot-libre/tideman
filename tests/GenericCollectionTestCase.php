@@ -9,6 +9,8 @@ abstract class GenericCollectionTestCase extends TestCase
     protected $values;
     //GenericCollection instance as specified by the subclass
     protected $instance;
+    //Concrete type of GenericCollection as specified by the subclass
+    protected $concreteType;
 
     public function testValidConstructorCall() : void
     {
@@ -64,5 +66,44 @@ abstract class GenericCollectionTestCase extends TestCase
             $counter++;
         }
         $this->assertEquals(count($originalValues), $counter);
+    }
+
+    public function testConstructorTypeSafety() : void
+    {
+        $variousIllegalArguments = array(
+            array(1),
+            array(1,2),
+            //should fail when passed an array of candidate lists.
+            array($this->values)
+        );
+        foreach ($variousIllegalArguments as $illegalArg) {
+            try {
+                $instance = new $this->concreteType($illegalArg);
+                //this should never run
+                $this->assertEquals(true, false);
+            } catch (\TypeError $e) {
+                //pass
+            }
+            try {
+                $instance = new $this->concreteType(...$illegalArg);
+                //this should never run
+                $this->assertEquals(true, false);
+            } catch (\TypeError $e) {
+                //pass
+            }
+        }
+
+        //special case:
+        try {
+            //should fail when passed an arary of Candidates WITHOUT using ""..."
+            $instance = new $this->concreteType($this->values);
+            //this should never run
+            $this->assertEquals(true, false);
+        } catch (\TypeError $e) {
+            //pass
+        }
+
+        $instance = new $this->concreteType(...$this->values);
+        $this->assertNotNull($instance);
     }
 }
