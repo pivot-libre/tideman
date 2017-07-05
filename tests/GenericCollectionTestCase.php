@@ -5,6 +5,32 @@ use PHPUnit\Framework\TestCase;
 
 abstract class GenericCollectionTestCase extends TestCase
 {
+    //array of values used to construct the GenericCollection as specified by the subclass
+    protected $values;
+    //GenericCollection instance as specified by the subclass
+    protected $instance;
+
+    public function testValidConstructorCall() : void
+    {
+        $this->assertEquals(count($this->values), count($this->instance->toArray()));
+        $this->assertEquals($this->values, $this->instance->toArray());
+    }
+
+    public function testCollectionReturnsCopyOfArray() : void
+    {
+        $this->assertCollectionReturnsCopyOfArray($this->instance, $this->values);
+    }
+
+    public function testCollectionPreservesOriginalOrderAndValues() : void
+    {
+        $this->assertCollectionPreservesOriginalOrderAndValues($this->instance, $this->values);
+    }
+
+    public function testIteratorOrderMatchesOrderOfOriginalValues() : void
+    {
+        $this->assertIteratorOrderMatchesOrderOfOriginalValues($this->instance, $this->values);
+    }
+
     protected function assertCollectionReturnsCopyOfArray(GenericCollection $collection, array $originalValues) : void
     {
         //if we modify the array returned by the generic collection

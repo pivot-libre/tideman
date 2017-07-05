@@ -4,19 +4,29 @@ namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
 
-class CandidateListTest extends GenericCollectionTestCase
+class BallotTest extends GenericCollectionTestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
     private const BOB_ID = "B";
     private const BOB_NAME = "Bob";
+    private const CHERYL_ID = "C";
+    private const CHERYL_NAME = "Cheryl";
+    private const DARIUS_ID = "D";
+    private const DARIUS_NAME = "Darius";
+
+    private $alice;
+    private $bob;
 
     protected function setUp()
     {
         $alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $bob = new Candidate(self::BOB_ID, self::BOB_NAME);
-        $this->values = array($alice, $bob);
-        $this->instance = new CandidateList(...$this->values);
+        $oneCandidateList = new CandidateList($alice, $bob);
+        $darius = new Candidate(self::DARIUS_ID, self::DARIUS_NAME);
+        $anotherCandidateList = new CandidateList($darius);
+        $this->values = array($oneCandidateList, $anotherCandidateList);
+        $this->instance = new Ballot(...$this->values);
     }
 
     public function testConstructorTypeSafety() : void
@@ -29,14 +39,14 @@ class CandidateListTest extends GenericCollectionTestCase
         );
         foreach ($variousIllegalArguments as $illegalArg) {
             try {
-                $instance = new CandidateList($illegalArg);
+                $instance = new Ballot($illegalArg);
                 //this should never run
                 $this->assertEquals(true, false);
             } catch (\TypeError $e) {
                 //pass
             }
             try {
-                $instance = new CandidateList(...$illegalArg);
+                $instance = new Ballot(...$illegalArg);
                 //this should never run
                 $this->assertEquals(true, false);
             } catch (\TypeError $e) {
@@ -46,15 +56,15 @@ class CandidateListTest extends GenericCollectionTestCase
 
         //special case:
         try {
-            //should fail when passed an arary of Candidates WITHOUT using ""..."
-            $instance = new CandidateList($this->values);
+            //should fail when passed an arary of CandidateLists WITHOUT using ""..."
+            $instance = new Ballot($this->values);
             //this should never run
             $this->assertEquals(true, false);
         } catch (\TypeError $e) {
             //pass
         }
 
-        $instance = new CandidateList(...$this->values);
+        $instance = new Ballot(...$this->values);
         $this->assertNotNull($instance);
     }
 }
