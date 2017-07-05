@@ -33,9 +33,55 @@ class CandidateListTest extends GenericCollectionTestCase
         $instance = new CandidateList(...$this->values);
         $this->assertCollectionReturnsCopyOfArray($instance, $this->values);
     }
+
     public function testCollectionPreservesOriginalOrderAndValues() : void
     {
         $instance = new CandidateList(...$this->values);
         $this->assertCollectionPreservesOriginalOrderAndValues($instance, $this->values);
+    }
+
+    public function testIteratorOrderMatchesOrderOfOriginalValues() : void
+    {
+        $instance = new CandidateList(...$this->values);
+        $this->assertIteratorOrderMatchesOrderOfOriginalValues($instance, $this->values);
+    }
+
+    public function testConstructorTypeSafety() : void
+    {
+        $variousIllegalArguments = array(
+            array(1),
+            array(1,2),
+            //should fail when passed an array of candidate lists.
+            array($this->values)
+        );
+        foreach ($variousIllegalArguments as $illegalArg) {
+            try {
+                $instance = new CandidateList($illegalArg);
+                //this should never run
+                $this->assertEquals(true, false);
+            } catch (\TypeError $e) {
+                //pass
+            }
+            try {
+                $instance = new CandidateList(...$illegalArg);
+                //this should never run
+                $this->assertEquals(true, false);
+            } catch (\TypeError $e) {
+                //pass
+            }
+        }
+
+        //special case:
+        try {
+            //should fail when passed an arary of Candidates WITHOUT using ""..."
+            $instance = new CandidateList($this->values);
+            //this should never run
+            $this->assertEquals(true, false);
+        } catch (\TypeError $e) {
+            //pass
+        }
+
+        $instance = new CandidateList(...$this->values);
+        $this->assertNotNull($instance);
     }
 }
