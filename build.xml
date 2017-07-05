@@ -60,9 +60,7 @@
 
     <target name="phpunit-coverage" depends="prepare" description="Run all tests and generate html coverage report">
         <exec executable="vendor/bin/phpunit" passthru="true" checkreturn="true">
-            <arg path="tests" />
             <arg value="--coverage-html=build/coverage" />
-            <arg value="--whitelist=src" />
         </exec>
     </target>
 
