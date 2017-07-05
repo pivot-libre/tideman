@@ -20,52 +20,33 @@ abstract class GenericCollectionTestCase extends TestCase
 
     public function testCollectionReturnsCopyOfArray() : void
     {
-        $this->assertCollectionReturnsCopyOfArray($this->instance, $this->values);
-    }
-
-    public function testCollectionPreservesOriginalOrderAndValues() : void
-    {
-        $this->assertCollectionPreservesOriginalOrderAndValues($this->instance, $this->values);
-    }
-
-    public function testIteratorOrderMatchesOrderOfOriginalValues() : void
-    {
-        $this->assertIteratorOrderMatchesOrderOfOriginalValues($this->instance, $this->values);
-    }
-
-    protected function assertCollectionReturnsCopyOfArray(GenericCollection $collection, array $originalValues) : void
-    {
         //if we modify the array returned by the generic collection
-        $manipulatedArray = $collection->toArray();
+        $manipulatedArray = $this->instance->toArray();
         $manipulatedArray[] = 'bad value';
         $manipulatedArray[] = 'even worse value';
         //it should not affect the array stored within the collection
-        $unManipulatedArray = $collection->toArray();
+        $unManipulatedArray = $this->instance->toArray();
         $this->assertNotEquals(count($unManipulatedArray), count($manipulatedArray));
         $this->assertNotEquals($unManipulatedArray, $manipulatedArray);
     }
 
-    protected function assertCollectionPreservesOriginalOrderAndValues(
-        GenericCollection $collection,
-        array $originalValues
-    ) : void {
-        $this->assertEquals($originalValues, $collection->toArray());
+    public function testCollectionPreservesOriginalOrderAndValues() : void
+    {
+        $this->assertEquals($this->values, $this->instance->toArray());
     }
 
-    protected function assertIteratorOrderMatchesOrderOfOriginalValues(
-        GenericCollection $collection,
-        array $originalValues
-    ) : void {
+    public function testIteratorOrderMatchesOrderOfOriginalValues() : void
+    {
         $valuesFromIterator = array();
-        $iterator = $collection->getIterator();
+        $iterator = $this->instance->getIterator();
         $counter = 0;
         while ($iterator->valid()) {
             $value = $iterator->current();
-            $this->assertEquals($originalValues[$counter], $value);
+            $this->assertEquals($this->values[$counter], $value);
             $iterator->next();
             $counter++;
         }
-        $this->assertEquals(count($originalValues), $counter);
+        $this->assertEquals(count($this->values), $counter);
     }
 
     public function testConstructorTypeSafety() : void

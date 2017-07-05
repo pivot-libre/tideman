@@ -27,44 +27,6 @@ class BallotTest extends GenericCollectionTestCase
         $anotherCandidateList = new CandidateList($darius);
         $this->values = array($oneCandidateList, $anotherCandidateList);
         $this->instance = new Ballot(...$this->values);
-    }
-
-    public function testConstructorTypeSafety() : void
-    {
-        $variousIllegalArguments = array(
-            array(1),
-            array(1,2),
-            //should fail when passed an array of candidate lists.
-            array($this->values)
-        );
-        foreach ($variousIllegalArguments as $illegalArg) {
-            try {
-                $instance = new Ballot($illegalArg);
-                //this should never run
-                $this->assertEquals(true, false);
-            } catch (\TypeError $e) {
-                //pass
-            }
-            try {
-                $instance = new Ballot(...$illegalArg);
-                //this should never run
-                $this->assertEquals(true, false);
-            } catch (\TypeError $e) {
-                //pass
-            }
-        }
-
-        //special case:
-        try {
-            //should fail when passed an arary of CandidateLists WITHOUT using ""..."
-            $instance = new Ballot($this->values);
-            //this should never run
-            $this->assertEquals(true, false);
-        } catch (\TypeError $e) {
-            //pass
-        }
-
-        $instance = new Ballot(...$this->values);
-        $this->assertNotNull($instance);
+        $this->concreteType = Ballot::class;
     }
 }
