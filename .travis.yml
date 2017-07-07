@@ -1,0 +1,9 @@
+language: php
+php:
+    - '7.1'
+before_script:
+    - composer install --prefer-source --no-interaction
+script:
+    - vendor/bin/phing build-ci
+after_success:
+    - travis_retry php vendor/bin/coveralls
