@@ -3,7 +3,7 @@ namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
 
-class MajorityTest extends TestCase
+class MarginTest extends TestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";

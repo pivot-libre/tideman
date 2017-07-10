@@ -1,7 +1,7 @@
 <?php
 namespace PivotLibre\Tideman;
 
-class Majority
+class Margin
 {
     private $winner;
     private $loser;
