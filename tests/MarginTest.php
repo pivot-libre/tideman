@@ -20,34 +20,34 @@ class MarginTest extends TestCase
     public function testGetWinner() : void
     {
         $margin = 0;
-        $majority = new Majority($this->alice, $this->bob, $margin);
-        $actualWinner = $majority->getWinner();
+        $Margin = new Margin($this->alice, $this->bob, $margin);
+        $actualWinner = $Margin->getWinner();
         $this->assertEquals($this->alice, $actualWinner);
     }
 
     public function testGetLoser() : void
     {
         $margin = 0;
-        $majority = new Majority($this->alice, $this->bob, $margin);
-        $actualLoser = $majority->getLoser();
+        $Margin = new Margin($this->alice, $this->bob, $margin);
+        $actualLoser = $Margin->getLoser();
         $this->assertEquals($this->bob, $actualLoser);
     }
 
     public function testGetMargin() : void
     {
         $margin = 42;
-        $majority = new Majority($this->alice, $this->bob, $margin);
-        $actualMargin = $majority->getMargin();
+        $Margin = new Margin($this->alice, $this->bob, $margin);
+        $actualMargin = $Margin->getMargin();
         $this->assertEquals($margin, $actualMargin);
     }
 
     public function testToString()
     {
         $margin = 21;
-        $majority = new Majority($this->bob, $this->alice, $margin);
+        $Margin = new Margin($this->bob, $this->alice, $margin);
 
         $expectedToString = $this->bob->getId() . " --" . $margin . "--> " . $this->alice->getId();
-        $actualToString = $majority->__toString();
+        $actualToString = $Margin->__toString();
         $this->assertEquals($expectedToString, $actualToString);
     }
 }

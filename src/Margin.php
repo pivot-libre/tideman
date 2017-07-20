@@ -29,7 +29,7 @@ class Margin
         return $this->margin;
     }
 
-    public function __toString()
+    public function __toString() : string
     {
         return $this->winner->getId() . " --" . $this->margin . "--> " . $this->loser->getId();
     }
