@@ -39,4 +39,42 @@ class MarginRegistryTest extends TestCase
         $this->assertEquals($expectedMargin->getLoser(), $actualMargin->getLoser());
         $this->assertEquals($expectedMargin->getMargin(), $actualMargin->getMargin());
     }
+    public function testCandidateOrderMatters() : void
+    {
+        $expectedMarginOne = new Margin($this->alice, $this->bob, 42);
+        $expectedMarginTwo = new Margin($this->bob, $this->alice, -42);
+        $this->instance->register($expectedMarginOne);
+        $this->instance->register($expectedMarginTwo);
+
+        $actualMarginOne = $this->instance->get($this->alice, $this->bob);
+        $this->assertEquals($expectedMarginOne, $actualMarginOne);
+        $this->assertNotEquals($expectedMarginTwo, $actualMarginOne);
+        $actualMarginTwo = $this->instance->get($this->bob, $this->alice);
+        $this->assertEquals($expectedMarginTwo, $actualMarginTwo);
+        $this->assertNotEquals($expectedMarginOne, $actualMarginTwo);
+    }
+    public function testDuplicateRegistrationFails() : void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $expectedMarginOne = new Margin($this->alice, $this->bob, 42);
+        $expectedMarginTwo = new Margin($this->alice, $this->bob, 42);
+
+        $this->instance->register($expectedMarginOne);
+        $this->instance->register($expectedMarginTwo);
+    }
+    public function testEmptyWinnerIdFailsToRegister() : void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $margin = new Margin(new Candidate('', 'John Doe'), $this->bob, 42);
+
+        $this->instance->register($margin);
+    }
+
+    public function testEmptyLoserIdFailsToRegister() : void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $margin = new Margin($this->alice, new Candidate('', 'John Doe'), 42);
+
+        $this->instance->register($margin);
+    }
 }
