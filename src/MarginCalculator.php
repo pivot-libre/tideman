@@ -1,5 +1,6 @@
 <?php
 namespace PivotLibre\Tideman;
+
 use PivotLibre\Tideman\MarginRegistry;
 
 class MarginCalculator
@@ -34,35 +35,41 @@ class MarginCalculator
                  //$candidateToRank[$candidate->getId()] = i;
         return $candidateIdToRank;
     }
+    protected function updatePairInRegistry(
+        Candidate $outerCandidate,
+        Candidate $innerCandidate,
+        array $candidateIdToRank,
+        MarginRegistry $registry
+    ) : void {
+        //if $outerCandidate != $innerCandidate
+            //$outerCandidateRank = $candidateToRank[$outerCandidate->getId()];
+            //$innerCandidateRank = $candidateToRank[$innerCandidate->getId()];
+            // $marginToUpdate;
+            // $updateAmount = $nBallot->getCount();
+
+            //if($outerCandidateRank > $innerCandidateRank) {
+                //$marginToUpdate = $marginRegistry($outerCandidate->getId(), $innerCandidate->getId());
+            // } else {
+                //no need to explicitly handle special case $outerCandidateRank == $innerCandidateRank
+                //One margin for the tied pair will be populate ond the first pass through.
+                //The other margin will be populated on the second pass through.
+                //$marginToUpdate = $marginRegistry($innerCandidate->getId(), $outerCandidate->getId());
+            // }
+            //
+    }
     public function calculate(Agenda $agenda, NBallot ...$nBallots) : MarginRegistry
     {
         $registry = $this->initializeRegistry($agenda);
 
-        foreach($nBallots as $nBallot)
-        {
-            $candidateIdToRank = $this->getCandidateIdToRankMap($nBallot); //a map of candidate id to their integer rank within an NBallot.
-
-            //for each candidate $outerCandidate in the agenda
-                //for each candidate $innerCandidate in the agenda
-                    //if $outerCandidate != $innerCandidate
-                        //$outerCandidateRank = $candidateToRank[$outerCandidate->getId()];
-                        //$innerCandidateRank = $candidateToRank[$innerCandidate->getId()];
-                        // $marginToUpdate;
-                        // $updateAmount = $nBallot->getCount();
-
-                        //if($outerCandidateRank > $innerCandidateRank) {
-                            //$marginToUpdate = $marginRegistry($outerCandidate->getId(), $innerCandidate->getId());
-                        // } else {
-                            //no need to explicitly handle special case $outerCandidateRank == $innerCandidateRank
-                            //One margin for the tied pair will be populate on the first pass through, the other margin will be populated
-                            //on the second pass through
-                            //$marginToUpdate = $marginRegistry($innerCandidate->getId(), $outerCandidate->getId());
-                        // }
-                        //
+        foreach ($nBallots as $nBallot) {
+            //a map of candidate id to their integer rank
+            $candidateIdToRank = $this->getCandidateIdToRankMap($nBallot);
+            foreach ($agenda->getCandidates() as $outerCandidate) {
+                foreach ($agenda->getCandidates() as $innerCandidate) {
+                    $this->updatePairInRegistry($outerCandidate, $innerCandidate, $candidateIdToRank, $registry);
+                }
             }
+        }
         return $registry;
     }
-
-
-
 }

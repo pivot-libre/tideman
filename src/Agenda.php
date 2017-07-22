@@ -1,5 +1,6 @@
 <?php
 namespace PivotLibre\Tideman;
+
 use PivotLibre\Tideman\MarginRegistry;
 
 class Agenda
