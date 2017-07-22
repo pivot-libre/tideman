@@ -11,6 +11,7 @@ class AgendaTest extends TestCase
      */
     public function testAgendaConstruction() : void
     {
+        echo "Implement real test!";
         $this->assertTrue(true);
     }
 }
