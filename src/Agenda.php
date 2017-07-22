@@ -9,23 +9,30 @@ use PivotLibre\Tideman\MarginRegistry;
 class Agenda
 {
     private $candidateSet;
+
+    /**
+     * Creates an Agenda consisting of all unique Candidates from the parameterized Ballots.
+     */
     public function __construct(Ballot ...$ballots)
     {
-         $this->candidateSet = new \SplObjectStorage();
+        $this->candidateSet = new \SplObjectStorage();
         foreach ($ballots as $ballot) {
             foreach ($ballot as $candidateList) {
                 foreach ($candidateList as $candidate) {
                     $candidateId = $candidate->getId();
                     $this->candidateSet->attach($candidateId, $candidate);
-                    //Since we are only using the candidateId as the key, all other Candidate attributes will be set by
-                    //the last Candidate that was attached at a given key
+                    /**
+                     * Since we are only using the candidateId as the key, we will set the value to a new Candidate
+                     * every time. That means that if the Ballots store differing information on the same Candidate,
+                     * then the attributes of the Candidate most-recently iterated over will be used.
+                     */
                 }
             }
         }
     }
     /**
-     * Returns all Candidates for this election as a CandidateList
-     * The order of the Candidates wihtin the list is not significant
+     * Returns all Candidates for this election as a CandidateList.
+     * The order of the Candidates wihtin the list is not significant.
      */
     public function getCandidates() : CandidateList
     {
