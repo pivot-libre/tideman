@@ -48,11 +48,24 @@ class MarginCalculator
         /**
          * @todo #7 build map of candidate id to rank
          */
-
-         //for each of the NBallot's candidate lists with counter i
-             //for each Candidate in each Candidate list,
-                 //ensure candidate's id is defined and non-empty
-                 //$candidateIdToRank[$candidate->getId()] = i;
+        foreach ($ballot as $rank => $candidateList) {
+            foreach ($candidateList as $candidate) {
+                $candidateId = $candidate->getId();
+                if (empty($candidateId)) {
+                    throw new \InvalidArgumentException("Candidates must have a non-empty Id");
+                } else {
+                    if (isset($candidateIdToRank[$candidateId])) {
+                        throw new \InvalidArgumentException(
+                            "A Ballot cannot contain a candidate more than once."
+                            . " Offending Ballot: " . $ballot
+                            . " Offending Candidate: " . $candidate
+                        );
+                    } else {
+                        $candidateIdToRank[$candidateId] = $rank;
+                    }
+                }
+            }
+        }
         return $candidateIdToRank;
     }
 
