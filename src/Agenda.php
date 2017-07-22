@@ -3,30 +3,40 @@ namespace PivotLibre\Tideman;
 
 use PivotLibre\Tideman\MarginRegistry;
 
+/**
+ * This class should be used to represent all of the Candidates in an election
+ */
 class Agenda
 {
     private $candidateSet;
     public function __construct(Ballot ...$ballots)
     {
-        /**
-         * @todo #7 populate $candidateSet with all of the Candidates in $BallotTest
-         */
-
-
          $this->candidateSet = new \SplObjectStorage();
-         echo $ballots;
-         //might be an array, or might be SplObjectStorage
-         //read this article, then decide
-         // http://technosophos.com/2009/05/29/set-objects-php-arrays-vs-splobjectstorage.html
+        foreach ($ballots as $ballot) {
+            foreach ($ballot as $candidateList) {
+                foreach ($candidateList as $candidate) {
+                    $candidateId = $candidate->getId();
+                    $this->candidateSet->attach($candidateId, $candidate);
+                    //Since we are only using the candidateId as the key, all other Candidate attributes will be set by
+                    //the last Candidate that was attached at a given key
+                }
+            }
+        }
     }
-
+    /**
+     * Returns all Candidates for this election as a CandidateList
+     * The order of the Candidates wihtin the list is not significant
+     */
     public function getCandidates() : CandidateList
     {
-
-         $candidateList = new CandidateList();
-         /**
-          * @todo #7 iterate through all of the candidates in the set, return a CandidateList;
-          */
-         return $candidateList;
+        $candidates = array();
+        $this->candidateSet->rewind();
+        while ($this->candidateSet->valid()) {
+            $candidate = $this->candidateSet->getInfo();
+            $candidates[] = $candidate;
+            $this->candidateSet->next();
+        }
+        $candidateList = new CandidateList(...$candidates);
+        return $candidateList;
     }
 }
