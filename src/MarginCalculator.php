@@ -45,9 +45,6 @@ class MarginCalculator
     protected function getCandidateIdToRankMap(Ballot $ballot) : array
     {
         $candidateIdToRank = array();
-        /**
-         * @todo #7 build map of candidate id to rank
-         */
         foreach ($ballot as $rank => $candidateList) {
             foreach ($candidateList as $candidate) {
                 $candidateId = $candidate->getId();
