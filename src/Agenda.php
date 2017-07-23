@@ -1,8 +1,6 @@
 <?php
 namespace PivotLibre\Tideman;
 
-use PivotLibre\Tideman\MarginRegistry;
-
 /**
  * This class should be used to represent all of the Candidates in an election
  */
@@ -36,7 +34,7 @@ class Agenda
 
     /**
      * Returns all Candidates for this election as a CandidateList.
-     * The order of the Candidates wihtin the list is not significant.
+     * The order of the Candidates within the returned list is not significant.
      */
     public function getCandidates() : CandidateList
     {
