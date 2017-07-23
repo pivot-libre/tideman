@@ -20,42 +20,42 @@ class MarginTest extends TestCase
     public function testGetWinner() : void
     {
         $margin = 0;
-        $Margin = new Margin($this->alice, $this->bob, $margin);
-        $actualWinner = $Margin->getWinner();
+        $instance = new Margin($this->alice, $this->bob, $margin);
+        $actualWinner = $instance->getWinner();
         $this->assertEquals($this->alice, $actualWinner);
     }
 
     public function testGetLoser() : void
     {
         $margin = 0;
-        $Margin = new Margin($this->alice, $this->bob, $margin);
-        $actualLoser = $Margin->getLoser();
+        $instance = new Margin($this->alice, $this->bob, $margin);
+        $actualLoser = $instance->getLoser();
         $this->assertEquals($this->bob, $actualLoser);
     }
 
     public function testGetMargin() : void
     {
         $margin = 42;
-        $Margin = new Margin($this->alice, $this->bob, $margin);
-        $actualMargin = $Margin->getMargin();
+        $instance = new Margin($this->alice, $this->bob, $margin);
+        $actualMargin = $instance->getMargin();
         $this->assertEquals($margin, $actualMargin);
     }
     public function testSetMargin() : void
     {
         $originalMargin = 42;
-        $margin = new Margin($this->alice, $this->bob, $originalMargin);
+        $instance = new Margin($this->alice, $this->bob, $originalMargin);
         $newMargin = 3;
-        $margin->setMargin($newMargin);
-        $actualMargin = $margin->getMargin();
+        $instance->setMargin($newMargin);
+        $actualMargin = $instance->getMargin();
         $this->assertEquals($newMargin, $actualMargin);
     }
     public function testToString()
     {
         $margin = 21;
-        $Margin = new Margin($this->bob, $this->alice, $margin);
+        $instance = new Margin($this->bob, $this->alice, $margin);
 
         $expectedToString = $this->bob->getId() . " --" . $margin . "--> " . $this->alice->getId();
-        $actualToString = $Margin->__toString();
+        $actualToString = $instance->__toString();
         $this->assertEquals($expectedToString, $actualToString);
     }
 }
