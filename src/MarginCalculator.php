@@ -67,6 +67,42 @@ class MarginCalculator
     }
 
     /**
+     * @return array whose zeroth element is the winning candidate, and whose
+     * first element is the loser. It is suggested that the results of this function be assigned via list().
+     * Example:
+     * list($winner, $loser) = getWinnerAndLoser(...);
+     */
+    protected function getWinnerAndLoser(
+        Candidate $outerCandidate,
+        Candidate $innerCandidate,
+        array $candidateIdToRank
+    ) : array {
+        $outerCandidateId = $outerCandidate->getId();
+        $innerCandidateId = $innerCandidate->getId();
+        if (empty($outerCandidateId)) {
+            throw new \InvalidArgumentException("Outer Candidate Id should be non-empty.");
+        } elseif (empty($innerCandidateId)) {
+            throw new \InvalidArgumentException("Inner Candidate Id should be non-empty.");
+        } else {
+            $outerCandidateRank = $candidateIdToRank[$outerCandidateId];
+            $innerCandidateRank = $candidateIdToRank[$innerCandidateId];
+
+            //the candidate with the lower rank is the winner
+            if ($outerCandidateRank < $innerCandidateRank) {
+                $winnerAndLoser = array($outerCandidate, $innerCandidate);
+            } else {
+                /**
+                 * no need to explicitly handle special case $outerCandidateRank == $innerCandidateRank
+                 * One margin for the tied pair will be populated on the first iteration through candidates.
+                 * The other margin will be populated on the the second iteration through candidates. At that point,
+                 * the candidate arguments will be transposed.
+                 */
+                $winnerAndLoser = array($innerCandidate, $outerCandidate);
+            }
+            return $winnerAndLoser;
+        }
+    }
+    /**
      * Uses the parameterized candidates and the $candidateIdToRank map to determine which candidate ranks higher.
      * Subsequently adds the $ballotCount to the count already associated with the appropriate margin in the
      * Registry.
@@ -78,40 +114,14 @@ class MarginCalculator
      * @param int $ballotCount
      */
     protected function updatePairInRegistry(
-        Candidate $outerCandidate,
-        Candidate $innerCandidate,
-        array $candidateIdToRank,
+        Candidate $winner,
+        Candidate $loser,
         MarginRegistry $registry,
         int $ballotCount
     ) : void {
-        $outerCandidateId = $outerCandidate->getId();
-        $innerCandidateId = $innerCandidate->getId();
-        if (empty($outerCandidateId)) {
-            throw new \InvalidArgumentException("Outer Candidate Id should be non-empty.");
-        } elseif (empty($innerCandidateId)) {
-            throw new \InvalidArgumentException("Inner Candidate Id should be non-empty.");
-        } elseif (0 >= $ballotCount) {
-            //If ballot count is zero, then this method should not be called.
-            //A negative ballot count makes no sense.
-            throw new \InvalidArgumentException("Ballot Count should be greater than zero.");
-        } elseif ($outerCandidateId != $innerCandidateId) {
-            $outerCandidateRank = $candidateIdToRank[$outerCandidateId];
-            $innerCandidateRank = $candidateIdToRank[$innerCandidateId];
-
-            if ($outerCandidateRank > $innerCandidateRank) {
-                $marginToUpdate = $registry->get($outerCandidateId, $innerCandidateId);
-            } else {
-                /**
-                 * no need to explicitly handle special case $outerCandidateRank == $innerCandidateRank
-                 * One margin for the tied pair will be populated on the first iteration through candidates.
-                 * The other margin will be populated on the the second iteration through candidates. At that point,
-                 * the candidate arguments will be transposed.
-                 */
-                $marginToUpdate = $registry->get($innerCandidateId, $outerCandidateId);
-            }
-            $updatedMargin = $marginToUpdate->getMargin() + $ballotCount;
-            $marginToUpdate->setMargin($updatedMargin);
-        }
+        $marginToUpdate = $registry->get($winner->getId(), $loser->getId());
+        $updatedMargin = $marginToUpdate->getMargin() + $ballotCount;
+        $marginToUpdate->setMargin($updatedMargin);
     }
     public function calculate(Agenda $agenda, NBallot ...$nBallots) : MarginRegistry
     {
@@ -123,13 +133,19 @@ class MarginCalculator
             $ballotCount = $nBallot->getCount();
             foreach ($agenda->getCandidates() as $outerCandidate) {
                 foreach ($agenda->getCandidates() as $innerCandidate) {
-                    $this->updatePairInRegistry(
-                        $outerCandidate,
-                        $innerCandidate,
-                        $candidateIdToRank,
-                        $registry,
-                        $ballotCount
-                    );
+                    if ($outerCandidate != $innerCandidate) {
+                        list($winner, $loser) = $this->getWinnerAndLoser(
+                            $outerCandidate,
+                            $innerCandidate,
+                            $candidateIdToRank
+                        );
+                        $this->updatePairInRegistry(
+                            $winner,
+                            $loser,
+                            $registry,
+                            $ballotCount
+                        );
+                    }
                 }
             }
         }
