@@ -40,7 +40,15 @@ class MarginTest extends TestCase
         $actualMargin = $Margin->getMargin();
         $this->assertEquals($margin, $actualMargin);
     }
-
+    public function testSetMargin() : void
+    {
+        $originalMargin = 42;
+        $margin = new Margin($this->alice, $this->bob, $originalMargin);
+        $newMargin = 3;
+        $margin->setMargin($newMargin);
+        $actualMargin = $margin->getMargin();
+        $this->assertEquals($newMargin, $actualMargin);
+    }
     public function testToString()
     {
         $margin = 21;
