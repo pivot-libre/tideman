@@ -2,6 +2,7 @@
 namespace PivotLibre\Tideman;
 
 use PivotLibre\Tideman\MarginRegistry;
+use \InvalidArgumentException;
 
 class MarginCalculator
 {
@@ -42,17 +43,17 @@ class MarginCalculator
      * Candidate within the Ballot. A lower index indicates higher preference. An index of zero is the highest rank.
      * Since a Ballot can contain ties, multiple Candidate ids can map to the same integer rank.
      */
-    protected function getCandidateIdToRankMap(Ballot $ballot) : array
+    public function getCandidateIdToRankMap(Ballot $ballot) : array
     {
         $candidateIdToRank = array();
         foreach ($ballot as $rank => $candidateList) {
             foreach ($candidateList as $candidate) {
                 $candidateId = $candidate->getId();
                 if (empty($candidateId)) {
-                    throw new \InvalidArgumentException("Candidates must have a non-empty Id");
+                    throw new InvalidArgumentException("Candidates must have a non-empty Id");
                 } else {
                     if (isset($candidateIdToRank[$candidateId])) {
-                        throw new \InvalidArgumentException(
+                        throw new InvalidArgumentException(
                             "A Ballot cannot contain a candidate more than once."
                             . " Offending Ballot: " . $ballot
                             . " Offending Candidate: " . $candidate
@@ -72,7 +73,7 @@ class MarginCalculator
      * Example:
      * list($winner, $loser) = getWinnerAndLoser(...);
      */
-    protected function getWinnerAndLoser(
+    public function getWinnerAndLoser(
         Candidate $outerCandidate,
         Candidate $innerCandidate,
         array $candidateIdToRank
@@ -80,26 +81,40 @@ class MarginCalculator
         $outerCandidateId = $outerCandidate->getId();
         $innerCandidateId = $innerCandidate->getId();
         if (empty($outerCandidateId)) {
-            throw new \InvalidArgumentException("Outer Candidate Id should be non-empty.");
+            throw new InvalidArgumentException("Outer Candidate Id should be non-empty.");
         } elseif (empty($innerCandidateId)) {
-            throw new \InvalidArgumentException("Inner Candidate Id should be non-empty.");
+            throw new InvalidArgumentException("Inner Candidate Id should be non-empty.");
         } else {
-            $outerCandidateRank = $candidateIdToRank[$outerCandidateId];
-            $innerCandidateRank = $candidateIdToRank[$innerCandidateId];
-
-            //the candidate with the lower rank is the winner
-            if ($outerCandidateRank < $innerCandidateRank) {
-                $winnerAndLoser = array($outerCandidate, $innerCandidate);
+            if (!isset($candidateIdToRank[$outerCandidateId])) {
+                throw new InvalidArgumentException(
+                    "Candidate's Id should be in the map of ID to Rank.\n"
+                    . " Candidate: " . $outerCandidate . "\n"
+                    . " Mapping: " . var_export($candidateIdToRank, true)
+                );
+            } elseif (!isset($candidateIdToRank[$innerCandidateId])) {
+                throw new InvalidArgumentException(
+                    "Candidate's Id should be in the map of ID to Rank.\n"
+                    . " Candidate: " . $innerCandidate . "\n"
+                    . " Mapping: " . var_export($candidateIdToRank, true)
+                );
             } else {
-                /**
-                 * no need to explicitly handle special case $outerCandidateRank == $innerCandidateRank
-                 * One margin for the tied pair will be populated on the first iteration through candidates.
-                 * The other margin will be populated on the the second iteration through candidates. At that point,
-                 * the candidate arguments will be transposed.
-                 */
-                $winnerAndLoser = array($innerCandidate, $outerCandidate);
+                $outerCandidateRank = $candidateIdToRank[$outerCandidateId];
+                $innerCandidateRank = $candidateIdToRank[$innerCandidateId];
+
+                //the candidate with the lower rank is the winner
+                if ($outerCandidateRank < $innerCandidateRank) {
+                    $winnerAndLoser = array($outerCandidate, $innerCandidate);
+                } else {
+                    /**
+                     * no need to explicitly handle special case $outerCandidateRank == $innerCandidateRank
+                     * One margin for the tied pair will be populated on the first iteration through candidates.
+                     * The other margin will be populated on the the second iteration through candidates. At that point,
+                     * the candidate arguments will be transposed.
+                     */
+                    $winnerAndLoser = array($innerCandidate, $outerCandidate);
+                }
+                return $winnerAndLoser;
             }
-            return $winnerAndLoser;
         }
     }
     /**
