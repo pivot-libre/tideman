@@ -12,13 +12,17 @@ class MarginCalculatorTest extends TestCase
     private const ALICE_NAME = "Alice";
     private const BOB_ID = "B";
     private const BOB_NAME = "Bob";
+    private const CLAIRE_ID = "C";
+    private const CLAIRE_NAME = "Claire";
     private $alice;
     private $bob;
+    private $claire;
     private $instance;
     protected function setUp()
     {
         $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
+        $this->claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
         $this->instance = new MarginCalculator();
     }
     public function testGetWinnerAliceAndLoserBob() : void
@@ -76,5 +80,17 @@ class MarginCalculatorTest extends TestCase
             $this->bob,
             $candidateIdToRankMap
         );
+    }
+    public function testGetWinnerAndLoserWithMissingOuterCandidateId() : void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $missingIdCandidate = new Candidate('', 'Claire');
+        $this->instance->getWinnerAndLoser($missingIdCandidate, $this->bob, []);
+    }
+    public function testGetWinnerAndLoserWithMissingInnerCandidateId() : void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $missingIdCandidate = new Candidate('', 'Claire');
+        $this->instance->getWinnerAndLoser($this->alice, $missingIdCandidate, []);
     }
 }
