@@ -45,9 +45,7 @@ class AgendaTest extends TestCase
             new CandidateList($this->bob),
             new CandidateList($this->claire)
         ];
-        $ballot = new Ballot(
-            ...$expectedCandidateLists
-        );
+        $ballot = new Ballot(...$expectedCandidateLists);
         $instance = new Agenda($ballot);
 
         $this->assertOnlyContainsCandidates($instance->getCandidates(), array($this->alice, $this->bob, $this->claire));
@@ -59,9 +57,7 @@ class AgendaTest extends TestCase
             new CandidateList($this->bob),
             new CandidateList($this->claire)
         ];
-        $ballot = new Ballot(
-            ...$expectedCandidateLists
-        );
+        $ballot = new Ballot(...$expectedCandidateLists);
         $ballots = $this->cloneBallot($ballot, 10);
         $instance = new Agenda(...$ballots);
         $this->assertOnlyContainsCandidates($instance->getCandidates(), array($this->alice, $this->bob, $this->claire));

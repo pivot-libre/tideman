@@ -107,9 +107,8 @@ class MarginCalculator
      * Subsequently adds the $ballotCount to the count already associated with the appropriate margin in the
      * Registry.
      *
-     * @param Candidate $outerCandidate
-     * @param Candidate $innerCandidate
-     * @param array $candidateIdToRank
+     * @param Candidate $winner
+     * @param Candidate $loser
      * @param MarginRegistry $registry
      * @param int $ballotCount
      */
