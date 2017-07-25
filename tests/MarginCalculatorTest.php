@@ -12,13 +12,17 @@ class MarginCalculatorTest extends TestCase
     private const ALICE_NAME = "Alice";
     private const BOB_ID = "B";
     private const BOB_NAME = "Bob";
+    private const CLAIRE_ID = "C";
+    private const CLAIRE_NAME = "Claire";
     private $alice;
     private $bob;
+    private $claire;
     private $instance;
     protected function setUp()
     {
         $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
+        $this->claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
         $this->instance = new MarginCalculator();
     }
     public function testGetWinnerAliceAndLoserBob() : void
@@ -76,5 +80,61 @@ class MarginCalculatorTest extends TestCase
             $this->bob,
             $candidateIdToRankMap
         );
+    }
+    public function testGetCandidateIdToRankMapFromEmptyBallot() : void
+    {
+        $map = $this->instance->getCandidateIdToRankMap(new Ballot());
+        $this->assertEmpty($map);
+    }
+    public function testGetCandidateIdToRankMapFromOneCandidateBallot() : void
+    {
+        $map = $this->instance->getCandidateIdToRankMap(new Ballot(
+            new CandidateList($this->alice)
+        ));
+        $this->assertSame(0, $map[self::ALICE_ID]);
+    }
+    public function testGetCandidateIdToRankMapFromTwoCandidateBallot() : void
+    {
+        $map = $this->instance->getCandidateIdToRankMap(new Ballot(
+            new CandidateList($this->alice),
+            new CandidateList($this->bob)
+        ));
+        $this->assertSame(0, $map[self::ALICE_ID]);
+        $this->assertSame(1, $map[self::BOB_ID]);
+    }
+    public function testGetCandidateIdToRankMapFromTwoTiedCandidateBallot() : void
+    {
+        $map = $this->instance->getCandidateIdToRankMap(new Ballot(
+            new CandidateList($this->alice, $this->bob)
+        ));
+        $this->assertSame(0, $map[self::ALICE_ID]);
+        $this->assertSame(0, $map[self::BOB_ID]);
+    }
+    public function testGetCandidateIdToRankMapFromMixedTiedAndNotTiedBallot() : void
+    {
+        $map = $this->instance->getCandidateIdToRankMap(new Ballot(
+            new CandidateList($this->alice, $this->bob),
+            new CandidateList($this->claire)
+        ));
+        $this->assertSame(0, $map[self::ALICE_ID]);
+        $this->assertSame(0, $map[self::BOB_ID]);
+        $this->assertSame(1, $map[self::CLAIRE_ID]);
+    }
+    public function testGetCandidateIdToRankMapFromMixedNotTiedAndTiedBallot() : void
+    {
+        $map = $this->instance->getCandidateIdToRankMap(new Ballot(
+            new CandidateList($this->claire),
+            new CandidateList($this->alice, $this->bob)
+        ));
+        $this->assertSame(0, $map[self::CLAIRE_ID]);
+        $this->assertSame(1, $map[self::ALICE_ID]);
+        $this->assertSame(1, $map[self::BOB_ID]);
+    }
+    public function testGetCandidateIdToRankMapFailsOnBallotWithDuplicates() : void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $map = $this->instance->getCandidateIdToRankMap(new Ballot(
+            new CandidateList($this->alice, $this->alice)
+        ));
     }
 }

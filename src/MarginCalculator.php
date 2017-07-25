@@ -52,8 +52,8 @@ class MarginCalculator
                 if (isset($candidateIdToRank[$candidateId])) {
                     throw new InvalidArgumentException(
                         "A Ballot cannot contain a candidate more than once."
-                        . " Offending Ballot: " . $ballot
-                        . " Offending Candidate: " . $candidate
+                        . " Offending Ballot: " . var_export($ballot, true)
+                        . " Offending Candidate: " . var_export($candidate, true)
                     );
                 } else {
                     $candidateIdToRank[$candidateId] = $rank;
