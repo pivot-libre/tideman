@@ -7,25 +7,10 @@ class MarginRegistry
 {
     private $registry = array();
 
-    protected function getCandidateIds(Candidate $winner, Candidate $loser) : array
+    protected function makeKey(Candidate $winner, Candidate $loser) : string
     {
         $winnerId = $winner->getId();
         $loserId = $loser->getId();
-        if (empty($winnerId)) {
-            throw new InvalidArgumentException(
-                "The Margin's winner Candidate had no id. No registry key could be formed."
-            );
-        }
-        if (empty($loserId)) {
-            throw new InvalidArgumentException(
-                "The Margin's loser Candidate had no id. No registry key could be formed."
-            );
-        }
-        return array($winnerId, $loserId);
-    }
-    protected function makeKey(Candidate $winner, Candidate $loser) : string
-    {
-        list($winnerId, $loserId) = $this->getCandidateIds($winner, $loser);
         $key = $winnerId . $loserId;
         return $key;
     }

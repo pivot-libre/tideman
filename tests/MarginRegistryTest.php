@@ -62,19 +62,4 @@ class MarginRegistryTest extends TestCase
         $this->instance->register($expectedMarginOne);
         $this->instance->register($expectedMarginTwo);
     }
-    public function testEmptyWinnerIdFailsToRegister() : void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $margin = new Margin(new Candidate('', 'John Doe'), $this->bob, 42);
-
-        $this->instance->register($margin);
-    }
-
-    public function testEmptyLoserIdFailsToRegister() : void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $margin = new Margin($this->alice, new Candidate('', 'John Doe'), 42);
-
-        $this->instance->register($margin);
-    }
 }
