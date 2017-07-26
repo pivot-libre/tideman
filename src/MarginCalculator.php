@@ -64,8 +64,8 @@ class MarginCalculator
     }
 
     /**
-     * @return array whose zeroth element is the winning candidate, and whose
-     * first element is the loser. It is suggested that the results of this function be assigned via list().
+     * @return array whose zeroth element is the winning Candidate, and whose
+     * first element is the losing Candidate. It is suggested that the results of this function be assigned via list().
      * Example:
      * list($winner, $loser) = getWinnerAndLoser(...);
      */
@@ -108,9 +108,9 @@ class MarginCalculator
         }
     }
     /**
-     * Uses the parameterized candidates and the $candidateIdToRank map to determine which candidate ranks higher.
-     * Subsequently adds the $ballotCount to the count already associated with the appropriate margin in the
-     * Registry.
+     *
+     * Adds the $ballotCount to the count already associated with the appropriate Margin in the
+     * MarginRegistry.
      *
      * @param Candidate $winner
      * @param Candidate $loser
@@ -127,6 +127,10 @@ class MarginCalculator
         $updatedMargin = $marginToUpdate->getMargin() + $ballotCount;
         $marginToUpdate->setMargin($updatedMargin);
     }
+    /**
+     * @return a MarginRegistry whose Margins completely describe the pairwise
+     * difference in popular support between every Candidate.
+     */
     public function calculate(Agenda $agenda, NBallot ...$nBallots) : MarginRegistry
     {
         $registry = $this->initializeRegistry($agenda);
