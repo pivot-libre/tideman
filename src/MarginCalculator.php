@@ -17,11 +17,11 @@ class MarginCalculator
 
     /**
      * Register a Margin for all possible pairs of Candidates described in an Agenda. If the agenda contains N
-     * Candidates, then this method should register (N^2) - N Candidates.
+     * Candidates, then this method should register (N^2) - N = N(N - 1) Candidates.
      *
      * @todo #7 Decide whether this method should be a part of the MarginCalculator class or the Agenda class.
      */
-    protected function initializeRegistry(Agenda $agenda) : MarginRegistry
+    public function initializeRegistry(Agenda $agenda) : MarginRegistry
     {
         $registry = new MarginRegistry();
         foreach ($agenda->getCandidates() as $outerCandidate) {
@@ -33,6 +33,7 @@ class MarginCalculator
                  */
                 if ($outerCandidate->getId() != $innerCandidate->getId()) {
                     $margin = new Margin($outerCandidate, $innerCandidate, 0);
+                    $registry->register($margin);
                 }
             }
         }

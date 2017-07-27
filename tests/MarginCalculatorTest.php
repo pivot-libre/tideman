@@ -3,6 +3,8 @@
 namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
+use PivotLibre\Tideman\Agenda;
+use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\MarginCalculator;
 use \InvalidArgumentException;
 
@@ -213,5 +215,85 @@ class MarginCalculatorTest extends TestCase
 
         $untouchedMargin = $registry->get($this->alice, $this->bob);
         $this->assertEquals(18, $untouchedMargin->getMargin());
+    }
+
+    public function testInitializeRegistryWithEmptyAgenda() : void
+    {
+        $registry = $this->instance->initializeRegistry(new Agenda());
+
+        //N(N-1)
+        $this->assertEquals(0, $registry->getCount());
+    }
+    public function testInitializeRegistryWithOneMemberAgenda() : void
+    {
+        $registry = $this->instance->initializeRegistry(
+            new Agenda(
+                new Ballot(
+                    new CandidateList($this->alice)
+                )
+            )
+        );
+
+        //N(N-1)
+        $this->assertEquals(0, $registry->getCount());
+    }
+    public function testInitializeRegistryWithTwoMemberAgenda() : void
+    {
+        $registry = $this->instance->initializeRegistry(
+            new Agenda(
+                new Ballot(
+                    new CandidateList($this->alice),
+                    new CandidateList($this->bob)
+                )
+            )
+        );
+
+        //N(N-1)
+        $this->assertEquals(2, $registry->getCount());
+    }
+    public function testInitializeRegistryWithTwoMemberTiedAgenda() : void
+    {
+        $registry = $this->instance->initializeRegistry(
+            new Agenda(
+                new Ballot(
+                    new CandidateList($this->alice, $this->bob)
+                )
+            )
+        );
+
+        //N(N-1)
+        $this->assertEquals(2, $registry->getCount());
+    }
+    public function testInitializeRegistryWithThreeMemberAgenda() : void
+    {
+        $registry = $this->instance->initializeRegistry(
+            new Agenda(
+                new Ballot(
+                    new CandidateList($this->alice),
+                    new CandidateList($this->bob),
+                    new CandidateList($this->claire)
+                )
+            )
+        );
+
+        // N(N-1)
+        $this->assertEquals(6, $registry->getCount());
+    }
+    public function testInitializeRegistryWithThreeMemberTiedAgenda() : void
+    {
+        $registry = $this->instance->initializeRegistry(
+            new Agenda(
+                new Ballot(
+                    new CandidateList(
+                        $this->alice,
+                        $this->bob,
+                        $this->claire
+                    )
+                )
+            )
+        );
+
+        // N(N-1)
+        $this->assertEquals(6, $registry->getCount());
     }
 }

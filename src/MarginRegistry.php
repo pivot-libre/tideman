@@ -36,4 +36,8 @@ class MarginRegistry
             return $margin;
         }
     }
+    public function getCount() : int
+    {
+        return sizeof($this->registry);
+    }
 }
