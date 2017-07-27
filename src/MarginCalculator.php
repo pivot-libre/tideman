@@ -109,22 +109,22 @@ class MarginCalculator
     }
     /**
      *
-     * Adds the $ballotCount to the count already associated with the appropriate Margin in the
+     * Adds the $amountToAdd to the count already associated with the appropriate Margin in the
      * MarginRegistry.
      *
      * @param Candidate $winner
      * @param Candidate $loser
      * @param MarginRegistry $registry
-     * @param int $ballotCount
+     * @param int $amountToAdd
      */
-    protected function updatePairInRegistry(
+    public function incrementMarginInRegistry(
         Candidate $winner,
         Candidate $loser,
         MarginRegistry $registry,
-        int $ballotCount
+        int $amountToAdd
     ) : void {
-        $marginToUpdate = $registry->get($winner->getId(), $loser->getId());
-        $updatedMargin = $marginToUpdate->getMargin() + $ballotCount;
+        $marginToUpdate = $registry->get($winner, $loser);
+        $updatedMargin = $marginToUpdate->getMargin() + $amountToAdd;
         $marginToUpdate->setMargin($updatedMargin);
     }
     /**
@@ -147,7 +147,7 @@ class MarginCalculator
                             $innerCandidate,
                             $candidateIdToRank
                         );
-                        $this->updatePairInRegistry(
+                        $this->incrementMarginInRegistry(
                             $winner,
                             $loser,
                             $registry,

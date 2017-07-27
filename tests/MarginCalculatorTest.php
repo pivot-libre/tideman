@@ -137,4 +137,81 @@ class MarginCalculatorTest extends TestCase
             new CandidateList($this->alice, $this->alice)
         ));
     }
+    public function testUpdatePairInRegistry() : void
+    {
+        $registry = new MarginRegistry();
+        $registry->register(new Margin($this->alice, $this->bob, 0));
+        $this->instance->incrementMarginInRegistry(
+            $this->alice,
+            $this->bob,
+            $registry,
+            42
+        );
+        $actualMargin = $registry->get($this->alice, $this->bob);
+        $this->assertEquals(42, $actualMargin->getMargin());
+    }
+    public function testUpdatePairIgnoreAnotherPairInRegistry() : void
+    {
+        $registry = new MarginRegistry();
+        $registry->register(new Margin($this->alice, $this->bob, 0));
+        $registry->register(new Margin($this->claire, $this->bob, 0));
+
+        $this->instance->incrementMarginInRegistry(
+            $this->alice,
+            $this->bob,
+            $registry,
+            5
+        );
+        $actualMargin = $registry->get($this->alice, $this->bob);
+        $this->assertEquals(5, $actualMargin->getMargin());
+
+        $untouchedMargin = $registry->get($this->claire, $this->bob);
+        $this->assertEquals(0, $untouchedMargin->getMargin());
+    }
+
+    public function testTwoUpdatesOfTwoPairsInRegistry() : void
+    {
+        $registry = new MarginRegistry();
+        $registry->register(new Margin($this->alice, $this->bob, 0));
+        $registry->register(new Margin($this->claire, $this->bob, 0));
+
+        //add 1 to Alice->Bob, don't touch Claire->Bob
+        $this->instance->incrementMarginInRegistry(
+            $this->alice,
+            $this->bob,
+            $registry,
+            1
+        );
+        $actualMargin = $registry->get($this->alice, $this->bob);
+        $this->assertEquals(1, $actualMargin->getMargin());
+
+        $untouchedMargin = $registry->get($this->claire, $this->bob);
+        $this->assertEquals(0, $untouchedMargin->getMargin());
+
+        //add 17 to Alice->Bob, don't touch Claire->Bob
+        $this->instance->incrementMarginInRegistry(
+            $this->alice,
+            $this->bob,
+            $registry,
+            17
+        );
+        $actualMargin = $registry->get($this->alice, $this->bob);
+        $this->assertEquals(18, $actualMargin->getMargin());
+
+        $untouchedMargin = $registry->get($this->claire, $this->bob);
+        $this->assertEquals(0, $untouchedMargin->getMargin());
+
+        //Add 3 to Claire->Bob, don't touch Alice->Bob
+        $this->instance->incrementMarginInRegistry(
+            $this->claire,
+            $this->bob,
+            $registry,
+            3
+        );
+        $actualMargin = $registry->get($this->claire, $this->bob);
+        $this->assertEquals(3, $actualMargin->getMargin());
+
+        $untouchedMargin = $registry->get($this->alice, $this->bob);
+        $this->assertEquals(18, $untouchedMargin->getMargin());
+    }
 }
