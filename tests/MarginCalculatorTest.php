@@ -221,7 +221,7 @@ class MarginCalculatorTest extends TestCase
     {
         $registry = $this->instance->initializeRegistry(new Agenda());
 
-        //N(N-1)
+        // N(N-1)
         $this->assertEquals(0, $registry->getCount());
     }
     public function testInitializeRegistryWithOneMemberAgenda() : void
@@ -234,7 +234,7 @@ class MarginCalculatorTest extends TestCase
             )
         );
 
-        //N(N-1)
+        // N(N-1)
         $this->assertEquals(0, $registry->getCount());
     }
     public function testInitializeRegistryWithTwoMemberAgenda() : void
@@ -248,7 +248,7 @@ class MarginCalculatorTest extends TestCase
             )
         );
 
-        //N(N-1)
+        // N(N-1)
         $this->assertEquals(2, $registry->getCount());
     }
     public function testInitializeRegistryWithTwoMemberTiedAgenda() : void
@@ -261,7 +261,7 @@ class MarginCalculatorTest extends TestCase
             )
         );
 
-        //N(N-1)
+        // N(N-1)
         $this->assertEquals(2, $registry->getCount());
     }
     public function testInitializeRegistryWithThreeMemberAgenda() : void
@@ -295,5 +295,32 @@ class MarginCalculatorTest extends TestCase
 
         // N(N-1)
         $this->assertEquals(6, $registry->getCount());
+    }
+    public function testCalculateEmptyAgendaAndAbsentBallot() : void
+    {
+        $registry = $this->instance->calculate(new Agenda());
+        $this->assertEquals(0, $registry->getCount());
+    }
+    public function testCalculateEmptyAgendaAndEmptyBallot() : void
+    {
+        $registry = $this->instance->calculate(
+            new Agenda(),
+            new NBallot(0)
+        );
+        $this->assertEquals(0, $registry->getCount());
+    }
+    public function testCalculateEmptyAgendaAndPopulatedBallots() : void
+    {
+        $registry = $this->instance->calculate(
+            new Agenda(),
+            new NBallot(
+                1,
+                new CandidateList(
+                    $this->alice,
+                    $this->bob
+                )
+            )
+        );
+        $this->assertEquals(0, $registry->getCount());
     }
 }
