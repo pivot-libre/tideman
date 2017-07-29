@@ -7,15 +7,6 @@ use \InvalidArgumentException;
 
 class MarginCalculator
 {
-    public function __construct()
-    {
-        /**
-         * @todo #7 Decide whether the NBallots should be passed to the calculator
-         * at instantiation, or when invoking calculate().
-         */
-    }
-
-
     /**
      * Register a Margin for all possible pairs of Candidates described in an Agenda. If the agenda contains N
      * Candidates, then this method should register (N^2) - N = N(N - 1) Candidates.

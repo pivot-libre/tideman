@@ -17,7 +17,6 @@ class CandidateComparatorTest extends TestCase
     private $alice;
     private $bob;
     private $claire;
-    private $instance;
     protected function setUp()
     {
         $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
@@ -85,15 +84,6 @@ class CandidateComparatorTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         $instance->compare($this->alice, $this->bob);
     }
-    // public function testGetCandidateIdToRankMapFromTwoCandidateBallot() : void
-    // {
-    //     $map = $this->instance->getCandidateIdToRankMap(new Ballot(
-    //         new CandidateList($this->alice),
-    //         new CandidateList($this->bob)
-    //     ));
-    //     $this->assertSame(0, $map[self::ALICE_ID]);
-    //     $this->assertSame(1, $map[self::BOB_ID]);
-    // }
     public function testGetCandidateIdToRankMapFromTwoTiedCandidateBallot() : void
     {
         $instance = new CandidateComparator(
