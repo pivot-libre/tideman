@@ -3,8 +3,11 @@
     "description": "Implementation of the Tideman ranked pair algorithm",
     "type": "library",
     "require": {
+        "psr/log": "^1.0.2"
     },
     "require-dev": {
+        "cadre/sniffs": "^0.1.0",
+        "monolog/monolog": "^1.23.0",
         "pds/skeleton": "~1.0",
         "phing/phing": "2.16.0",
         "phpstan/phpstan": "^0.6.3",
