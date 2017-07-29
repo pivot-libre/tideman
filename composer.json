@@ -5,6 +5,7 @@
     "require": {
     },
     "require-dev": {
+        "cadre/sniffs": "^0.1.0",
         "pds/skeleton": "~1.0",
         "phing/phing": "2.16.0",
         "phpstan/phpstan": "^0.6.3",
