@@ -185,30 +185,10 @@ class MarginCalculatorTest extends TestCase
         // N(N-1)
         $this->assertEquals(6, $registry->getCount());
     }
-    public function testCalculateEmptyAgendaAndAbsentBallot() : void
-    {
-        $registry = $this->instance->calculate(new Agenda());
-        $this->assertEquals(0, $registry->getCount());
-    }
-    public function testCalculateEmptyAgendaAndEmptyBallot() : void
+    public function testCalculateWithEmptyBallot() : void
     {
         $registry = $this->instance->calculate(
-            new Agenda(),
             new NBallot(0)
-        );
-        $this->assertEquals(0, $registry->getCount());
-    }
-    public function testCalculateEmptyAgendaAndPopulatedBallots() : void
-    {
-        $registry = $this->instance->calculate(
-            new Agenda(),
-            new NBallot(
-                1,
-                new CandidateList(
-                    $this->alice,
-                    $this->bob
-                )
-            )
         );
         $this->assertEquals(0, $registry->getCount());
     }
@@ -225,9 +205,7 @@ class MarginCalculatorTest extends TestCase
                 )
             )
         ];
-        $agenda = new Agenda(...$nBallots);
         $registry = $this->instance->calculate(
-            $agenda,
             ...$nBallots
         );
         $this->assertEquals(2, $registry->getCount());
@@ -245,9 +223,7 @@ class MarginCalculatorTest extends TestCase
                 )
             )
         ];
-        $agenda = new Agenda(...$nBallots);
         $registry = $this->instance->calculate(
-            $agenda,
             ...$nBallots
         );
         $this->assertEquals(2, $registry->getCount());

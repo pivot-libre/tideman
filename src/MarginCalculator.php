@@ -56,8 +56,9 @@ class MarginCalculator
      * @return a MarginRegistry whose Margins completely describe the pairwise
      * difference in popular support between every Candidate.
      */
-    public function calculate(Agenda $agenda, NBallot ...$nBallots) : MarginRegistry
+    public function calculate(NBallot ...$nBallots) : MarginRegistry
     {
+        $agenda = new Agenda(...$nBallots);
         $registry = $this->initializeRegistry($agenda);
 
         foreach ($nBallots as $nBallot) {
