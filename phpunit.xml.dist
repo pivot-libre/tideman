@@ -5,9 +5,10 @@
          backupStaticAttributes="false"
          strict="true"
          verbose="true">
-         
+
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
+        <log type="coverage-text" target="php://stdout" showOnlySummary="true"/>
     </logging>
 
     <testsuites>

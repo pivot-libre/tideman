@@ -2,9 +2,13 @@
 namespace PivotLibre\Tideman;
 
 use \InvalidArgumentException;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 
-class Candidate
+class Candidate implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     private $id;
     private $name;
 
