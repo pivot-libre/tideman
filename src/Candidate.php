@@ -1,8 +1,13 @@
 <?php
 namespace PivotLibre\Tideman;
 
-class Candidate
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+
+class Candidate implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     private $id;
     private $name;
 

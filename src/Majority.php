@@ -1,8 +1,13 @@
 <?php
 namespace PivotLibre\Tideman;
 
-class Majority
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+
+class Majority implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     private $winner;
     private $loser;
     private $margin;

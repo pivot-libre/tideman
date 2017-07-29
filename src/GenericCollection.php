@@ -1,8 +1,14 @@
 <?php
 namespace PivotLibre\Tideman;
 
-abstract class GenericCollection implements \IteratorAggregate
+use IteratorAggregate;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+
+abstract class GenericCollection implements IteratorAggregate, LoggerAwareInterface
 {
+    use LoggerAwareTrait;
+
     protected $values;
 
     public function toArray() : array
