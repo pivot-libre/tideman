@@ -323,4 +323,46 @@ class MarginCalculatorTest extends TestCase
         );
         $this->assertEquals(0, $registry->getCount());
     }
+    public function testCalculateForSimplePair() : void
+    {
+        $nBallots = [
+            new NBallot(
+                1,
+                new CandidateList(
+                    $this->alice
+                ),
+                new CandidateList(
+                    $this->bob
+                )
+            )
+        ];
+        $agenda = new Agenda(...$nBallots);
+        $registry = $this->instance->calculate(
+            $agenda,
+            ...$nBallots
+        );
+        $this->assertEquals(2, $registry->getCount());
+        $this->assertEquals(1, $registry->get($this->alice, $this->bob)->getMargin());
+        $this->assertEquals(-1, $registry->get($this->bob, $this->alice)->getMargin());
+    }
+    public function testCalculateForSimpleTiedPair() : void
+    {
+        $nBallots = [
+            new NBallot(
+                1,
+                new CandidateList(
+                    $this->alice,
+                    $this->bob
+                )
+            )
+        ];
+        $agenda = new Agenda(...$nBallots);
+        $registry = $this->instance->calculate(
+            $agenda,
+            ...$nBallots
+        );
+        $this->assertEquals(2, $registry->getCount());
+        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getMargin());
+        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getMargin());
+    }
 }

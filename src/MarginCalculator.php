@@ -61,6 +61,7 @@ class MarginCalculator
                 }
             }
         }
+        var_dump($candidateIdToRank);
         return $candidateIdToRank;
     }
 
@@ -140,21 +141,32 @@ class MarginCalculator
             //a map of candidate id to their integer rank
             $candidateIdToRank = $this->getCandidateIdToRankMap($nBallot);
             $ballotCount = $nBallot->getCount();
-            foreach ($agenda->getCandidates() as $outerCandidate) {
-                foreach ($agenda->getCandidates() as $innerCandidate) {
-                    if ($outerCandidate != $innerCandidate) {
-                        list($winner, $loser) = $this->getWinnerAndLoser(
-                            $outerCandidate,
-                            $innerCandidate,
-                            $candidateIdToRank
-                        );
-                        $this->incrementMarginInRegistry(
-                            $winner,
-                            $loser,
-                            $registry,
-                            $ballotCount
-                        );
-                    }
+            $candidatesList = $agenda->getCandidates();
+            //it is very important to convert this to array, otherwise count() will always return 1
+            $candidates = $candidatesList->toArray();
+            $candidatesCount = count($candidates);
+            //Loop through all combinations of candidates in the Agenda.
+            for ($outerCounter = 0; $outerCounter < $candidatesCount; ++$outerCounter) {
+                for ($innerCounter = $outerCounter + 1; $innerCounter < $candidatesCount; ++$innerCounter) {
+                    $outerCandidate = $candidates[$outerCounter];
+                    $innerCandidate = $candidates[$innerCounter];
+                    list($winner, $loser) = $this->getWinnerAndLoser(
+                        $outerCandidate,
+                        $innerCandidate,
+                        $candidateIdToRank
+                    );
+                    $this->incrementMarginInRegistry(
+                        $winner,
+                        $loser,
+                        $registry,
+                        $ballotCount
+                    );
+                    $this->incrementMarginInRegistry(
+                        $loser,
+                        $winner,
+                        $registry,
+                        -1 * $ballotCount
+                    );
                 }
             }
         }
