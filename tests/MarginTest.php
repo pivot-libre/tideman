@@ -3,7 +3,7 @@ namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
 
-class MajorityTest extends TestCase
+class MarginTest extends TestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
@@ -20,34 +20,42 @@ class MajorityTest extends TestCase
     public function testGetWinner() : void
     {
         $margin = 0;
-        $majority = new Majority($this->alice, $this->bob, $margin);
-        $actualWinner = $majority->getWinner();
+        $instance = new Margin($this->alice, $this->bob, $margin);
+        $actualWinner = $instance->getWinner();
         $this->assertEquals($this->alice, $actualWinner);
     }
 
     public function testGetLoser() : void
     {
         $margin = 0;
-        $majority = new Majority($this->alice, $this->bob, $margin);
-        $actualLoser = $majority->getLoser();
+        $instance = new Margin($this->alice, $this->bob, $margin);
+        $actualLoser = $instance->getLoser();
         $this->assertEquals($this->bob, $actualLoser);
     }
 
     public function testGetMargin() : void
     {
         $margin = 42;
-        $majority = new Majority($this->alice, $this->bob, $margin);
-        $actualMargin = $majority->getMargin();
+        $instance = new Margin($this->alice, $this->bob, $margin);
+        $actualMargin = $instance->getMargin();
         $this->assertEquals($margin, $actualMargin);
     }
-
+    public function testSetMargin() : void
+    {
+        $originalMargin = 42;
+        $instance = new Margin($this->alice, $this->bob, $originalMargin);
+        $newMargin = 3;
+        $instance->setMargin($newMargin);
+        $actualMargin = $instance->getMargin();
+        $this->assertEquals($newMargin, $actualMargin);
+    }
     public function testToString()
     {
         $margin = 21;
-        $majority = new Majority($this->bob, $this->alice, $margin);
+        $instance = new Margin($this->bob, $this->alice, $margin);
 
         $expectedToString = $this->bob->getId() . " --" . $margin . "--> " . $this->alice->getId();
-        $actualToString = $majority->__toString();
+        $actualToString = $instance->__toString();
         $this->assertEquals($expectedToString, $actualToString);
     }
 }

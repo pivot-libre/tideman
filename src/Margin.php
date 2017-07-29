@@ -4,7 +4,7 @@ namespace PivotLibre\Tideman;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-class Majority implements LoggerAwareInterface
+class Margin implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -33,8 +33,11 @@ class Majority implements LoggerAwareInterface
     {
         return $this->margin;
     }
-
-    public function __toString()
+    public function setMargin($margin) : void
+    {
+        $this->margin = $margin;
+    }
+    public function __toString() : string
     {
         return $this->winner->getId() . " --" . $this->margin . "--> " . $this->loser->getId();
     }

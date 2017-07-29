@@ -18,7 +18,7 @@ class BallotTest extends GenericCollectionTestCase
     private $alice;
     private $bob;
 
-    protected function setUp()
+    protected function setUpValues() : void
     {
         $alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $bob = new Candidate(self::BOB_ID, self::BOB_NAME);
@@ -26,6 +26,10 @@ class BallotTest extends GenericCollectionTestCase
         $darius = new Candidate(self::DARIUS_ID, self::DARIUS_NAME);
         $anotherCandidateList = new CandidateList($darius);
         $this->values = array($oneCandidateList, $anotherCandidateList);
+    }
+    protected function setUp()
+    {
+        $this->setUpValues();
         $this->instance = new Ballot(...$this->values);
         $this->concreteType = Ballot::class;
     }
