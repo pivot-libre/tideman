@@ -3,6 +3,8 @@
 namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
+use \InvalidArgumentException;
+use \TypeError;
 
 class CandidateTest extends TestCase
 {
@@ -31,5 +33,20 @@ class CandidateTest extends TestCase
         $expectedToString = self::CANDIDATE_NAME . "(" . self::CANDIDATE_ID . ")";
         $actualToString = $this->instance->__toString();
         $this->assertEquals($expectedToString, $actualToString);
+    }
+    public function testNullCandidateId() : void
+    {
+        $this->expectException(TypeError::class);
+        new Candidate(null, self::CANDIDATE_NAME);
+    }
+    public function testEmptyCandidateId() : void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new Candidate('', self::CANDIDATE_NAME);
+    }
+    public function testBlankCandidateId() : void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new Candidate(" \t\r\n", self::CANDIDATE_NAME);
     }
 }
