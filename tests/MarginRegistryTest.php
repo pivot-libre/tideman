@@ -37,7 +37,7 @@ class MarginRegistryTest extends TestCase
         $this->assertEquals($expectedMargin, $actualMargin);
         $this->assertEquals($expectedMargin->getWinner(), $actualMargin->getWinner());
         $this->assertEquals($expectedMargin->getLoser(), $actualMargin->getLoser());
-        $this->assertEquals($expectedMargin->getMargin(), $actualMargin->getMargin());
+        $this->assertEquals($expectedMargin->getDifference(), $actualMargin->getDifference());
     }
     public function testCandidateOrderMatters() : void
     {

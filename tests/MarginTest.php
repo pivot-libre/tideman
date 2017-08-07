@@ -37,7 +37,7 @@ class MarginTest extends TestCase
     {
         $margin = 42;
         $instance = new Margin($this->alice, $this->bob, $margin);
-        $actualMargin = $instance->getMargin();
+        $actualMargin = $instance->getDifference();
         $this->assertEquals($margin, $actualMargin);
     }
     public function testSetMargin() : void
@@ -45,8 +45,8 @@ class MarginTest extends TestCase
         $originalMargin = 42;
         $instance = new Margin($this->alice, $this->bob, $originalMargin);
         $newMargin = 3;
-        $instance->setMargin($newMargin);
-        $actualMargin = $instance->getMargin();
+        $instance->setDifference($newMargin);
+        $actualMargin = $instance->getDifference();
         $this->assertEquals($newMargin, $actualMargin);
     }
     public function testToString()

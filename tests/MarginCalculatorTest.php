@@ -39,7 +39,7 @@ class MarginCalculatorTest extends TestCase
             42
         );
         $actualMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(42, $actualMargin->getMargin());
+        $this->assertEquals(42, $actualMargin->getDifference());
     }
     public function testUpdatePairIgnoreAnotherPairInRegistry() : void
     {
@@ -54,10 +54,10 @@ class MarginCalculatorTest extends TestCase
             5
         );
         $actualMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(5, $actualMargin->getMargin());
+        $this->assertEquals(5, $actualMargin->getDifference());
 
         $untouchedMargin = $registry->get($this->claire, $this->bob);
-        $this->assertEquals(0, $untouchedMargin->getMargin());
+        $this->assertEquals(0, $untouchedMargin->getDifference());
     }
 
     public function testTwoUpdatesOfTwoPairsInRegistry() : void
@@ -74,10 +74,10 @@ class MarginCalculatorTest extends TestCase
             1
         );
         $actualMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(1, $actualMargin->getMargin());
+        $this->assertEquals(1, $actualMargin->getDifference());
 
         $untouchedMargin = $registry->get($this->claire, $this->bob);
-        $this->assertEquals(0, $untouchedMargin->getMargin());
+        $this->assertEquals(0, $untouchedMargin->getDifference());
 
         //add 17 to Alice->Bob, don't touch Claire->Bob
         $this->instance->incrementMarginInRegistry(
@@ -87,10 +87,10 @@ class MarginCalculatorTest extends TestCase
             17
         );
         $actualMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(18, $actualMargin->getMargin());
+        $this->assertEquals(18, $actualMargin->getDifference());
 
         $untouchedMargin = $registry->get($this->claire, $this->bob);
-        $this->assertEquals(0, $untouchedMargin->getMargin());
+        $this->assertEquals(0, $untouchedMargin->getDifference());
 
         //Add 3 to Claire->Bob, don't touch Alice->Bob
         $this->instance->incrementMarginInRegistry(
@@ -100,10 +100,10 @@ class MarginCalculatorTest extends TestCase
             3
         );
         $actualMargin = $registry->get($this->claire, $this->bob);
-        $this->assertEquals(3, $actualMargin->getMargin());
+        $this->assertEquals(3, $actualMargin->getDifference());
 
         $untouchedMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(18, $untouchedMargin->getMargin());
+        $this->assertEquals(18, $untouchedMargin->getDifference());
     }
 
     public function testInitializeRegistryWithEmptyAgenda() : void
@@ -210,9 +210,8 @@ class MarginCalculatorTest extends TestCase
         );
         // N(N-1)
         $this->assertEquals(2, $registry->getCount());
-        //check that Alice is ahead of Bob
-        $this->assertEquals(1, $registry->get($this->alice, $this->bob)->getMargin());
-        $this->assertEquals(-1, $registry->get($this->bob, $this->alice)->getMargin());
+        $this->assertEquals(1, $registry->get($this->alice, $this->bob)->getDifference());
+        $this->assertEquals(-1, $registry->get($this->bob, $this->alice)->getDifference());
     }
     public function testCalculateForSimpleTiedPair() : void
     {
@@ -230,9 +229,8 @@ class MarginCalculatorTest extends TestCase
         );
         // N(N-1)
         $this->assertEquals(2, $registry->getCount());
-        // check that Alice and Bob are tied
-        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getMargin());
-        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getMargin());
+        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getDifference());
+        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getDifference());
     }
     public function testCalculateForTiedPairOfCandidatesAheadOfNonTiedCandidate() : void
     {

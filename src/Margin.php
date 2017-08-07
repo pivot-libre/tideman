@@ -5,13 +5,13 @@ class Margin
 {
     private $winner;
     private $loser;
-    private $margin;
+    private $difference;
 
-    public function __construct(Candidate $winner, Candidate $loser, int $margin)
+    public function __construct(Candidate $winner, Candidate $loser, int $difference)
     {
         $this->winner = $winner;
         $this->loser = $loser;
-        $this->margin = $margin;
+        $this->difference = $difference;
     }
 
     public function getWinner() : Candidate
@@ -24,16 +24,16 @@ class Margin
         return $this->loser;
     }
 
-    public function getMargin() : int
+    public function getDifference() : int
     {
-        return $this->margin;
+        return $this->difference;
     }
-    public function setMargin($margin) : void
+    public function setDifference($difference) : void
     {
-        $this->margin = $margin;
+        $this->difference = $difference;
     }
     public function __toString() : string
     {
-        return $this->winner->getId() . " --" . $this->margin . "--> " . $this->loser->getId();
+        return $this->winner->getId() . " --" . $this->difference . "--> " . $this->loser->getId();
     }
 }
