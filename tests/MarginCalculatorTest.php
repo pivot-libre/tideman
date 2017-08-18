@@ -253,13 +253,13 @@ class MarginCalculatorTest extends TestCase
         // N(N-1)
         $this->assertEquals(6, $registry->getCount());
         //check that tied candidates' margins reflect that they are tied
-        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getMargin());
-        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getMargin());
+        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getDifference());
+        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getDifference());
         //check that the margins indicate that Claire is ranked behind Alice and Bob
-        $this->assertEquals($ballotCount, $registry->get($this->alice, $this->claire)->getMargin());
-        $this->assertEquals($ballotCount, $registry->get($this->bob, $this->claire)->getMargin());
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->claire, $this->alice)->getMargin());
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->claire, $this->bob)->getMargin());
+        $this->assertEquals($ballotCount, $registry->get($this->alice, $this->claire)->getDifference());
+        $this->assertEquals($ballotCount, $registry->get($this->bob, $this->claire)->getDifference());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->claire, $this->alice)->getDifference());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->claire, $this->bob)->getDifference());
     }
     public function testCalculateForTiedPairOfCandidatesBehindNonTiedCandidate() : void
     {
@@ -282,13 +282,13 @@ class MarginCalculatorTest extends TestCase
         // N(N-1)
         $this->assertEquals(6, $registry->getCount());
         //check that tied candidates' margins reflect that they are tied
-        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getMargin());
-        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getMargin());
+        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getDifference());
+        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getDifference());
         //check that the margins indicate that Claire is ahead of Alice and Bob
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->alice, $this->claire)->getMargin());
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->claire)->getMargin());
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getMargin());
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->bob)->getMargin());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->alice, $this->claire)->getDifference());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->claire)->getDifference());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getDifference());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->bob)->getDifference());
     }
     public function testCalculateForThreeNonTiedCandidates() : void
     {
@@ -316,16 +316,16 @@ class MarginCalculatorTest extends TestCase
         //Now check all N(N-1) margins in the registry
 
         //check that Claire is ranked higher than Alice
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getMargin());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getDifference());
         //check that Alice is ranked lower than Claire
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->alice, $this->claire)->getMargin());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->alice, $this->claire)->getDifference());
         //check that Claire is ranked higher than Bob
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->bob)->getMargin());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->bob)->getDifference());
         //check that Bob is ranked lower than Claire
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->claire)->getMargin());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->claire)->getDifference());
         //check that Alice is ranked higher than Bob
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getMargin());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getDifference());
         //check that Bob is ranked lower than Alice
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->alice)->getMargin());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->alice)->getDifference());
     }
 }
