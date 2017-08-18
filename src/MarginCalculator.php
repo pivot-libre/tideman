@@ -49,8 +49,8 @@ class MarginCalculator
         int $amountToAdd
     ) : void {
         $marginToUpdate = $registry->get($winner, $loser);
-        $updatedMargin = $marginToUpdate->getMargin() + $amountToAdd;
-        $marginToUpdate->setMargin($updatedMargin);
+        $updatedMargin = $marginToUpdate->getDifference() + $amountToAdd;
+        $marginToUpdate->setDifference($updatedMargin);
     }
     /**
      * @return a MarginRegistry whose Margins completely describe the pairwise
