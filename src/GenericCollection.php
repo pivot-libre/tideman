@@ -20,4 +20,12 @@ abstract class GenericCollection implements IteratorAggregate, LoggerAwareInterf
     {
         return new \ArrayIterator($this->values);
     }
+
+    public function __toString() : string
+    {
+        $string = "[ ";
+        $string .= join(", ", $this->values);
+        $string .= " ]";
+        return $string;
+    }
 }

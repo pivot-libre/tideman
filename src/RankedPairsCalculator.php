@@ -14,13 +14,7 @@ class RankedPairsCalculator
         $marginCalculator = new MarginCalculator();
         $marginRegistry = $marginCalculator->calculate(...$nBallots);
         $allMargins = $marginRegistry->getAll();
-        $grouper = new Grouper(function (Margin $margin) {
-            return $margin->getDifference();
-        });
-
-        $marginsGroupedByDifference = $grouper->group($allMargins);
-        $marginGroupsSortedAscByDifference = ksort($marginsGroupedByDifference, SORT_NUMERIC);
-        $marginGroupsSortedDescByDifference = array_reverse($marginGroupsSortedAscByDifference);
+        $marginGroupsSortedDescByDifference = $allMargins->filterGroupAndSort();
         $marginsWithoutTies = $this->breakTies($marginGroupsSortedDescByDifference);
     }
 

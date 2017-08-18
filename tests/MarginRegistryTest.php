@@ -62,4 +62,30 @@ class MarginRegistryTest extends TestCase
         $this->instance->register($expectedMarginOne);
         $this->instance->register($expectedMarginTwo);
     }
+    public function testGetAllWithNoRegisteredMargins() : void
+    {
+        $margins = $this->instance->getAll();
+        $this->assertEmpty($margins->toArray());
+    }
+    public function testGetAllWithOneRegisteredMargin() : void
+    {
+        $margins = $this->instance->getAll();
+        $margin = new Margin($this->alice, $this->bob, 11);
+        $this->instance->register($margin);
+        $expected = new MarginList($margin);
+        $actual = $this->instance->getAll();
+        $this->assertEquals($expected, $actual);
+    }
+    public function testGetAllWithTwoRegisteredMargins() : void
+    {
+        $marginOne = new Margin($this->alice, $this->bob, 11);
+        $this->instance->register($marginOne);
+
+        $marginTwo = new Margin($this->bob, $this->alice, -11);
+        $this->instance->register($marginTwo);
+
+        $expected = new MarginList($marginOne, $marginTwo);
+        $actual = $this->instance->getAll();
+        $this->assertEquals($expected, $actual);
+    }
 }
