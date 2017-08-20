@@ -5,12 +5,27 @@ use \InvalidArgumentException;
 
 class CandidateComparator
 {
+    private $ballot;
     private $candidateIdToRank;
+
+    /**
+     * @param a Ballot. The CandidateComparator will store a copy of the Ballot. The caller of this constructor may
+     * subsequently modify the parameterized Ballot without affecting this CandidateComparator.
+     */
     public function __construct(Ballot $ballot)
     {
+        $this->ballot = clone $ballot;
         $this->candidateIdToRank = $this->makeCandidateIdToRankMap($ballot);
     }
 
+    /**
+     * @return a copy of the Ballot that this instance uses to inform its comparisons. The returned Ballot may be
+     * modified without affecting this CandidateComparator.
+     */
+    public function getBallot() : Ballot
+    {
+        return clone $this->ballot;
+    }
     /**
      * Return an associative array that maps Candidates' ids to an integer. The integer represents the rank of the
      * Candidate within the Ballot. A smaller integer indicates higher preference. An integer of zero is the most

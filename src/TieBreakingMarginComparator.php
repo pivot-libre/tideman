@@ -4,13 +4,15 @@ namespace PivotLibre\Tideman;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-class TieBreakingMarginComparator {
+class TieBreakingMarginComparator
+{
 
     use LoggerAwareTrait;
 
     private $tieBreaker;
 
-    public function __construct(MarginTieBreaker $tieBreaker) {
+    public function __construct(MarginTieBreaker $tieBreaker)
+    {
         $this->tieBreaker = $tieBreaker;
     }
 
@@ -29,9 +31,9 @@ class TieBreakingMarginComparator {
     public function compare(Margin $a, Margin $b) : int
     {
         $differenceOfStrength = $a->getDifference() - $b->getDifference();
-        if( 0 == $differenceOfStrength) {
+        if (0 == $differenceOfStrength) {
             $this->logger->info("Tie between two Margins:\n$a\n$b\n");
-            $aMorePreferredThanB = $this->tieBreaker($a, $b);
+            $aMorePreferredThanB = ($this->tieBreaker)($a, $b);
             if ($aMorePreferredThanB) {
                 $result = 1;
                 $this->logger->info("Tie-breaking results:\nWinner:\n$a\nLoser:$b\n");

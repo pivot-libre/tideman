@@ -1,12 +1,14 @@
 <?php
 namespace PivotLibre\Tideman;
+
 use PivotLibre\Tideman\ListOfMarginLists;
 
 /**
  * A MarginTieBreaker specifies some tie-breaking rule that determines which Margin should be considered the winner
  * over another Margin even though their difference properties are identical.
  */
-interface MarginTieBreaker {
+interface MarginTieBreaker
+{
 
     /**
      * If Margin $a should be considered to be more preferred than $b, return TRUE. Otherwise, if Margin $b should be
@@ -24,6 +26,4 @@ interface MarginTieBreaker {
      *
      */
     // public function breakTies(ListOfMarginLists $ListOfMarginLists) : MarginList;
-
-
 }
