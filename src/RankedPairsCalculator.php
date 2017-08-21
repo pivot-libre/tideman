@@ -37,7 +37,6 @@ class RankedPairsCalculator
         $marginList = $this->getMargins(...$nBallots);
         $sortedMarginList = $this->sortMargins($marginList);
         $rankedCandidates = $this->rankCandidates($sortedMarginList);
-
     }
 
     /**
