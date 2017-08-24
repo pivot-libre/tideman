@@ -11,7 +11,8 @@ class MarginCalculator
      * Register a Margin for all possible pairs of Candidates described in an Agenda. If the agenda contains N
      * Candidates, then this method should register (N^2) - N = N(N - 1) Candidates.
      *
-     * @todo #7 Decide whether this method should be a part of the MarginCalculator class or the Agenda class.
+     * @todo This basically registers all non-duplicating permutations of a list of Candidates. Consider moving this to
+     * a more generic function.
      */
     public function initializeRegistry(Agenda $agenda) : MarginRegistry
     {
@@ -55,10 +56,11 @@ class MarginCalculator
     /**
      * @return a MarginRegistry whose Margins completely describe the pairwise
      * difference in popular support between every Candidate.
+     * @todo this function generates all combinations of Candidates. Consider moving the combination logic out.
      */
-    public function calculate(NBallot ...$nBallots) : MarginRegistry
+    public function calculate(CandidateSet $candidatesToSkip, NBallot ...$nBallots) : MarginRegistry
     {
-        $agenda = new Agenda(...$nBallots);
+        $agenda = new Agenda($candidatesToSkip, ...$nBallots);
         $registry = $this->initializeRegistry($agenda);
 
         foreach ($nBallots as $nBallot) {

@@ -9,6 +9,7 @@ use \Graphp\Algorithms\Search\DepthFirst;
 use PivotLibre\Tideman\Agenda;
 use PivotLibre\Tideman\Candidate;
 use PivotLibre\Tideman\MarginList;
+use PivotLibre\Tideman\CandidateSet;
 use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\TieBreakingMarginComparator;
@@ -33,17 +34,34 @@ class RankedPairsCalculator
     }
 
     /**
+     * @param int number of winners to return.
      * @return CandidateList in which the zeroth Candidate is the most preferred, the first Candidate is the second most
      * preferred, and so on until the last Candidate who is the least preferred.
      */
-    public function calculate(NBallot ...$nBallots) : CandidateList
+    public function calculate(int $numWinners, NBallot ...$nBallots) : CandidateList
     {
-        $marginList = $this->getMargins(...$nBallots);
-        $sortedMarginList = $this->sortMargins($marginList);
-        $rankedCandidates = $this->rankCandidates($sortedMarginList);
-
+        $candidatesInOrder = [];
+        $candidatesToSkip = new CandidateSet();
+        while (sizeof($candidatesInOrder) < $numWinners) {
+            $winnersFromThisRound = $this->getWinner($candidatesToSkip, ...$nBallots)->toArray();
+            array_push($candidatesInOrder, ...$winnersFromThisRound);
+            $candidatesToSkip->add(...$winnersFromThisRound);
+        }
+        $winners = new CandidateList($numWinners);
     }
 
+
+    /**
+     * @param CandidateList a liist of Candidates to skip. The Candidates needn't be in any particular order.
+     * @param ... NBallot the ballots submitted to decide the election.
+     * @return CandidateList, usually of length one, but possibly greater if the result was a tie.
+     */
+    public function getWinner(CandiateSet $candidatesToSkip, NBallot ...$nBallots) : CandidateList
+    {
+        $marginList = $this->getMargins($candidatesToSkip, ...$nBallots);
+        $sortedMarginList = $this->sortMargins($marginList);
+        $rankedCandidates = $this->rankCandidates($sortedMarginList);
+    }
     /**
      * Tallies the Margins and returns the Margins with difference properties >= 0
      */
