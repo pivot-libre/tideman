@@ -123,4 +123,142 @@ class MarginListTest extends GenericCollectionTestCase
             srand();
         }
     }
+    public function testEmptyList()
+    {
+        $marginList = new MarginList();
+        $listOfMarginLists = $marginList->filterGroupAndSort();
+        $this->assertEquals(new ListOfMarginLists(), $listOfMarginLists);
+        $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
+    }
+
+    public function testOneMarginList()
+    {
+        $marginList = new MarginList(new Margin($this->alice, $this->bob, 10));
+        $listOfMarginLists = $marginList->filterGroupAndSort();
+        $expected = new ListOfMarginLists(new MarginList(new Margin($this->alice, $this->bob, 10)));
+        $this->assertEquals($expected, $listOfMarginLists);
+        $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
+    }
+    public function testTwoMarginTiedList()
+    {
+        $marginList = new MarginList(
+            new Margin($this->alice, $this->bob, 10),
+            new Margin($this->alice, $this->claire, 10)
+        );
+        $listOfMarginLists = $marginList->filterGroupAndSort();
+        $expected = new ListOfMarginLists(new MarginList(
+            new Margin($this->alice, $this->bob, 10),
+            new Margin($this->alice, $this->claire, 10)
+        ));
+        $this->assertEquals($expected, $listOfMarginLists);
+        $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
+    }
+    public function testTwoMarginNonTiedList()
+    {
+        $marginList = new MarginList(
+            new Margin($this->alice, $this->claire, 5),
+            new Margin($this->alice, $this->bob, 10)
+        );
+
+        $listOfMarginLists = $marginList->filterGroupAndSort();
+        $expected = new ListOfMarginLists(
+            new MarginList(
+                new Margin($this->alice, $this->bob, 10)
+            ),
+            new MarginList(
+                new Margin($this->alice, $this->claire, 5)
+            )
+        );
+        $this->assertEquals($expected, $listOfMarginLists);
+        $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
+    }
+    public function testThreeMarginsWithNoTies()
+    {
+        $marginList = new MarginList(
+            new Margin($this->alice, $this->bob, 10),
+            new Margin($this->alice, $this->claire, 2),
+            new Margin($this->bob, $this->claire, 300)
+        );
+        $listOfMarginLists = $marginList->filterGroupAndSort();
+        $expected = new ListOfMarginLists(
+            new MarginList(
+                new Margin($this->bob, $this->claire, 300)
+            ),
+            new MarginList(
+                new Margin($this->alice, $this->bob, 10)
+            ),
+            new MarginList(
+                new Margin($this->alice, $this->claire, 2)
+            )
+        );
+        $this->assertEquals($expected, $listOfMarginLists);
+        $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
+    }
+    public function testThreeMarginsWithATieOfStrongerDifference()
+    {
+        $marginList = new MarginList(
+            new Margin($this->alice, $this->bob, 100),
+            new Margin($this->bob, $this->claire, 10),
+            new Margin($this->alice, $this->claire, 100)
+        );
+        $listOfMarginLists = $marginList->filterGroupAndSort();
+        $expected = new ListOfMarginLists(
+            new MarginList(
+                new Margin($this->alice, $this->bob, 100),
+                new Margin($this->alice, $this->claire, 100)
+            ),
+            new MarginList(
+                new Margin($this->bob, $this->claire, 10)
+            )
+        );
+        $this->assertEquals($expected, $listOfMarginLists);
+        $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
+    }
+    public function testThreeMarginsWithATieOfWeakerDifference()
+    {
+        $marginList = new MarginList(
+            new Margin($this->alice, $this->bob, 2),
+            new Margin($this->bob, $this->claire, 100),
+            new Margin($this->alice, $this->claire, 2)
+        );
+        $listOfMarginLists = $marginList->filterGroupAndSort();
+        $expected = new ListOfMarginLists(
+            new MarginList(
+                new Margin($this->bob, $this->claire, 100)
+            ),
+            new MarginList(
+                new Margin($this->alice, $this->bob, 2),
+                new Margin($this->alice, $this->claire, 2)
+            )
+        );
+        $this->assertEquals($expected, $listOfMarginLists);
+        $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
+    }
+    public function testTenMarginListWithSomeTies()
+    {
+        $listSize = 10;
+        for ($i = 0; $i < $listSize / 2; $i++) {
+            $marginList = $this->generateMarginList($listSize, $i);
+            $actual = $marginList->filterGroupAndSort();
+            $this->assertGroupedAndInOrderOfDescendingDifference($actual);
+        }
+    }
+    public function testThirtyOneMarginListWithSomeTies()
+    {
+        $listSize = 31;
+        for ($i = 0; $i < $listSize / 2; $i++) {
+            $marginList = $this->generateMarginList($listSize, $i);
+            $actual = $marginList->filterGroupAndSort();
+            $this->assertGroupedAndInOrderOfDescendingDifference($actual);
+        }
+    }
+    public function LONGtestOneHundredMarginListWithSomeTies()
+    {
+        $listSize = 100;
+        for ($i = 0; $i < $listSize / 2; $i++) {
+            $marginList = $this->generateMarginList($listSize, $i);
+            $actual = $marginList->filterGroupAndSort();
+            $this->assertGroupedAndInOrderOfDescendingDifference($actual);
+        }
+    }
 }
