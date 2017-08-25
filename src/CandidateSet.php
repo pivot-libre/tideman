@@ -1,15 +1,18 @@
 <?php
 namespace PivotLibre\Tideman;
+
 use PivotLibre\Tideman\Candidate;
 
 class CandidateSet extends GenericCollection
 {
     public function __construct(Candidate ...$candidates)
     {
+            $this->values = [];
             $this->add(...$candidates);
     }
 
-    public function remove(Candidate ...$candidates) {
+    public function remove(Candidate ...$candidates)
+    {
         foreach ($candidates as $candidate) {
             $key = $this->makeKey($candidate);
             unset($this->values[$key]);
@@ -19,7 +22,8 @@ class CandidateSet extends GenericCollection
     /**
      * If Canddiate is already present,then it is overwritten with the newer one
      */
-    public function add(Candidate ...$candidates) {
+    public function add(Candidate ...$candidates)
+    {
         foreach ($candidates as $candidate) {
             $key = $this->makeKey($candidate);
             $this->values[$key] = $candidate;
@@ -29,6 +33,7 @@ class CandidateSet extends GenericCollection
     protected function makeKey(Candidate $candidate) : string
     {
         $key = $candidate->getId();
+        return $key;
     }
 
     /**
@@ -38,13 +43,7 @@ class CandidateSet extends GenericCollection
     {
         return $this->values[$this->makeKey($candidate)] ?? null;
     }
-    /**
-     * @return the Candidate if present, or null if no such Candidate is in this Set.
-     */
-//     public function getById(string $candidateId) : Candidate
-//     {
-//         return $this->values[$candidateId] ?? null;
-// -   }
+
     public function contains(Candidate $candidate) : bool
     {
         return null == $this->get($candidate);

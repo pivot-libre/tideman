@@ -7,4 +7,11 @@ class CandidateList extends GenericCollection
     {
         $this->values = $candidates;
     }
+
+    // public function add(Candidate ...$candidates)
+    // {
+    //     foreach ($candidates as $candidate) {
+    //         $this->values[] = $candidate;
+    //     }
+    // }
 }

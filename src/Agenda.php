@@ -11,9 +11,19 @@ class Agenda
     /**
      * Creates an Agenda consisting of all unique Candidates from the parameterized Ballots.
      */
-    public function __construct(CandidateSet $candidatesToSkip, Ballot ...$ballots)
+    public function __construct(Ballot ...$ballots)
     {
         $this->candidateSet = new CandidateSet();
+        $this->addCandidatesFromBallots(...$ballots);
+    }
+
+    public function removeCandidates(Candidate ...$candidates)
+    {
+        $this->candidateSet->remove(...$candidates);
+    }
+
+    public function addCandidatesFromBallots(Ballot ...$ballots)
+    {
         foreach ($ballots as $ballot) {
             //a ballot has multiple CandidateLists
             foreach ($ballot as $candidateList) {
@@ -28,15 +38,13 @@ class Agenda
                 }
             }
         }
-        $this->candidateSet->remove(...$candidatesToSkip->toArray());
     }
-
     /**
      * Returns all Candidates for this election as a CandidateList.
      * The order of the Candidates within the returned list is not significant.
      */
     public function getCandidates() : CandidateList
     {
-        return new CandidateList(...$this->candidateSet->toArray());
+        return new CandidateList(...array_values($this->candidateSet->toArray()));
     }
 }

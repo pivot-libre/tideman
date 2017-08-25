@@ -12,7 +12,7 @@ class MarginCalculator
      * Candidates, then this method should register (N^2) - N = N(N - 1) Candidates.
      *
      * @todo This basically registers all non-duplicating permutations of a list of Candidates. Consider moving this to
-     * a more generic function.
+     * a more generic function. http://php.net/manual/en/language.generators.syntax.php
      */
     public function initializeRegistry(Agenda $agenda) : MarginRegistry
     {
@@ -56,11 +56,11 @@ class MarginCalculator
     /**
      * @return a MarginRegistry whose Margins completely describe the pairwise
      * difference in popular support between every Candidate.
-     * @todo this function generates all combinations of Candidates. Consider moving the combination logic out.
+     * @todo this function generates all non-duplicating combinations of Candidates. Consider moving the combination
+     * logic elsewhere. http://php.net/manual/en/language.generators.syntax.php
      */
-    public function calculate(CandidateSet $candidatesToSkip, NBallot ...$nBallots) : MarginRegistry
+    public function calculate(Agenda $agenda, NBallot ...$nBallots) : MarginRegistry
     {
-        $agenda = new Agenda($candidatesToSkip, ...$nBallots);
         $registry = $this->initializeRegistry($agenda);
 
         foreach ($nBallots as $nBallot) {

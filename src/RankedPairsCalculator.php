@@ -4,20 +4,20 @@ namespace PivotLibre\Tideman;
 
 use \InvalidArgumentException;
 use \Exception;
-use \Fhaculty\Graph\Graph as Graph;
-use \Graphp\Algorithms\Search\DepthFirst;
+
 use PivotLibre\Tideman\Agenda;
 use PivotLibre\Tideman\Candidate;
 use PivotLibre\Tideman\MarginList;
 use PivotLibre\Tideman\CandidateSet;
 use PivotLibre\Tideman\CandidateList;
+use PivotLibre\Tideman\RankedPairsGraph;
 use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\TieBreakingMarginComparator;
 
 class RankedPairsCalculator
 {
-    private $tieBreakingBallot;
-    private const CANDIDATE_ATTRIBUTE_NAME = "candidate";
+    private $tieBreakingMarginComparator;
+
     /**
      * Constructs a Ranked Pairs Calculator, verifying that the specified tie-breaking ballot contains no ties.
      * Retains a copy of the tie-breaking Ballot so that the caller may modify the parameterized Ballot without
@@ -29,46 +29,55 @@ class RankedPairsCalculator
         if ($tieBreakingBallot->containsTies()) {
             throw new InvalidArgumentException("Tie breaking ballot must not contain any ties. $tieBreakingBallot");
         } else {
-            $this->tieBreakingBallot = clone $tieBreakingBallot;
+            $myTieBreakingBallot = clone $tieBreakingBallot;
+            $tieBreaker = new TotallyOrderedBallotMarginTieBreaker(new CandidateComparator($myTieBreakingBallot));
+            $this->tieBreakingMarginComparator = new TieBreakingMarginComparator($tieBreaker);
         }
     }
 
     /**
      * @param int number of winners to return.
      * @return CandidateList in which the zeroth Candidate is the most preferred, the first Candidate is the second most
-     * preferred, and so on until the last Candidate who is the least preferred.
+     * preferred, and so on until the last Candidate who is the least preferred. Ties are broken according
      */
     public function calculate(int $numWinners, NBallot ...$nBallots) : CandidateList
     {
+        $agenda = new Agenda(...$nBallots);
         $candidatesInOrder = [];
-        $candidatesToSkip = new CandidateSet();
         while (sizeof($candidatesInOrder) < $numWinners) {
-            $winnersFromThisRound = $this->getWinner($candidatesToSkip, ...$nBallots)->toArray();
+            $winnersFromThisRound = $this->getOneRoundOfWinners($agenda, ...$nBallots)->toArray();
             array_push($candidatesInOrder, ...$winnersFromThisRound);
-            $candidatesToSkip->add(...$winnersFromThisRound);
+            $agenda->removeCandidates(...$winnersFromThisRound);
         }
-        $winners = new CandidateList($numWinners);
+        $winners = new CandidateList(...$candidatesInOrder);
+        return $winners;
     }
 
-
     /**
-     * @param CandidateList a liist of Candidates to skip. The Candidates needn't be in any particular order.
+     * @param Agenda of Candidates to consider in this round. Not all Candidates on the Ballots need be considered.
+     * Chiefly, successive rounds of determining winners will have a smaller and smaller Agenda as fewer candidates
+     * are elegible to be winners.
      * @param ... NBallot the ballots submitted to decide the election.
      * @return CandidateList, usually of length one, but possibly greater if the result was a tie.
      */
-    public function getWinner(CandiateSet $candidatesToSkip, NBallot ...$nBallots) : CandidateList
+    public function getOneRoundOfWinners(Agenda $agenda, NBallot ...$nBallots) : CandidateList
     {
-        $marginList = $this->getMargins($candidatesToSkip, ...$nBallots);
+        $marginList = $this->getMargins($agenda, ...$nBallots);
         $sortedMarginList = $this->sortMargins($marginList);
-        $rankedCandidates = $this->rankCandidates($sortedMarginList);
+        $rankedPairsGraph = new RankedPairsGraph();
+        $rankedPairsGraph->addMargins($sortedMarginList);
+        $tiedWinners = $rankedPairsGraph->getWinningCandidates();
+        $sortedWinners = $this->breakTies($tiedWinners, $this->tieBreakingMarginComparator);
+        return $sortedWinners;
     }
+
     /**
      * Tallies the Margins and returns the Margins with difference properties >= 0
      */
-    public function getMargins(NBallot ...$nBallots) : MarginList
+    public function getMargins(Agenda $agenda, NBallot ...$nBallots) : MarginList
     {
         $marginCalculator = new MarginCalculator();
-        $marginRegistry = $marginCalculator->calculate(...$nBallots);
+        $marginRegistry = $marginCalculator->calculate($agenda, ...$nBallots);
         $allMargins = $marginRegistry->getAll();
         $positiveOrZeroMargins = array_filter($allMargins->toArray(), function (Margin $margin) {
             return $margin->getDifference() >= 0;
@@ -78,50 +87,30 @@ class RankedPairsCalculator
     }
 
     /**
-     * Sorts all Margins in order of descending getDifference(). When Margins have the same difference property, ties
-     * are broken according to Tideman and Zavist's 1989 "Complete Independence of Clones" rule using the Ballot passed
-     * to this instance's constructor.
+     * Sorts all Margins in order of descending getDifference().
      */
     public function sortMargins(MarginList $marginList) : MarginList
     {
-        $tieBreaker = new TotallyOrderedBallotMarginTieBreaker(new CandidateComparator($this->tieBreakingBallot));
-        $tieBreakingMarginComparator = new TieBreakingMarginComparator($tieBreaker);
-        $sortedMargins = usort($positiveOrZeroMargins, $tieBreakingMarginComparator);
+
+        $sortedMargins = usort($positiveOrZeroMargins, function (Margin $a, Margin $b) {
+            //DESCENDING getDifference requires that $a's value be subtracted from $b's value.
+            return $b->getDifference() - $a->getDifference();
+        });
         $sortedMarginList = new MarginList(...$sortedMargins);
         return $sortedMargins;
     }
 
     /**
-     * Locks in Margins in order of descending difference, ignoring any Margins that would contradict a
-     * previously-locked-in Margin.
-     * @param MarginList a MarginList whose Margins are sorted in order of descending difference and all differences are
-     * greater than or equal to zero.
-     * @return CandidateList - a list of Candidates in descending order of preference. Candidates that are more
-     * preferred have a lower index than Candidates that are less preferred.
+     * Sort a list of tied candidates according to a TieBreakingMarginComparator
      */
-    public function rankCandidates(MarginList $sortedMarginList) : CandidateList
-    {
-
-        foreach ($sortedMarginList as $margin) {
-            $winnerVertex = $this->addCandidateToGraph($margin->getWinner(), $graph);
-            $loserVertex = $this->addCandidateToGraph($margin->getLoser(), $graph);
-            $newEdge = $winnerVertex->createEdgeTo($loserVertex);
-            $newEdge->setWeight($margin->getDifference());
-
-            throw new Exception("not finished");
-            // check if there's a cycle
-            //if cyle, remove $newEdge from the graph
-        }
-
-        //find the graph's source node
-        //get a linear order
-    }
-
-    protected function addCandidateToGraph(Candidate $candidate, Graph $graph) : Vertex {
-        $id = $candidate->getId();
-        if (!$graph->hasVertex($id)) {
-            $vertex = $graph->createVertex($id);
-            $vertex->setAttribute(self::CANDIDATE_ATTRIBUTE_NAME, $candidate);
-        }
+    public function breakTies(
+        CandidateList $tiedCandidates,
+        TieBreakingMarginComparator $tieBreakingMarginComparator
+    ) : CandidateList {
+        $tiedCandidatesArray = $tiedCandidates->toArray();
+        usort($tiedCandidatesArray, $tieBreakingMarginComparator);
+        //give a better name
+        $sortedCandidates = $tiedCandidatesArray;
+        return $sortedCandidates;
     }
 }
