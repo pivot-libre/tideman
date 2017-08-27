@@ -48,8 +48,8 @@ class TotallyOrderedBallotMarginTieBreaker implements MarginTieBreaker
      */
     public function breakTie(Margin $a, Margin $b) : bool
     {
-        //initialize to something invalid to ensure that a TypeError will be thrown if the body of the method fails to
-        //assign a correct value;
+        //initialize to something invalid to ensure that a TypeError will be thrown on return if the body of the method
+        //fails to assign a correct value;
         $aIsMorePreferredThanB = null;
 
         //if the Margins are actually tied

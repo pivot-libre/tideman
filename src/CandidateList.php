@@ -1,17 +1,19 @@
 <?php
 namespace PivotLibre\Tideman;
 
+use PivotLibre\Tideman\CandidateComparator;
+
 class CandidateList extends GenericCollection
 {
     public function __construct(Candidate ...$candidates)
     {
         $this->values = $candidates;
     }
-
-    // public function add(Candidate ...$candidates)
-    // {
-    //     foreach ($candidates as $candidate) {
-    //         $this->values[] = $candidate;
-    //     }
-    // }
+    /**
+     * Re-orders the Candidates in this CandidateList list according to the parameterized CandidateComparator
+     */
+    public function sort(CandidateComparator $comparator) : void
+    {
+        usort($this->values, $comparator);
+    }
 }
