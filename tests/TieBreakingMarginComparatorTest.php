@@ -42,10 +42,40 @@ class TieBreakingMarginComparatorTest extends TestCase
         $this->instance = new TieBreakingMarginComparator($tieBreaker);
     }
 
-    public function testBasicCompaison() : void
+    public function testNonTiedComparison() : void
     {
         $marginA = new Margin($this->alice, $this->bob, 10);
         $marginB = new Margin($this->dave, $this->claire, 5);
         $this->assertGreaterThan(0, $this->instance->compare($marginA, $marginB));
+        $this->assertLessThan(0, $this->instance->compare($marginB, $marginA));
+    }
+
+    public function testTiedMarginsWithTiedWinners() : void
+    {
+        //in these test margins, the differences are the same and the winners are the same Candidate
+        $marginA = new Margin($this->alice, $this->bob, 10);
+        $marginB = new Margin($this->alice, $this->claire, 10);
+        $this->assertGreaterThan(0, $this->instance->compare($marginA, $marginB));
+        $this->assertLessThan(0, $this->instance->compare($marginB, $marginA));
+    }
+
+    public function testTiedMarginsWithNonTiedWinners() : void
+    {
+        //in these test margins, the differences are the same and the winners are different Candidates
+        $marginA = new Margin($this->alice, $this->bob, 10);
+        $marginB = new Margin($this->dave, $this->claire, 10);
+        $this->assertGreaterThan(0, $this->instance->compare($marginA, $marginB));
+        $this->assertLessThan(0, $this->instance->compare($marginB, $marginA));
+    }
+
+    public function testInvoke() : void
+    {
+        //in these test margins, the differences are the same and the winners are different Candidates
+        $marginA = new Margin($this->alice, $this->bob, 10);
+        $marginB = new Margin($this->dave, $this->claire, 10);
+        $margins = [$marginB, $marginA];
+        $expected = [$marginB, $marginA];
+        $actual = usort($margins, $this->instance);
+        $this->assertEquals($expected, $margins);
     }
 }

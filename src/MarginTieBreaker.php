@@ -11,19 +11,10 @@ interface MarginTieBreaker
 {
 
     /**
-     * If Margin $a should be considered to be more preferred than $b, return TRUE. Otherwise, if Margin $b should be
-     * considered to be more preferred than $a, return FALSE. If the Margins' difference properties are not equal, then
-     * throw an InvalidArgumentException.
+     * @return int If Margin $a should be considered to be more preferred than $b, return an integer greater than 0.
+     * If Margin $b should be considered to be more preferred than $a, return an integer less than 0. If the Margins'
+     * difference properties are not equal, then throw an InvalidArgumentException.
+     * Implementations of this method should never return zero, because a zero would imply a tie.
      */
-    public function breakTie(Margin $a, Margin $b) : bool;
-
-    /**
-     * Given a ListOfMarginLists, produce a MarginList, ordering the Margins such that:
-     * A) The Margins' difference properties decrease monotonically from left (low numeric index) to right (high
-     *    numeric index)
-     * B) Margins with identical difference properties are ordered such that the Margins that won the tie breaking
-     *    appear at a lower index in the list than the Margin that lost the tie breaking.
-     *
-     */
-    // public function breakTies(ListOfMarginLists $ListOfMarginLists) : MarginList;
+    public function breakTie(Margin $a, Margin $b) : int;
 }

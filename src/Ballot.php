@@ -3,6 +3,9 @@ namespace PivotLibre\Tideman;
 
 class Ballot extends GenericCollection
 {
+    /**
+     * @param The most-preferred Candidates come first (low index). The least-preferred Candidates go last (high index).
+     */
     public function __construct(CandidateList ...$listsOfCandidates)
     {
         $this->values = $listsOfCandidates;

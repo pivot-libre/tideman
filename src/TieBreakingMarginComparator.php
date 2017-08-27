@@ -32,15 +32,13 @@ class TieBreakingMarginComparator
     {
         $differenceOfStrength = $a->getDifference() - $b->getDifference();
         if (0 == $differenceOfStrength) {
-            $this->logger->info("Tie between two Margins:\n$a\n$b\n");
-            $aMorePreferredThanB = ($this->tieBreaker)($a, $b);
-            if ($aMorePreferredThanB) {
-                $result = 1;
-                $this->logger->info("Tie-breaking results:\nWinner:\n$a\nLoser:$b\n");
-            } else {
-                $result = -1;
-                $this->logger->info("Tie-breaking results:\nWinner:\n$b\nLoser:$a\n");
-            }
+            // $this->logger->info("Tie between two Margins:\n$a\n$b\n");
+            echo "Tie between two Margins:\n$a\n$b\n";
+            $result = $this->tieBreaker->breakTie($a, $b);
+            $winner = $result > 0 ? $a : $b;
+            $loser = $result > 0 ? $b : $a;
+            // $this->logger->info("Tie-breaking results:\nWinner:\n$winner\nLoser:\n$loser\n");
+            echo "Tie-breaking results:\nWinner:\n$winner\nLoser:\n$loser\n";
         } else {
             $result = $differenceOfStrength;
         }
