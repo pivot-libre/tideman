@@ -12,12 +12,14 @@ This algorithm first computes the difference in popular support between all pair
  * Independence of Clones as a Criterion for Voting Rules. Tideman, T.N. Soc Choice Welfare (1987) 4: 185. [https://doi.org/10.1007/BF00433944](https://doi.org/10.1007/BF00433944)
  * Complete Independence of Clones in the Ranked Pairs Rule. Zavist, T.M. & Tideman, T.N. Soc Choice Welfare (1989) 6: 167. [https://doi.org/10.1007/BF00303170](https://doi.org/10.1007/BF00303170)
 
+The original 1987 Ranked Pairs paper lacked a tie-breaking rule. The follow-up 1989 paper added a tie-breaking rule.
+
 ### Tie-Breaking
-In elections with a small number of voters, it is common to encounter margins of equal difference. The sort order of margins of equal difference needs to be determined by a tie breaking rule. In this case, the tie-breaking rule is to sort the tied margins according to a tie-breaking ballot. For the sake of simplicity, this implementation requires that the tie-breaking ballot contain no ties itself.
+In elections with a small number of voters, it is common to encounter margins of equal difference. The sort order of margins of equal difference needs to be determined by a tie-breaking rule. In this case, the tie-breaking rule is to sort the tied margins according to a tie-breaking ballot. For the sake of simplicity, this implementation requires that the tie-breaking ballot contain no ties itself.
 
-This deviates from Zavist and Tideman's 1989 paper, which permitted a tie-breaking ballot to contain ties itself. This implementation also deviates from the 1989 paper in that it uses the tie-breaking ballot to break ties for all margins of identical strength, whereas the paper advocated for the tie-breaking rule to be used only to break ties between margins whose differences were exactly zero.
+This deviates from Zavist and Tideman's 1989 paper, which permitted a tie-breaking ballot to contain ties itself. This implementation also deviates from the 1989 paper in that it uses the tie-breaking ballot to break ties for all margins of identical strength, whereas the paper advocated that the tie-breaking rule be used only to break ties between margins whose differences were exactly zero.
 
-If the algorithm finds that a completed graph contains multiple source nodes, then all of the candidates associated with the source nodes are considered winners and their order is determined by the tie-breaking ballot.
+If this implementation finds that a completed graph contains multiple source nodes, then all of the candidates associated with the source nodes are considered winners and their order is determined by the tie-breaking ballot.
 
 ### Additional Reading
  * Canadian MP Ron McKinnon's [condorcet.ca](https://condorcet.ca) offers an excellent layperson-oriented survey of Ranked Pairs. Be sure to explore the various in-page dropdown sections and tabs, as some important parts of the site’s content are hidden inside.
