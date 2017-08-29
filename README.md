@@ -9,8 +9,8 @@ This algorithm first computes the difference in popular support between all pair
 ## Details
 
 ### Papers
- * [Independence of Clones as a Criterion for Voting Rules. Tideman, T.N. Soc Choice Welfare (1987) 4: 185. https://doi.org/10.1007/BF00433944](https://doi.org/10.1007/BF00433944)
- * [Complete Independence of Clones in the Ranked Pairs Rule. Zavist, T.M. & Tideman, T.N. Soc Choice Welfare (1989) 6: 167. https://doi.org/10.1007/BF00303170](https://doi.org/10.1007/BF00303170)
+ * Independence of Clones as a Criterion for Voting Rules. Tideman, T.N. Soc Choice Welfare (1987) 4: 185. [https://doi.org/10.1007/BF00433944](https://doi.org/10.1007/BF00433944)
+ * Complete Independence of Clones in the Ranked Pairs Rule. Zavist, T.M. & Tideman, T.N. Soc Choice Welfare (1989) 6: 167. [https://doi.org/10.1007/BF00303170](https://doi.org/10.1007/BF00303170)
 
 ### Tie-Breaking
 In elections with a small number of voters, it is common to encounter margins of equal difference. The sort order of margins of equal difference needs to be determined by a tie breaking rule. In this case, the tie-breaking rule is to sort the tied margins according to a tie-breaking ballot. For the sake of simplicity, this implementation requires that the tie-breaking ballot contain no ties itself.
@@ -19,6 +19,12 @@ This deviates from Zavist and Tideman's 1989 paper, which permitted a tie-breaki
 
 If the algorithm finds that a completed graph contains multiple source nodes, then all of the candidates associated with the source nodes are considered winners and their order is determined by the tie-breaking ballot.
 
+### Additional Reading
+ * Canadian MP Ron McKinnon's [condorcet.ca](https://condorcet.ca) offers an excellent layperson-oriented survey of Ranked Pairs. Be sure to explore the various in-page dropdown sections and tabs, as some important parts of the site’s content are hidden inside.
+ * The Cambridge Press Handbook of Computational Social Choice is available as a free pdf. Tideman’s Ranked Pairs Algorithm is described on page 98-101.
+   * [Direct Link](http://www.cambridge.org/download_file/932961)
+   * [Book Homepage](http://www.cambridge.org/us/academic/subjects/computer-science/artificial-intelligence-and-natural-language-processing/handbook-computational-social-choice?format=HB&isbn=9781107060432#GTKsebzTk5Wxs756.97)
+ * An alternate description of the Tideman-Zavist tie-breaking rule is in [an electorama mailing list post by Dr. Markus Schulze](http://lists.electorama.com/pipermail/election-methods-electorama.com/2004-May/078350.html). The explanation is just a few lines long, starting with "Thomas Zavist suggested that...".
 
 ## Badges!
 
