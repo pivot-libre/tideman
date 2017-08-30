@@ -59,15 +59,15 @@ class TotallyOrderedBallotMarginTieBreakerTest extends TestCase
     {
         $marginA = new Margin($this->alice, $this->bob, 10);
         $marginB = new Margin($this->bob, $this->claire, 10);
-        $this->assertGreaterThan(0, $this->instance->breakTie($marginA, $marginB));
-        $this->assertLessThan(0, $this->instance->breakTie($marginB, $marginA));
+        $this->assertLessThan(0, $this->instance->breakTie($marginA, $marginB));
+        $this->assertGreaterThan(0, $this->instance->breakTie($marginB, $marginA));
     }
 
     public function testTiedWinners() : void
     {
         $marginA = new Margin($this->alice, $this->bob, 10);
         $marginB = new Margin($this->alice, $this->claire, 10);
-        $this->assertGreaterThan(0, $this->instance->breakTie($marginA, $marginB));
-        $this->assertLessThan(0, $this->instance->breakTie($marginB, $marginA));
+        $this->assertLessThan(0, $this->instance->breakTie($marginA, $marginB));
+        $this->assertGreaterThan(0, $this->instance->breakTie($marginB, $marginA));
     }
 }

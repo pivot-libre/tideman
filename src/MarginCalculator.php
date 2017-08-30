@@ -53,6 +53,26 @@ class MarginCalculator
         $updatedMargin = $marginToUpdate->getDifference() + $amountToAdd;
         $marginToUpdate->setDifference($updatedMargin);
     }
+
+    /**
+     * @param int comparisonResult, any valid int as provided by CandidateComparator->compare()
+     * @return int - 0 if comparisonResult is 0
+     * -1 if comparisonResult is positive
+     * 1 if comparisonResult is negative
+     * The result of this function can be multiplied by NBallot->getCount() to determine how much
+     * a Margin should be incremented.
+     */
+    public function getComparisonFactor(int $comparisonResult) : int
+    {
+        //if comparison result is zero, then the candidates are tied
+        if (0 === $comparisonResult) {
+            $comparisonFactor = 0;
+        } else {
+            $comparisonFactor = $comparisonResult < 0 ? 1 : -1;
+        }
+        return $comparisonFactor;
+    }
+
     /**
      * @return a MarginRegistry whose Margins completely describe the pairwise
      * difference in popular support between every Candidate.
@@ -67,7 +87,7 @@ class MarginCalculator
             $comparator = new CandidateComparator($nBallot);
             $ballotCount = $nBallot->getCount();
             $candidatesList = $agenda->getCandidates();
-            //it is very important to convert this to array, otherwise count() will always return 1
+            //it is very important to convert this to an array, otherwise count() will always return 1
             $candidates = $candidatesList->toArray();
             $candidatesCount = count($candidates);
             //Loop through all combinations of candidates in the Agenda.
@@ -75,7 +95,8 @@ class MarginCalculator
                 for ($innerCounter = $outerCounter + 1; $innerCounter < $candidatesCount; ++$innerCounter) {
                     $outerCandidate = $candidates[$outerCounter];
                     $innerCandidate = $candidates[$innerCounter];
-                    $comparisonFactor = $comparator->compare($outerCandidate, $innerCandidate);
+                    $comparisonResult = $comparator->compare($outerCandidate, $innerCandidate);
+                    $comparisonFactor = $this->getComparisonFactor($comparisonResult);
                     $updateAmount = $comparisonFactor * $ballotCount;
                     $this->incrementMarginInRegistry(
                         $outerCandidate,

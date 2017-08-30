@@ -69,9 +69,9 @@ class CandidateComparator
      * @param Candidate $a
      * @param Candidate $b
      * @return an int :
-     *  1 if Candidate $a is more preferred than Candidate $b
+     *  a negative integer if Candidate $a is more preferred than Candidate $b
      *  0 if Candidate $a and Candidate $b are tied
-     * -1 if Candidate $b is more preferred than Candidate $a
+     *  a postive integer if Candidate $b is more preferred than Candidate $a
      */
     public function compare(Candidate $a, Candidate $b) : int
     {
@@ -93,14 +93,7 @@ class CandidateComparator
             $aRank = $this->candidateIdToRank[$aId];
             $bRank = $this->candidateIdToRank[$bId];
 
-            //the candidate with the lower rank is the winner
-            if ($aRank < $bRank) {
-                $result = 1;
-            } elseif ($aRank > $bRank) {
-                $result = -1;
-            } else {
-                $result = 0;
-            }
+            $result = $aRank - $bRank;
             return $result;
         }
     }

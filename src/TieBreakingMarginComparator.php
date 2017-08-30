@@ -21,8 +21,8 @@ class TieBreakingMarginComparator
      * @param Margin $a
      * @param Margin $b
      * @return an int :
-     *  A positive int if Margin $a is more preferred than Margin $b
-     *  A negative int if Margin $b is more preferred than Margin $a
+     *  A negative int if Margin $a is more preferred than Margin $b
+     *  A positive int if Margin $b is more preferred than Margin $a
      *
      * This function should never return zero. In the event of a tie, it should use the TieBreaker specified in the
      * constructor to determine a nonzero integer indicating which Margin should be treated as though it were more
@@ -30,7 +30,7 @@ class TieBreakingMarginComparator
      */
     public function compare(Margin $a, Margin $b) : int
     {
-        $differenceOfStrength = $a->getDifference() - $b->getDifference();
+        $differenceOfStrength = $b->getDifference() - $a->getDifference();
         if (0 == $differenceOfStrength) {
             // $this->logger->info("Tie between two Margins:\n$a\n$b\n");
             echo "Tie between two Margins:\n$a\n$b\n";

@@ -38,8 +38,8 @@ class CandidateComparatorTest extends TestCase
             ),
             $instance->getCandidateIdToRankMap()
         );
-        $this->assertEquals(1, $instance->compare($this->alice, $this->bob));
-        $this->assertEquals(-1, $instance->compare($this->bob, $this->alice));
+        $this->assertEquals(-1, $instance->compare($this->alice, $this->bob));
+        $this->assertEquals(1, $instance->compare($this->bob, $this->alice));
     }
     public function testGetWinnerBobAndLoserAlice() : void
     {
@@ -56,8 +56,8 @@ class CandidateComparatorTest extends TestCase
             ),
             $instance->getCandidateIdToRankMap()
         );
-        $this->assertEquals(1, $instance->compare($this->bob, $this->alice));
-        $this->assertEquals(-1, $instance->compare($this->alice, $this->bob));
+        $this->assertEquals(-1, $instance->compare($this->bob, $this->alice));
+        $this->assertEquals(1, $instance->compare($this->alice, $this->bob));
     }
     public function testGetCandidateIdToRankMapFromEmptyBallot() : void
     {
@@ -119,10 +119,10 @@ class CandidateComparatorTest extends TestCase
         );
         $this->assertEquals(0, $instance->compare($this->alice, $this->bob));
         $this->assertEquals(0, $instance->compare($this->bob, $this->alice));
-        $this->assertEquals(1, $instance->compare($this->alice, $this->claire));
-        $this->assertEquals(1, $instance->compare($this->bob, $this->claire));
-        $this->assertEquals(-1, $instance->compare($this->claire, $this->alice));
-        $this->assertEquals(-1, $instance->compare($this->claire, $this->bob));
+        $this->assertEquals(-1, $instance->compare($this->alice, $this->claire));
+        $this->assertEquals(-1, $instance->compare($this->bob, $this->claire));
+        $this->assertEquals(1, $instance->compare($this->claire, $this->alice));
+        $this->assertEquals(1, $instance->compare($this->claire, $this->bob));
     }
     public function testGetCandidateIdToRankMapFromMixedNotTiedAndTiedBallot() : void
     {
@@ -142,10 +142,10 @@ class CandidateComparatorTest extends TestCase
         );
         $this->assertEquals(0, $instance->compare($this->alice, $this->bob));
         $this->assertEquals(0, $instance->compare($this->bob, $this->alice));
-        $this->assertEquals(-1, $instance->compare($this->alice, $this->claire));
-        $this->assertEquals(-1, $instance->compare($this->bob, $this->claire));
-        $this->assertEquals(1, $instance->compare($this->claire, $this->alice));
-        $this->assertEquals(1, $instance->compare($this->claire, $this->bob));
+        $this->assertEquals(1, $instance->compare($this->alice, $this->claire));
+        $this->assertEquals(1, $instance->compare($this->bob, $this->claire));
+        $this->assertEquals(-1, $instance->compare($this->claire, $this->alice));
+        $this->assertEquals(-1, $instance->compare($this->claire, $this->bob));
     }
     public function testGetCandidateIdToRankMapFailsOnBallotWithDuplicates() : void
     {

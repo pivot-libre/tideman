@@ -9,7 +9,7 @@ use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\SingleBallotMarginTieBreaker;
 
 /**
- * This class breaks ties using a simplified version of the tie breaking rule published in Tideman and Zavist's 1989
+ * This class breaks ties using a simplified version of the tie-breaking rule published in Tideman and Zavist's 1989
  * paper "Complete Independence of Clones". The simplification is that this class requires that
  * the TBRC (aka Ballot) contains no ties.
  */
@@ -44,7 +44,9 @@ class TotallyOrderedBallotMarginTieBreaker implements MarginTieBreaker
      * InvalidArgumentException because they are the same Margin. If the Margin's difference properties are not equal,
      * throw an InvalidArgumentException because they are not tied.
      *
-     * @return int - positive if $a is preferred over $b, negative if $b is preferred over $a.
+     * @return int
+     *   a negative int if $a is preferred over $b
+     *   a postive int if $b is preferred over $a.
      */
     public function breakTie(Margin $a, Margin $b) : int
     {
