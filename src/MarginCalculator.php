@@ -11,7 +11,8 @@ class MarginCalculator
      * Register a Margin for all possible pairs of Candidates described in an Agenda. If the agenda contains N
      * Candidates, then this method should register (N^2) - N = N(N - 1) Candidates.
      *
-     * @todo #7 Decide whether this method should be a part of the MarginCalculator class or the Agenda class.
+     * @todo This basically registers all non-duplicating permutations of a list of Candidates. Consider moving this to
+     * a more generic function. http://php.net/manual/en/language.generators.syntax.php
      */
     public function initializeRegistry(Agenda $agenda) : MarginRegistry
     {
@@ -49,23 +50,44 @@ class MarginCalculator
         int $amountToAdd
     ) : void {
         $marginToUpdate = $registry->get($winner, $loser);
-        $updatedMargin = $marginToUpdate->getMargin() + $amountToAdd;
-        $marginToUpdate->setMargin($updatedMargin);
+        $updatedMargin = $marginToUpdate->getDifference() + $amountToAdd;
+        $marginToUpdate->setDifference($updatedMargin);
     }
+
+    /**
+     * @param int comparisonResult, any valid int as provided by CandidateComparator->compare()
+     * @return int - 0 if comparisonResult is 0
+     * -1 if comparisonResult is positive
+     * 1 if comparisonResult is negative
+     * The result of this function can be multiplied by NBallot->getCount() to determine how much
+     * a Margin should be incremented.
+     */
+    public function getComparisonFactor(int $comparisonResult) : int
+    {
+        //if comparison result is zero, then the candidates are tied
+        if (0 === $comparisonResult) {
+            $comparisonFactor = 0;
+        } else {
+            $comparisonFactor = $comparisonResult < 0 ? 1 : -1;
+        }
+        return $comparisonFactor;
+    }
+
     /**
      * @return a MarginRegistry whose Margins completely describe the pairwise
      * difference in popular support between every Candidate.
+     * @todo this function generates all non-duplicating combinations of Candidates. Consider moving the combination
+     * logic elsewhere. http://php.net/manual/en/language.generators.syntax.php
      */
-    public function calculate(NBallot ...$nBallots) : MarginRegistry
+    public function calculate(Agenda $agenda, NBallot ...$nBallots) : MarginRegistry
     {
-        $agenda = new Agenda(...$nBallots);
         $registry = $this->initializeRegistry($agenda);
 
         foreach ($nBallots as $nBallot) {
             $comparator = new CandidateComparator($nBallot);
             $ballotCount = $nBallot->getCount();
             $candidatesList = $agenda->getCandidates();
-            //it is very important to convert this to array, otherwise count() will always return 1
+            //it is very important to convert this to an array, otherwise count() will always return 1
             $candidates = $candidatesList->toArray();
             $candidatesCount = count($candidates);
             //Loop through all combinations of candidates in the Agenda.
@@ -73,7 +95,8 @@ class MarginCalculator
                 for ($innerCounter = $outerCounter + 1; $innerCounter < $candidatesCount; ++$innerCounter) {
                     $outerCandidate = $candidates[$outerCounter];
                     $innerCandidate = $candidates[$innerCounter];
-                    $comparisonFactor = $comparator->compare($outerCandidate, $innerCandidate);
+                    $comparisonResult = $comparator->compare($outerCandidate, $innerCandidate);
+                    $comparisonFactor = $this->getComparisonFactor($comparisonResult);
                     $updateAmount = $comparisonFactor * $ballotCount;
                     $this->incrementMarginInRegistry(
                         $outerCandidate,

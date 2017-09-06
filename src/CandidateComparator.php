@@ -5,12 +5,27 @@ use \InvalidArgumentException;
 
 class CandidateComparator
 {
+    private $ballot;
     private $candidateIdToRank;
+
+    /**
+     * @param a Ballot. The CandidateComparator will store a copy of the Ballot. The caller of this constructor may
+     * subsequently modify the parameterized Ballot without affecting this CandidateComparator.
+     */
     public function __construct(Ballot $ballot)
     {
+        $this->ballot = clone $ballot;
         $this->candidateIdToRank = $this->makeCandidateIdToRankMap($ballot);
     }
 
+    /**
+     * @return a copy of the Ballot that this instance uses to inform its comparisons. The returned Ballot may be
+     * modified without affecting this CandidateComparator.
+     */
+    public function getBallot() : Ballot
+    {
+        return clone $this->ballot;
+    }
     /**
      * Return an associative array that maps Candidates' ids to an integer. The integer represents the rank of the
      * Candidate within the Ballot. A smaller integer indicates higher preference. An integer of zero is the most
@@ -54,9 +69,9 @@ class CandidateComparator
      * @param Candidate $a
      * @param Candidate $b
      * @return an int :
-     *  1 if Candidate $a is more preferred than Candidate $b
+     *  a negative integer if Candidate $a is more preferred than Candidate $b
      *  0 if Candidate $a and Candidate $b are tied
-     * -1 if Candidate $b is more preferred than Candidate $a
+     *  a postive integer if Candidate $b is more preferred than Candidate $a
      */
     public function compare(Candidate $a, Candidate $b) : int
     {
@@ -78,14 +93,7 @@ class CandidateComparator
             $aRank = $this->candidateIdToRank[$aId];
             $bRank = $this->candidateIdToRank[$bId];
 
-            //the candidate with the lower rank is the winner
-            if ($aRank < $bRank) {
-                $result = 1;
-            } elseif ($aRank > $bRank) {
-                $result = -1;
-            } else {
-                $result = 0;
-            }
+            $result = $aRank - $bRank;
             return $result;
         }
     }

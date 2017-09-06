@@ -40,4 +40,10 @@ class MarginRegistry
     {
         return sizeof($this->registry);
     }
+    public function getAll() : MarginList
+    {
+        $marginsOnly = array_values($this->registry);
+        $marginsList = new MarginList(...$marginsOnly);
+        return $marginsList;
+    }
 }

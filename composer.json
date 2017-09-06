@@ -3,7 +3,9 @@
     "description": "Implementation of the Tideman ranked pair algorithm",
     "type": "library",
     "require": {
-        "psr/log": "^1.0.2"
+        "psr/log": "^1.0.2",
+        "clue/graph": "0.9.0",
+        "graphp/algorithms": "0.8.1"
     },
     "require-dev": {
         "cadre/sniffs": "^0.1.0",

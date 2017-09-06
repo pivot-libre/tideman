@@ -19,42 +19,51 @@ class MarginTest extends TestCase
 
     public function testGetWinner() : void
     {
-        $margin = 0;
-        $instance = new Margin($this->alice, $this->bob, $margin);
+        $difference = 0;
+        $instance = new Margin($this->alice, $this->bob, $difference);
         $actualWinner = $instance->getWinner();
         $this->assertEquals($this->alice, $actualWinner);
     }
 
     public function testGetLoser() : void
     {
-        $margin = 0;
-        $instance = new Margin($this->alice, $this->bob, $margin);
+        $difference = 0;
+        $instance = new Margin($this->alice, $this->bob, $difference);
         $actualLoser = $instance->getLoser();
         $this->assertEquals($this->bob, $actualLoser);
     }
 
     public function testGetMargin() : void
     {
-        $margin = 42;
-        $instance = new Margin($this->alice, $this->bob, $margin);
-        $actualMargin = $instance->getMargin();
-        $this->assertEquals($margin, $actualMargin);
+        $difference = 42;
+        $instance = new Margin($this->alice, $this->bob, $difference);
+        $actualMargin = $instance->getDifference();
+        $this->assertEquals($difference, $actualMargin);
     }
     public function testSetMargin() : void
     {
         $originalMargin = 42;
         $instance = new Margin($this->alice, $this->bob, $originalMargin);
         $newMargin = 3;
-        $instance->setMargin($newMargin);
-        $actualMargin = $instance->getMargin();
+        $instance->setDifference($newMargin);
+        $actualMargin = $instance->getDifference();
         $this->assertEquals($newMargin, $actualMargin);
     }
-    public function testToString()
+    public function testToStringPositiveDifference()
     {
-        $margin = 21;
-        $instance = new Margin($this->bob, $this->alice, $margin);
+        $difference = 21;
+        $instance = new Margin($this->bob, $this->alice, $difference);
 
-        $expectedToString = $this->bob->getId() . " --" . $margin . "--> " . $this->alice->getId();
+        $expectedToString = "(" . $this->bob->getId() . " --(" . $difference . ")--> " . $this->alice->getId() . ")";
+        $actualToString = $instance->__toString();
+        $this->assertEquals($expectedToString, $actualToString);
+    }
+    public function testToStringNegativeDifference()
+    {
+        $difference = -21;
+        $instance = new Margin($this->alice, $this->bob, $difference);
+
+        $expectedToString = "(" . $this->alice->getId() . " --(" . $difference . ")--> " . $this->bob->getId() . ")";
         $actualToString = $instance->__toString();
         $this->assertEquals($expectedToString, $actualToString);
     }

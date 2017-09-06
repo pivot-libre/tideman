@@ -6,21 +6,30 @@ namespace PivotLibre\Tideman;
  */
 class Agenda
 {
-    private $candidateList;
+    private $candidateSet;
 
     /**
      * Creates an Agenda consisting of all unique Candidates from the parameterized Ballots.
      */
     public function __construct(Ballot ...$ballots)
     {
-        $candidateSet = array();
+        $this->candidateSet = new CandidateSet();
+        $this->addCandidatesFromBallots(...$ballots);
+    }
+
+    public function removeCandidates(Candidate ...$candidates)
+    {
+        $this->candidateSet->remove(...$candidates);
+    }
+
+    public function addCandidatesFromBallots(Ballot ...$ballots)
+    {
         foreach ($ballots as $ballot) {
             //a ballot has multiple CandidateLists
             foreach ($ballot as $candidateList) {
                 //a CandidateList has multiple Candidates
                 foreach ($candidateList as $candidate) {
-                    $candidateId = $candidate->getId();
-                    $candidateSet[$candidateId] = $candidate;
+                    $this->candidateSet->add($candidate);
                     /**
                      * Since we are only using the candidateId as the key, we will set the value to a new Candidate
                      * every time. That means that if the Ballots store differing information on the same Candidate,
@@ -29,15 +38,13 @@ class Agenda
                 }
             }
         }
-        $this->candidateList = new CandidateList(...array_values($candidateSet));
     }
-
     /**
      * Returns all Candidates for this election as a CandidateList.
      * The order of the Candidates within the returned list is not significant.
      */
     public function getCandidates() : CandidateList
     {
-        return $this->candidateList;
+        return new CandidateList(...array_values($this->candidateSet->toArray()));
     }
 }

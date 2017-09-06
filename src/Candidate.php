@@ -12,7 +12,7 @@ class Candidate implements LoggerAwareInterface
     private $id;
     private $name;
 
-    public function __construct(string $id, string $name)
+    public function __construct(string $id, string $name = "")
     {
         if (empty($id) || empty(trim($id))) {
             throw new InvalidArgumentException("A Candidate must have an id");
