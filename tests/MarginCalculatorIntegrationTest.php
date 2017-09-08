@@ -5,8 +5,27 @@ namespace PivotLibre\Tideman;
 use PivotLibre\Tideman\TestScenario1;
 use PivotLibre\Tideman\MarginCalculator;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\EventDispatcher\GenericEvent;
 
-//https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
+/**
+ * Each of these large tests were constructed as follows:
+ *
+ * Visit the Google Sheet:
+ * https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
+ *
+ * (Optionally create a worksheet describing a collection of ballots that are grouped with a count)
+ * Create a worksheet describing a collection of individuals' ballots.
+ * Create a worksheet describing the expected margins.
+ *
+ * Download the individual ballots worksheet as a TSV.
+ * Generate a php class from the TSV by running:
+ *     python parse_ballot.py <name_of_individual_ballot.tsv> > TestScenarioN.php
+ * Update the name of the generated class to match the name of the file it is inside of.
+ * Create a new method in MarginCalculatorIntegrationTest.
+ * Inside of the method, manually construct a list of expected margins by looking at the expected margins worksheet.
+ * Compare the expected margins and the actual margins using the `checkMargins()` utility method.
+ *
+ */
 class MarginCalculatorIntegrationTest extends TestCase
 {
     protected function checkMargins($expectedMargins, $ballots)
