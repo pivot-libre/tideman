@@ -22,6 +22,7 @@ class MarginCalculatorIntegrationTest extends TestCase
             $this->assertEquals($expectedMargin, $actualMargin, $marginAsString);
         }
     }
+
     public function testScenario1() : void
     {
         //@TODO: ask Lucas why these differ from his expected results by a constant factor.
@@ -87,6 +88,50 @@ class MarginCalculatorIntegrationTest extends TestCase
             ];
             $this->checkMargins($expectedMargins, $ballots);
     }
+
+    public function testScenario3() : void
+    {
+            $ballots = (new TestScenario3())->getBallots();
+            $expectedMargins = [
+                new Margin(new Candidate('CS'), new Candidate('MC'), -8),
+                new Margin(new Candidate('CS'), new Candidate('BT'), -4),
+                new Margin(new Candidate('CS'), new Candidate('FE'), 0),
+                new Margin(new Candidate('CS'), new Candidate('RR'), 3),
+                new Margin(new Candidate('CS'), new Candidate('MN'), -8),
+
+                new Margin(new Candidate('MC'), new Candidate('CS'), 8),
+                new Margin(new Candidate('MC'), new Candidate('BT'), 6),
+                new Margin(new Candidate('MC'), new Candidate('FE'), 0),
+                new Margin(new Candidate('MC'), new Candidate('RR'), 5),
+                new Margin(new Candidate('MC'), new Candidate('MN'), -2),
+
+                new Margin(new Candidate('BT'), new Candidate('CS'), 4),
+                new Margin(new Candidate('BT'), new Candidate('MC'), -6),
+                new Margin(new Candidate('BT'), new Candidate('FE'), 6),
+                new Margin(new Candidate('BT'), new Candidate('RR'), 6),
+                new Margin(new Candidate('BT'), new Candidate('MN'), -6),
+
+                new Margin(new Candidate('FE'), new Candidate('CS'), 0),
+                new Margin(new Candidate('FE'), new Candidate('MC'), 0),
+                new Margin(new Candidate('FE'), new Candidate('BT'), -6),
+                new Margin(new Candidate('FE'), new Candidate('RR'), 4),
+                new Margin(new Candidate('FE'), new Candidate('MN'), 0),
+
+                new Margin(new Candidate('RR'), new Candidate('CS'), -3),
+                new Margin(new Candidate('RR'), new Candidate('MC'), -5),
+                new Margin(new Candidate('RR'), new Candidate('BT'), -6),
+                new Margin(new Candidate('RR'), new Candidate('FE'), -4),
+                new Margin(new Candidate('RR'), new Candidate('MN'), -6),
+
+                new Margin(new Candidate('MN'), new Candidate('CS'), 8),
+                new Margin(new Candidate('MN'), new Candidate('MC'), 2),
+                new Margin(new Candidate('MN'), new Candidate('BT'), 6),
+                new Margin(new Candidate('MN'), new Candidate('FE'), 0),
+                new Margin(new Candidate('MN'), new Candidate('RR'), 6)
+            ];
+            $this->checkMargins($expectedMargins, $ballots);
+    }
+
     public function testTideman1987Example2() : void
     {
         $ballots = (new TestScenarioTideman1987Example2())->getBallots();
