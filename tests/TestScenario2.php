@@ -14,7 +14,7 @@ class TestScenario2
                     new Candidate("MM")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("FE")
@@ -35,7 +35,7 @@ class TestScenario2
                     new Candidate("CS")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("FE")
@@ -54,7 +54,7 @@ class TestScenario2
                     new Candidate("RR")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("FE")
@@ -75,7 +75,7 @@ class TestScenario2
                     new Candidate("CS")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 )
             ),
             new NBallot(
@@ -90,7 +90,7 @@ class TestScenario2
                     new Candidate("RR")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("CS")
@@ -102,7 +102,7 @@ class TestScenario2
                     new Candidate("MM")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("FE")
@@ -123,7 +123,7 @@ class TestScenario2
                     new Candidate("CS")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("FE")
@@ -138,7 +138,7 @@ class TestScenario2
                     new Candidate("MM")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("CS")
@@ -153,7 +153,7 @@ class TestScenario2
             new NBallot(
                 1,
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("RR")
@@ -174,7 +174,7 @@ class TestScenario2
                     new Candidate("RR")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("FE"),
@@ -193,7 +193,7 @@ class TestScenario2
                     new Candidate("MM")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("CS")
@@ -214,7 +214,7 @@ class TestScenario2
                     new Candidate("CS")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("RR")
@@ -232,7 +232,7 @@ class TestScenario2
                     new Candidate("MM")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("RR")
@@ -241,7 +241,7 @@ class TestScenario2
             new NBallot(
                 1,
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("CS")
@@ -259,7 +259,7 @@ class TestScenario2
             new NBallot(
                 1,
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("CS")
@@ -280,7 +280,7 @@ class TestScenario2
                     new Candidate("RR")
                 ),
                 new CandidateList(
-                    new Candidate("TT")
+                    new Candidate("BT")
                 ),
                 new CandidateList(
                     new Candidate("FE")
