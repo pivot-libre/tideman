@@ -6,6 +6,7 @@ use PivotLibre\Tideman\TestScenario1;
 use PivotLibre\Tideman\MarginCalculator;
 use PHPUnit\Framework\TestCase;
 
+//https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
 class MarginCalculatorIntegrationTest extends TestCase
 {
     protected function checkMargins($expectedMargins, $ballots)

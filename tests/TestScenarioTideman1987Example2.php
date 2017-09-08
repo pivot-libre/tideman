@@ -2,6 +2,7 @@
 
 namespace PivotLibre\Tideman;
 
+//https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
 class TestScenarioTideman1987Example2
 {
 
