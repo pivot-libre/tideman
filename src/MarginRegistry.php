@@ -28,8 +28,9 @@ class MarginRegistry
     {
         $key = $this->makeKey($winner, $loser);
         if (!array_key_exists($key, $this->registry)) {
+            $marginAsString = "{$winner->getId()} -> {$loser->getId()}";
             throw new InvalidArgumentException(
-                "No margin found for the given pair of Candidates."
+                "No margin found for the given pair of Candidates. $marginAsString"
             );
         } else {
             $margin = $this->registry[$key];
