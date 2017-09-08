@@ -132,6 +132,38 @@ class MarginCalculatorIntegrationTest extends TestCase
             $this->checkMargins($expectedMargins, $ballots);
     }
 
+    public function testScenario4() : void
+    {
+            $ballots = (new TestScenario4())->getBallots();
+            $expectedMargins = [
+                new Margin(new Candidate('CW'), new Candidate('BB'), 2),
+                new Margin(new Candidate('CW'), new Candidate('CS'), 2),
+                new Margin(new Candidate('CW'), new Candidate('BT'), 2),
+                new Margin(new Candidate('CW'), new Candidate('SY'), 2),
+
+                new Margin(new Candidate('BB'), new Candidate('CW'), -2),
+                new Margin(new Candidate('BB'), new Candidate('CS'), 20),
+                new Margin(new Candidate('BB'), new Candidate('BT'), 20),
+                new Margin(new Candidate('BB'), new Candidate('SY'), 20),
+
+                new Margin(new Candidate('CS'), new Candidate('CW'), -2),
+                new Margin(new Candidate('CS'), new Candidate('BB'), -20),
+                new Margin(new Candidate('CS'), new Candidate('BT'), 2),
+                new Margin(new Candidate('CS'), new Candidate('SY'), 2),
+
+                new Margin(new Candidate('BT'), new Candidate('CW'), -2),
+                new Margin(new Candidate('BT'), new Candidate('BB'), -20),
+                new Margin(new Candidate('BT'), new Candidate('CS'), -2),
+                new Margin(new Candidate('BT'), new Candidate('SY'), 0),
+
+                new Margin(new Candidate('SY'), new Candidate('CW'), -2),
+                new Margin(new Candidate('SY'), new Candidate('BB'), -20),
+                new Margin(new Candidate('SY'), new Candidate('CS'), -2),
+                new Margin(new Candidate('SY'), new Candidate('BT'), 0)
+            ];
+            $this->checkMargins($expectedMargins, $ballots);
+    }
+
     public function testTideman1987Example2() : void
     {
         $ballots = (new TestScenarioTideman1987Example2())->getBallots();
