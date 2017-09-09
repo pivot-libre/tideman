@@ -1,5 +1,7 @@
 # Tideman
-
+[![Travis status](https://img.shields.io/travis/pivot-libre/tideman/0.x.svg)](https://travis-ci.org/pivot-libre/tideman/)
+[![Coveralls coverage](https://img.shields.io/coveralls/pivot-libre/tideman/0.x.svg)](https://coveralls.io/github/pivot-libre/tideman)
+[![PDD status](http://www.0pdd.com/svg?name=pivot-libre/tideman)](http://www.0pdd.com/p?name=pivot-libre/tideman)
 ## Purpose
 This algorithm takes a collection of rankings and produces a reasonably fair aggregate ranking using T.N. Tideman's Ranked Pairs Algorithm.
 
@@ -28,9 +30,39 @@ If this implementation finds that a completed graph contains multiple source nod
    * [Book Homepage](http://www.cambridge.org/us/academic/subjects/computer-science/artificial-intelligence-and-natural-language-processing/handbook-computational-social-choice?format=HB&isbn=9781107060432#GTKsebzTk5Wxs756.97)
  * An alternate description of the Tideman-Zavist tie-breaking rule is in [an electorama mailing list post by Dr. Markus Schulze](http://lists.electorama.com/pipermail/election-methods-electorama.com/2004-May/078350.html). The explanation is just a few lines long, starting with "Thomas Zavist suggested that...".
 
-## Badges!
+## Contributing
+### Setup
+ * Install php 7.1, composer, and the following php extensions:
+ * ctype,curl,dom,iconv,json,mbstring,openssl,pdo,pdo_sqlite,phar,sqlite3,tokenizer,xmlreader,xmlwriter,zlib
+### Working With the Code
+ * Fork this repo.
+ * Clone your fork.
+ * Add this repo as upstream.
+     * Examples:
+         * `git remote add upstream git@github.com:pivot-libre/tideman.git`
+         * `git remote add upstream https://github.com/pivot-libre/tideman.git`
+ * Download the dependencies
+     * `composer install`
+ * Build the project
+     * `vendor/bin/phing`
+     * This command checks the syntax of the files, run tests, checks for formatting conformance, and performs static code quality analysis.
+ * At the end of the output you should see `BUILD FINISHED`. You should not see `BUILD FAILLED`.
+ 
+### Visualizing Test Coverage
+ * Run
+ * `vendor/bin/phing coverage`
+ * Open a web browser to `file:///<file-path-to-cloned-repo>tideman/build/coverage/index.html`
+ * For example: `file:///home/john_doe/src/tideman/build/coverage/index.html`
 
-[![Travis status](https://img.shields.io/travis/pivot-libre/tideman/0.x.svg)](https://travis-ci.org/pivot-libre/tideman/)
-[![Coveralls coverage](https://img.shields.io/coveralls/pivot-libre/tideman/0.x.svg)](https://coveralls.io/github/pivot-libre/tideman)
-[![PDD status](http://www.0pdd.com/svg?name=pivot-libre/tideman)](http://www.0pdd.com/p?name=pivot-libre/tideman)
-
+### Sharing Your Work
+ * Git `add`, and `commit` your local changes
+ * Push your changes to your GitHub fork
+     * `git push origin`
+ * Create a pull request between your fork and the PivotLibre/tideman repo.
+ 
+### Getting Updates
+ * `git fetch upstream`
+ * Depending on whether you are using a merge-based or rebase-based workflow you will run one of:
+     * `git merge upstream/0.x`
+     * `git rebase upstream/0.x`
+     
