@@ -1,0 +1,9 @@
+<?php
+
+namespace PivotLibre\Tideman;
+
+class TestScenario
+{
+
+    public function getBallots()
+    {
