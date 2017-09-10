@@ -49,6 +49,7 @@ If this implementation finds that a completed graph contains multiple source nod
  * At the end of the output you should see `BUILD FINISHED`. You should not see `BUILD FAILLED`.
  
 ### Visualizing Test Coverage
+ * Make sure you have [installed xdebug](https://xdebug.org/docs/install).
  * Run
  * `vendor/bin/phing coverage`
  * Open a web browser to `file:///<file-path-to-cloned-repo>tideman/build/coverage/index.html`
