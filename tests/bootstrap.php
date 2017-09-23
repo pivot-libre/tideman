@@ -14,3 +14,12 @@ php composer.phar install
 EOT
     );
 }
+
+\bitExpert\Slf4PsrLog\LoggerFactory::registerFactoryCallback(function ($channel) {
+    if (!\Monolog\Registry::hasLogger($channel)) {
+        $logger = new \Monolog\Logger($channel);
+        $logger->pushHandler(new \Monolog\Handler\StreamHandler('build/logs/out.log'));
+        \Monolog\Registry::addLogger($logger);
+    }
+    return \Monolog\Registry::getInstance($channel);
+});

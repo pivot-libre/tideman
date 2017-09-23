@@ -3,7 +3,7 @@
 <project name="tideman" default="build">
 
     <target name="build" depends="lint,phpstan,phpcs,phpunit" />
-    <target name="build-ci" depends="lint,phpstan,phpcs,phpunit-ci" />
+    <target name="build-ci" depends="lint,phpstan,phpcs,phpunit-ci,print-logs" />
     <target name="test" depends="phpunit" />
     <target name="coverage" depends="phpunit-coverage" />
 
@@ -27,6 +27,11 @@
                 <include name="**/*.php" />
             </fileset>
         </phplint>
+    </target>
+
+    <target name="print-logs" description="print build logs">
+       <loadfile property="log-output" file="build/logs/out.log" />
+       <echo message="${log-output}" />
     </target>
 
     <target name="phpcs" description="Find coding standard violations using PHP_CodeSniffer">
