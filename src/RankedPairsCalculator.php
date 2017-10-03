@@ -19,6 +19,7 @@ class RankedPairsCalculator
 {
     private $tieBreakingMarginComparator;
     private $tieBreakingCandidateComparator;
+
     /**
      * Constructs a Ranked Pairs Calculator, verifying that the specified tie-breaking ballot contains no ties.
      * Retains a copy of the tie-breaking Ballot so that the caller may modify the parameterized Ballot without
