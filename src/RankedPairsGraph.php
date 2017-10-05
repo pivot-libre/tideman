@@ -24,7 +24,8 @@ class RankedPairsGraph
     /**
      * @return an human-readable adjacency list describing the graph
      */
-    public function toString() : string {
+    public function toString() : string
+    {
         $graphStr = '';
         foreach ($this->graph->getVertices() as $vertex) {
             $graphStr .= "[" . $vertex->getId() . " : ";
