@@ -1,11 +1,13 @@
 <?php
 namespace PivotLibre\Tideman;
 
+use \DomainException;
 use \Fhaculty\Graph\Graph;
 use \Fhaculty\Graph\Vertex;
 use \Fhaculty\Graph\Set\Vertices;
 use \Graphp\Algorithms\Search\DepthFirst;
 use Graphp\Algorithms\ShortestPath\BreadthFirst;
+use PivotLibre\Tideman\Candidate;
 
 class RankedPairsGraph
 {
@@ -20,13 +22,32 @@ class RankedPairsGraph
     }
 
     /**
+     * @return an human-readable adjacency list describing the graph
+     */
+    public function toString() : string {
+        $graphStr = '';
+        foreach ($this->graph->getVertices() as $vertex) {
+            $graphStr .= "[" . $vertex->getId() . " : ";
+            foreach ($vertex->getEdgesOut() as $edge) {
+                $graphStr .= "( " . $edge->getWeight() . ", " . $edge->getVertexEnd()->getId() . ") ";
+            }
+            $graphStr .= " ] ";
+        }
+        return $graphStr;
+    }
+    /**
     * @return CandidateList - a list of Candidates in descending order of preference. Candidates that are more
     * preferred have a lower index than Candidates that are less preferred.
     */
     public function getWinningCandidates() : CandidateList
     {
         $winningVertices = $this->getSourceVertices();
+        if ($winningVertices->isEmpty()) {
+            $graphStr = $this->toString();
+            throw new DomainException("Unable to find winners for the current graph. $graphStr");
+        }
         $tiedWinners = $this->getCandidatesFromVertices($winningVertices);
+
         return $tiedWinners;
     }
     /**
@@ -76,13 +97,18 @@ class RankedPairsGraph
         return $sourceVertices;
     }
 
+    public function getCandidateFromVertex(Vertex $vertex) : Candidate
+    {
+        $candidate = $vertex->getAttribute(self::CANDIDATE_ATTRIBUTE_NAME);
+        return $candidate;
+    }
     /**
      * get Candidates from Vertices
      */
     public function getCandidatesFromVertices(Vertices $vertices) : CandidateList
     {
         $candidates = array_map(function (Vertex $vertex) {
-            return $vertex->getAttribute(self::CANDIDATE_ATTRIBUTE_NAME);
+            return $this->getCandidateFromVertex($vertex);
         }, $vertices->getVector());
         $candidateList = new CandidateList(...$candidates);
         return $candidateList;
