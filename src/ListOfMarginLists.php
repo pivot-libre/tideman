@@ -25,7 +25,7 @@ class ListOfMarginLists extends GenericCollection
             function (array $carry, MarginList $current) use ($tieBreakingMarginComparator) {
                 $currentValues = $current->toArray();
                 usort($currentValues, $tieBreakingMarginComparator);
-                array_push($carry, ...$current);
+                array_push($carry, ...$currentValues);
                 return $carry;
             },
             $initial
