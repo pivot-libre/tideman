@@ -1,18 +1,17 @@
 <?php
 namespace PivotLibre\Tideman;
 
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use \bitExpert\Slf4PsrLog\LoggerFactory;
 
 class TieBreakingMarginComparator
 {
 
-    use LoggerAwareTrait;
-
     private $tieBreaker;
+    private $logger;
 
     public function __construct(MarginTieBreaker $tieBreaker)
     {
+        $this->logger = LoggerFactory::getLogger(__CLASS__);
         $this->tieBreaker = $tieBreaker;
     }
 
@@ -32,13 +31,11 @@ class TieBreakingMarginComparator
     {
         $differenceOfStrength = $b->getDifference() - $a->getDifference();
         if (0 == $differenceOfStrength) {
-            // $this->logger->info("Tie between two Margins:\n$a\n$b\n");
-            echo "Tie between two Margins:\n$a\n$b\n";
+            $this->logger->notice("Tie between two Margins:\n$a\n$b\n");
             $result = $this->tieBreaker->breakTie($a, $b);
             $winner = $result > 0 ? $a : $b;
             $loser = $result > 0 ? $b : $a;
-            // $this->logger->info("Tie-breaking results:\nWinner:\n$winner\nLoser:\n$loser\n");
-            echo "Tie-breaking results:\nWinner:\n$winner\nLoser:\n$loser\n";
+            $this->logger->notice("Tie-breaking results:\nWinner:\n$winner\nLoser:\n$loser\n");
         } else {
             $result = $differenceOfStrength;
         }
