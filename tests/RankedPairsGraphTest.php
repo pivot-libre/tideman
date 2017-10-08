@@ -130,6 +130,13 @@ class RankedPairsGraphTest extends TestCase
             $mostRecentVertex = $currentVertex;
         }
 
+        /*
+        graph should now look like:
+
+        a -> b -> c -> d -> e
+
+        */
+
         //assert none of the vertices are in a cycle
         foreach ($this->instance->getGraph()->getVertices() as $vertex) {
             $this->assertFalse($this->instance->vertexIsInACycle($vertex));
@@ -141,6 +148,15 @@ class RankedPairsGraphTest extends TestCase
 
         $vertexE->createEdgeTo($vertexA);
 
+        /*
+        graph should now look like
+
+          a -> b -> c -> d -> e
+          ^                   |
+          |___________________|
+
+        */
+
         //assert that all of the vertices are in a cycle
         foreach ($this->instance->getGraph()->getVertices() as $vertex) {
             $this->assertTrue($this->instance->vertexIsInACycle($vertex));
@@ -150,6 +166,16 @@ class RankedPairsGraphTest extends TestCase
         $vertexZ = $this->instance->getGraph()->createVertex('z');
         $vertexC = $this->instance->getGraph()->getVertex('c');
         $vertexC->createEdgeTo($vertexZ);
+
+        /*
+        graph should now look like
+                    z
+                    ^
+                    |
+          a -> b -> c -> d -> e
+          ^                   |
+          |___________________|
+        */
 
         //assert that the new vertex is not considered part of a cycle
         $this->assertFalse($this->instance->vertexIsInACycle($vertexZ));
