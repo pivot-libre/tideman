@@ -41,7 +41,7 @@ class TieBreakingMarginComparatorTest extends TestCase
         $tieBreaker = new TotallyOrderedBallotMarginTieBreaker($candidateComparator);
         $this->instance = new TieBreakingMarginComparator($tieBreaker);
 
-        $loggerFactory = new loggerFactory();
+        $loggerFactory = new LoggerFactory();
         $loggerFactory($this->instance);
     }
 
