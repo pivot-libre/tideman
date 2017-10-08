@@ -84,4 +84,32 @@ class AgendaTest extends TestCase
         $instance = new Agenda(...$ballots);
         $this->assertOnlyContainsCandidates($instance->getCandidates(), array($this->alice, $this->bob, $this->claire));
     }
+    public function testRemoveOneCandidate() : void
+    {
+        $expectedCandidateLists = [
+            new CandidateList($this->alice),
+            new CandidateList($this->bob),
+            new CandidateList($this->claire)
+        ];
+        $ballot = new Ballot(...$expectedCandidateLists);
+        $instance = new Agenda($ballot);
+        $this->assertOnlyContainsCandidates($instance->getCandidates(), array($this->alice, $this->bob, $this->claire));
+
+        $instance->removeCandidates($this->alice);
+        $this->assertOnlyContainsCandidates($instance->getCandidates(), array($this->bob, $this->claire));
+    }
+    public function testRemoveMultipleCandidates() : void
+    {
+        $expectedCandidateLists = [
+            new CandidateList($this->alice),
+            new CandidateList($this->bob),
+            new CandidateList($this->claire)
+        ];
+        $ballot = new Ballot(...$expectedCandidateLists);
+        $instance = new Agenda($ballot);
+        $this->assertOnlyContainsCandidates($instance->getCandidates(), array($this->alice, $this->bob, $this->claire));
+
+        $instance->removeCandidates($this->alice, $this->claire);
+        $this->assertOnlyContainsCandidates($instance->getCandidates(), array($this->bob));
+    }
 }
