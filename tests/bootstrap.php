@@ -15,4 +15,4 @@ EOT
     );
 }
 
-putenv('TIDEMAN_TEST_LOGFILE', __DIR__ . '/../build/logs/out.log');
+putenv('TIDEMAN_TEST_LOGFILE=' . __DIR__ . '/../build/logs/out.log');
