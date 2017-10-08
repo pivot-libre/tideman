@@ -1,17 +1,19 @@
 <?php
 namespace PivotLibre\Tideman;
 
-use \bitExpert\Slf4PsrLog\LoggerFactory;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
+use Psr\Log\NullLogger;
 
-class TieBreakingMarginComparator
+class TieBreakingMarginComparator implements LoggerAwareInterface
 {
+    use LoggerAwareTrait;
 
     private $tieBreaker;
-    private $logger;
 
     public function __construct(MarginTieBreaker $tieBreaker)
     {
-        $this->logger = LoggerFactory::getLogger(__CLASS__);
+        $this->logger = new NullLogger;
         $this->tieBreaker = $tieBreaker;
     }
 
