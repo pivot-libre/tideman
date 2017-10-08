@@ -73,6 +73,12 @@ class RankedPairsGraphTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testOneVertexGraphDoesNotContainCycle() : void
+    {
+        $a = $this->instance->getGraph()->createVertex('a');
+        $this->assertFalse($this->instance->vertexIsInACycle($a));
+    }
+
     public function testVertexIsInACycle() : void
     {
         $a = $this->instance->getGraph()->createVertex('a');
