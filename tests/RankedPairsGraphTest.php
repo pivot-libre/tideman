@@ -81,18 +81,80 @@ class RankedPairsGraphTest extends TestCase
 
     public function testVertexIsInACycle() : void
     {
+        //create two vertices
         $a = $this->instance->getGraph()->createVertex('a');
         $b = $this->instance->getGraph()->createVertex('b');
+        //assert that neither are considered to be in a cycle
         $this->assertFalse($this->instance->vertexIsInACycle($a));
         $this->assertFalse($this->instance->vertexIsInACycle($b));
 
+        //create an edge between the two vertices
         $a->createEdgeTo($b);
+        //assert that neither are considered to be in a cycle
         $this->assertFalse($this->instance->vertexIsInACycle($a));
         $this->assertFalse($this->instance->vertexIsInACycle($b));
 
+        //create an edge between the two vertices that points in the opposite direction
         $b->createEdgeTo($a);
+        //assert that both vertices are considered to be in a cycle
         $this->assertTrue($this->instance->vertexIsInACycle($a));
         $this->assertTrue($this->instance->vertexIsInACycle($b));
+
+        //remove the edge that forms a cycle
+        $edgeToA = $b->getEdgesTo($a)->getEdgeFirst();
+        $edgeToA->destroy();
+        //assert that neither vertex is considered to be part of a cycle
+        $this->assertFalse($this->instance->vertexIsInACycle($a));
+        $this->assertFalse($this->instance->vertexIsInACycle($b));
+    }
+
+    public function testLongerLengthCycles() : void
+    {
+        $ids = ['a', 'b', 'c', 'd', 'e'];
+
+        //we should be able to say `$mostRecentVertex = null;` on the next line, but phpstan is incorrectly reporting a
+        //"cannot call method on null" error`, so instead we trick phpstan by assigning null through an
+        //immediately-invoked lambda function.
+        $mostRecentVertex = (function () {
+            return null;
+        })();
+
+        $currentVertex = null;
+
+        //create vertices for each id in $ids. Create edges from the most recent Vertex to the the current Vertex
+        foreach ($ids as $id) {
+            $currentVertex = $this->instance->getGraph()->createVertex($id);
+            if ($mostRecentVertex != null) {
+                $mostRecentVertex->createEdgeTo($currentVertex);
+            }
+            $mostRecentVertex = $currentVertex;
+        }
+
+        //assert none of the vertices are in a cycle
+        foreach ($this->instance->getGraph()->getVertices() as $vertex) {
+            $this->assertFalse($this->instance->vertexIsInACycle($vertex));
+        }
+
+        //introduce a cycle
+        $vertexA = $this->instance->getGraph()->getVertex('a');
+        $vertexE = $this->instance->getGraph()->getVertex('e');
+
+        $vertexE->createEdgeTo($vertexA);
+
+        //assert that all of the vertices are in a cycle
+        foreach ($this->instance->getGraph()->getVertices() as $vertex) {
+            $this->assertTrue($this->instance->vertexIsInACycle($vertex));
+        }
+
+        //introduce a vertex and edge that are connected, but not part of the cycle
+        $vertexZ = $this->instance->getGraph()->createVertex('z');
+        $vertexC = $this->instance->getGraph()->getVertex('c');
+        $vertexC->createEdgeTo($vertexZ);
+
+        //assert that the new vertex is not considered part of a cycle
+        $this->assertFalse($this->instance->vertexIsInACycle($vertexZ));
+        //assert that the old vertex pointing to the new vertex is still considered to be in a cycle
+        $this->assertTrue($this->instance->vertexIsInACycle($vertexC));
     }
 
     public function testAddOneMargin() : void
