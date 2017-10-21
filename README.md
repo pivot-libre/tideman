@@ -37,8 +37,8 @@ If this implementation finds that a completed graph contains multiple source nod
 
 ## Contributing
 ### Setup
- * Install php 7.1, composer, and the following php extensions:
- * ctype,curl,dom,iconv,json,mbstring,openssl,pdo,pdo_sqlite,phar,sqlite3,tokenizer,xmlreader,xmlwriter,zlib
+ * Install PHP 7.1 and composer.
+ * The library is known to work when the following PHP extensions are installed, though the minimal list of extensions is probably shorter (See [Issue #51](https://github.com/pivot-libre/tideman/issues/51)): ctype,curl,dom,iconv,json,mbstring,openssl,pdo,pdo_sqlite,phar,sqlite3,tokenizer,xmlreader,xmlwriter,zlib
 ### Working With the Code
  * Fork this repo.
  * Clone your fork.
