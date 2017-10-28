@@ -13,7 +13,7 @@ class TieBreakingMarginComparator implements LoggerAwareInterface
 
     public function __construct(MarginTieBreaker $tieBreaker)
     {
-        $this->logger = new NullLogger;
+        $this->logger = new NullLogger();
         $this->tieBreaker = $tieBreaker;
     }
 
