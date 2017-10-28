@@ -97,4 +97,24 @@ class CandidateComparator
             return $result;
         }
     }
+
+    /**
+     * A simple wrapper that simplifies referencing this instance's compare() method.
+     * For example, the wrapper permits us to write:
+     *
+     * $tieBreaker = new MyGreatTieBreaker();
+     * usort($array, new CandidateComparator($tieBreaker));
+     *
+     * instead of:
+     *
+     * $tieBreaker = new MyGreatTieBreaker();
+     * usort($array, array(new CandidateComparator($tieBreaker), "compare"));
+     *
+     * Additional details:
+     * https://stackoverflow.com/a/35277180
+     */
+    public function __invoke(Candidate $a, Candidate $b) : int
+    {
+        return $this->compare($a, $b);
+    }
 }

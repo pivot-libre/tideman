@@ -22,10 +22,10 @@ class ListOfMarginLists extends GenericCollection
         $initial = [];
         $result = array_reduce(
             $this->values,
-            function (MarginList $carry, MarginList $current) use ($tieBreakingMarginComparator) {
+            function (array $carry, MarginList $current) use ($tieBreakingMarginComparator) {
                 $currentValues = $current->toArray();
                 usort($currentValues, $tieBreakingMarginComparator);
-                array_push($carry, ...$current);
+                array_push($carry, ...$currentValues);
                 return $carry;
             },
             $initial
