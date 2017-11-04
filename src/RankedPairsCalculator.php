@@ -79,7 +79,14 @@ class RankedPairsCalculator
     }
 
     /**
-     * Tallies and returns the Margins
+     * Calculate the pairwise differences in popular support, a.k.a. the Margins.
+     *
+     * @param Agenda $agenda a set of candidates. This is a non-strict subset of the Candidates in $nBallots.
+     * @param ...NBallot $nBallots a list of NBallots. The set of Candidates in $nBallots is a non-strict
+     * superset of the Candidates in $agenda.
+     * @return MarginList representing all of the pairwise differences in popular support for all Candidates specified
+     * by $agenda. The length of the returned MarginList should be equal to `N(N - 1)`, where `N` is the number of
+     * Candidates in $agenda.
      */
     public function getMargins(Agenda $agenda, NBallot ...$nBallots) : MarginList
     {
