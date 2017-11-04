@@ -44,7 +44,6 @@ class MarginCalculatorIntegrationTest extends TestCase
 
     public function testScenario1() : void
     {
-        //@TODO: ask Lucas why these differ from his expected results by a constant factor.
             $ballots = (new TestScenario1())->getBallots();
             $expectedMargins = [
                 new Margin(new Candidate('MM'), new Candidate('DD'), 14),
