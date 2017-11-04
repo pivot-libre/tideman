@@ -1,10 +1,12 @@
 <?php
 namespace PivotLibre\Tideman;
 
+use \Countable;
+
 /**
  * This class should be used to represent all of the Candidates in an election
  */
-class Agenda
+class Agenda implements Countable
 {
     private $candidateSet;
 
@@ -46,5 +48,10 @@ class Agenda
     public function getCandidates() : CandidateList
     {
         return new CandidateList(...array_values($this->candidateSet->toArray()));
+    }
+
+    public function count() : int
+    {
+        return $this->candidateSet->count();
     }
 }

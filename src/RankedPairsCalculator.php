@@ -68,14 +68,19 @@ class RankedPairsCalculator
      */
     public function getOneRoundOfWinners(Agenda $agenda, NBallot ...$nBallots) : CandidateList
     {
-        $marginList = $this->getMargins($agenda, ...$nBallots);
-        $sortedMarginList = $this->sortMargins($marginList);
-        $rankedPairsGraph = new RankedPairsGraph();
-        $rankedPairsGraph->addMargins($sortedMarginList);
-        $winnersOfTheRound = $rankedPairsGraph->getWinningCandidates();
-        //winners may contain ties. Ensure that they are sorted according to our tie-breaking ballot.
-        $winnersOfTheRound->sort($this->tieBreakingCandidateComparator);
-        return $winnersOfTheRound;
+        // if only one Candidate remains, return that Candidate.
+        if (1 === $agenda->count()) {
+            return $agenda->getCandidates();
+        } else {
+            $marginList = $this->getMargins($agenda, ...$nBallots);
+            $sortedMarginList = $this->sortMargins($marginList);
+            $rankedPairsGraph = new RankedPairsGraph();
+            $rankedPairsGraph->addMargins($sortedMarginList);
+            $winnersOfTheRound = $rankedPairsGraph->getWinningCandidates();
+            //winners may contain ties. Ensure that they are sorted according to our tie-breaking ballot.
+            $winnersOfTheRound->sort($this->tieBreakingCandidateComparator);
+            return $winnersOfTheRound;
+        }
     }
 
     /**
