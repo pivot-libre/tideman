@@ -50,7 +50,7 @@ class RankedPairsCalculator
         $agenda = new Agenda(...$nBallots);
         $candidatesInOrder = [];
         while (sizeof($candidatesInOrder) < $numWinners) {
-            $winnersOfTheRound = $this->getOneRoundOfWinners($agenda, ...$nBallots)->toArray();
+            $winnersOfTheRound = $this->getOneRoundOfWinners($agenda, ...$nBallots);
             array_push($candidatesInOrder, ...$winnersOfTheRound);
             $agenda->removeCandidates(...$winnersOfTheRound);
         }
