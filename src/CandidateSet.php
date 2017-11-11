@@ -1,9 +1,10 @@
 <?php
 namespace PivotLibre\Tideman;
 
+use \Countable;
 use PivotLibre\Tideman\Candidate;
 
-class CandidateSet extends GenericCollection
+class CandidateSet extends GenericCollection implements Countable
 {
     public function __construct(Candidate ...$candidates)
     {
@@ -20,7 +21,7 @@ class CandidateSet extends GenericCollection
     }
 
     /**
-     * If Canddiate is already present,then it is overwritten with the newer one
+     * If Candidate is already present,then it is overwritten with the newer one
      */
     public function add(Candidate ...$candidates)
     {
@@ -47,5 +48,10 @@ class CandidateSet extends GenericCollection
     public function contains(Candidate $candidate) : bool
     {
         return null == $this->get($candidate);
+    }
+
+    public function count() : int
+    {
+        return sizeof($this->values);
     }
 }
