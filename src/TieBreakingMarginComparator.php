@@ -38,7 +38,7 @@ class TieBreakingMarginComparator implements LoggerAwareInterface
             $winner = $result < 0 ? $a : $b;
             $loser = $result < 0 ? $b : $a;
             // $this->logger->info("Tie-breaking results:\nWinner:\n$winner\nLoser:\n$loser\n");
-            echo "Tie-breaking results:\nWinner:\n$winner\nLoser:\n$loser\n";
+            // echo "Tie-breaking results:\nWinner:\n$winner\nLoser:\n$loser\n";
         } else {
             $result = $differenceOfStrength;
         }
