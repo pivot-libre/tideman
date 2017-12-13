@@ -19,7 +19,7 @@ class MarginRegistry
         $key =  $this->makeKey($margin->getWinner(), $margin->getLoser());
         if (array_key_exists($key, $this->registry)) {
             throw new InvalidArgumentException(
-                "This Margin has already been registered."
+                "This Margin has already been registered: $margin"
             );
         }
         $this->registry[$key] = $margin;
