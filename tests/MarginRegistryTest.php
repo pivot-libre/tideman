@@ -91,9 +91,16 @@ class MarginRegistryTest extends TestCase
 
     /**
      * This addresses https://github.com/pivot-libre/tideman/issues/57
-     * in which the key the MarginRegistry created was the same for the
-     * winner -> loser version of the margin as the loser -> winner
-     * version of the margin.
+     * The MarginRegistry didn't put a delimeter between the ids of the winner
+     * and the loser candidate when it was building a key for a Margin. This could
+     * lead to non-unique keys. When the ids of the winner and loser
+     * form a palindrome (for example, 11 and 1) then the MarginRegistry
+     * class would incorrectly believe that the winner->loser version
+     * of a margin was the same as the loser->winner version of the margin.
+     *
+     * For example, although (1)-->(11) is different than (11)-->(1),
+     * the Margin considered them to be the same.
+     *
      */
     public function testRegisterPalindromeCandidateIds() : void
     {
