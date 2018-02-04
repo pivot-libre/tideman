@@ -88,4 +88,23 @@ class MarginRegistryTest extends TestCase
         $actual = $this->instance->getAll();
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * This addresses https://github.com/pivot-libre/tideman/issues/57
+     * in which the key the MarginRegistry created was the same for the
+     * winner -> loser version of the margin as the loser -> winner
+     * version of the margin.
+     */
+    public function testRegisterPalindromeCandidateIds() : void
+    {
+        $candidateOne = new Candidate('1', 'One');
+        $candidateEleven = new Candidate('11', 'Eleven');
+
+        $margin = new Margin($candidateOne, $candidateEleven, 0);
+        $this->instance->register($margin);
+
+        $oppositeMargin = new Margin($candidateEleven, $candidateOne, 0);
+        $this->instance->register($oppositeMargin);
+        $this->assertEquals(2, $this->instance->getCount());
+    }
 }
