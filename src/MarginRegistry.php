@@ -11,7 +11,7 @@ class MarginRegistry
     {
         $winnerId = $winner->getId();
         $loserId = $loser->getId();
-        $key = $winnerId . $loserId;
+        $key = $winnerId . ':' . $loserId;
         return $key;
     }
     public function register(Margin $margin) : void

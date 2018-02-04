@@ -88,4 +88,30 @@ class MarginRegistryTest extends TestCase
         $actual = $this->instance->getAll();
         $this->assertEquals($expected, $actual);
     }
+
+    /**
+     * This addresses https://github.com/pivot-libre/tideman/issues/57
+     * The MarginRegistry didn't put a delimeter between the ids of the winner
+     * and the loser candidate when it was building a key for a Margin. This could
+     * lead to non-unique keys. When the ids of the winner and loser
+     * form a palindrome (for example, 11 and 1) then the MarginRegistry
+     * class would incorrectly believe that the winner->loser version
+     * of a margin was the same as the loser->winner version of the margin.
+     *
+     * For example, although (1)-->(11) is different than (11)-->(1),
+     * the Margin considered them to be the same.
+     *
+     */
+    public function testRegisterPalindromeCandidateIds() : void
+    {
+        $candidateOne = new Candidate('1', 'One');
+        $candidateEleven = new Candidate('11', 'Eleven');
+
+        $margin = new Margin($candidateOne, $candidateEleven, 0);
+        $this->instance->register($margin);
+
+        $oppositeMargin = new Margin($candidateEleven, $candidateOne, 0);
+        $this->instance->register($oppositeMargin);
+        $this->assertEquals(2, $this->instance->getCount());
+    }
 }
