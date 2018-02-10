@@ -86,7 +86,12 @@ class MarginRegistryTest extends TestCase
 
         $expected = new MarginList($marginOne, $marginTwo);
         $actual = $this->instance->getAll();
-        $this->assertEquals($expected, $actual);
+        //order-inspecific equality test
+        $this->assertTrue(
+            count($expected->toArray())
+            ==
+            count(array_intersect($expected->toArray(), $actual->toArray()))
+        );
     }
 
     /**
@@ -104,8 +109,8 @@ class MarginRegistryTest extends TestCase
      */
     public function testRegisterPalindromeCandidateIds() : void
     {
-        $candidateOne = new Candidate('1', 'One');
-        $candidateEleven = new Candidate('11', 'Eleven');
+        $candidateOne = new Candidate(':', 'One Colon');
+        $candidateEleven = new Candidate('::', 'Two Colon');
 
         $margin = new Margin($candidateOne, $candidateEleven, 0);
         $this->instance->register($margin);
