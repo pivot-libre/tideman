@@ -12,6 +12,10 @@ This documentation's intended audience is programmers. See [Wikipedia's Ranked P
 ## Summary
 This algorithm first computes the difference in popular support between all pairs of candidates across all ballots. This pairwise difference between two candidates is called a margin. Next, the algorithm sorts the margins in order of descending difference. The algorithm then builds a graph data structure by iterating through the sorted list of margins from largest difference to smallest difference, adding an edge that points from the winning candidate to the losing candidate of each margin. If adding a margin's edge would introduce a cycle, the margin is ignored. The winning candidate is the candidate who has no edges pointing at them once the graph has been completed. In other words, the winner is the [source node](http://mathworld.wolfram.com/Source.html) in the completed graph. If multiple winners are desired, then the entire algorithm is repeated without considering candidates that have already won.
 
+## Usage
+Add `pivot-libre/tideman` as a dependency in your project's composer.json.
+See [tests/RankedPairsCalculatorTest.php](tests/RankedPairsCalculatorTest.php) for example usage.
+
 ## Details
 
 ### Papers
