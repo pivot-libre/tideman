@@ -1,9 +1,10 @@
 <?php
 namespace PivotLibre\Tideman;
 
+use \Countable;
 use PivotLibre\Tideman\ListOfMarginLists;
 
-class MarginList extends GenericCollection
+class MarginList extends GenericCollection implements Countable
 {
     private $grouper;
 
@@ -63,5 +64,10 @@ class MarginList extends GenericCollection
         }
         $listOfMarginLists = new ListOfMarginLists(...$allMarginLists);
         return $listOfMarginLists;
+    }
+
+    public function count() : int
+    {
+        return sizeof($this->values);
     }
 }
