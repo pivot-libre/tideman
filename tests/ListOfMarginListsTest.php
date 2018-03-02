@@ -6,11 +6,11 @@ use PHPUnit\Framework\TestCase;
 use PivotLibre\Tideman\Margin;
 use PivotLibre\Tideman\Candidate;
 use PivotLibre\Tideman\CandidateList;
-use PivotLibre\Tideman\MarginTieBreaker;
+use PivotLibre\Tideman\TieBreaking\MarginTieBreaker;
 use PivotLibre\Tideman\ListOfMarginLists;
 use PivotLibre\Tideman\CandidateComparator;
-use PivotLibre\Tideman\TieBreakingMarginComparator;
-use PivotLibre\Tideman\TotallyOrderedBallotMarginTieBreaker;
+use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotMarginTieBreaker;
 
 class ListOfMarginListsTest extends GenericCollectionTestCase
 {

@@ -13,7 +13,8 @@ use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\RankedPairsGraph;
 use PivotLibre\Tideman\ListOfMarginLists;
 use PivotLibre\Tideman\CandidateComparator;
-use PivotLibre\Tideman\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotMarginTieBreaker;
 
 class RankedPairsCalculator
 {
@@ -26,6 +27,7 @@ class RankedPairsCalculator
      * affecting this class.
      * @param tieBreakingBallot
      */
+    //public function __construct(MarginTieBreaker $marginTieBreaker)
     public function __construct(Ballot $tieBreakingBallot)
     {
         if ($tieBreakingBallot->containsTies()) {

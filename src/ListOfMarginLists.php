@@ -1,7 +1,7 @@
 <?php
 namespace PivotLibre\Tideman;
 
-use PivotLibre\Tideman\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
 
 class ListOfMarginLists extends GenericCollection
 {
