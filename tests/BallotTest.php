@@ -17,20 +17,35 @@ class BallotTest extends GenericCollectionTestCase
 
     private $alice;
     private $bob;
+    private $darius;
 
     protected function setUpValues() : void
     {
-        $alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
-        $bob = new Candidate(self::BOB_ID, self::BOB_NAME);
-        $oneCandidateList = new CandidateList($alice, $bob);
-        $darius = new Candidate(self::DARIUS_ID, self::DARIUS_NAME);
-        $anotherCandidateList = new CandidateList($darius);
-        $this->values = array($oneCandidateList, $anotherCandidateList);
+        $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
+        $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
+        $tiedCandidateList = new CandidateList($this->alice, $this->bob);
+        $this->darius = new Candidate(self::DARIUS_ID, self::DARIUS_NAME);
+        $anotherCandidateList = new CandidateList($this->darius);
+        $this->values = array($tiedCandidateList, $anotherCandidateList);
     }
     protected function setUp()
     {
         $this->setUpValues();
         $this->instance = new Ballot(...$this->values);
         $this->concreteType = Ballot::class;
+    }
+
+    public function testTieBreakingOnBallotWithTies() : void
+    {
+        $expectedCandidateOrder = [$this->alice, $this->bob, $this->darius];
+        //seed the random number generator so that we can reliably test
+        mt_srand(4242);
+        try {
+            $actualCandidateOrder = $this->instance->getCopyWithRandomlyResolvedTies()->toArray();
+            $this->assertEquals($expectedCandidateOrder, $actualCandidateOrder);
+        } finally {
+            //reset the random number generator
+            mt_srand();
+        }
     }
 }

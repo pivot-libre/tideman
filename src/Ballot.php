@@ -4,13 +4,29 @@ namespace PivotLibre\Tideman;
 class Ballot extends GenericCollection
 {
     /**
-     * @param The most-preferred Candidates come first (low index). The least-preferred Candidates go last (high index).
+     * @param The most-preferred Candidates come first (low index). The least-preferred Candidates go
+     * last (high index). Tied Candidates are in the same CandidateList.
      */
     public function __construct(CandidateList ...$listsOfCandidates)
     {
         $this->values = $listsOfCandidates;
     }
+
     /**
+     * @param The most-preferred Candidates come first (low index). The least-preferred Candidates go
+     * last (high index). This method cannot construct a Ballot that contains ties. To do that, use the
+     * Ballot constructor instead.
+     */
+    protected function wrapEachInCandidateList(Candidate ...$candidates) : array
+    {
+        $candidateLists = [];
+        foreach ($candidates as $candidate) {
+            $candidateLists[] = new CandidateList($candidate);
+        }
+        return $candidateLists;
+    }
+
+   /**
      * @return
      *         TRUE if this Ballot contains ties
      *         FALSE if this Ballot contains no ties
@@ -34,5 +50,41 @@ class Ballot extends GenericCollection
         );
         $containsTies = ($numberOfNonTiedCandidates !== sizeof($this->values));
         return $containsTies;
+    }
+
+    /**
+     * @param Ballot to linearize
+     * @return a CandidateList. All of the CandidateLists are of length 1.
+     * The original ordering is unaffected.
+     */
+    protected function getCandidatesWithTiesRandomlyBroken() : CandidateList
+    {
+        $candidatesWithTiesBroken = [];
+        foreach ($this->values as $candidatesWithSameRank) {
+            if (1 < sizeof($candidatesWithSameRank)) {
+                $candidatesWithRandomRank = shuffle($candidatesWithSameRank);
+                array_push($canidatesWithTiesBroken, ...$candidatesWithRandomRank);
+            } else {
+                $candidatesWithTiesBroken[] = $candidatesWithSameRank[0];
+            }
+        }
+        // now build a ballot
+        $candidateLists = [];
+        foreach ($candidatesWithTiesBroken as $candidate) {
+            $candidateLists[] = new CandidateList($candidate);
+        }
+        return new CandidateList(...$candidatesWithTiesBroken);
+    }
+
+    /**
+     * @eturn a copy of the current instance whose tied candidates have been put
+     * in a random order. This method does not modify the current instance.
+     */
+    public function getCopyWithRandomlyResolvedTies() : Ballot
+    {
+        $candidatesWithTiesBroken = $this->getCandidatesWithTiesRandomlyBroken();
+        $candidatesWrappedInLists = $this->wrapEachInCandidateList($candidatesWithTiesBroken);
+        $copy = new Ballot(...$candidatesWrappedInLists);
+        return $copy;
     }
 }
