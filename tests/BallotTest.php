@@ -15,9 +15,9 @@ class BallotTest extends GenericCollectionTestCase
     private const DARIUS_ID = "D";
     private const DARIUS_NAME = "Darius";
 
-    private $alice;
-    private $bob;
-    private $darius;
+    protected $alice;
+    protected $bob;
+    protected $darius;
 
     protected function setUpValues() : void
     {
@@ -35,9 +35,18 @@ class BallotTest extends GenericCollectionTestCase
         $this->concreteType = Ballot::class;
     }
 
+    public function testTieBreakingOnBallotWithoutTies() : void
+    {
+        $expectedCandidateOrder = Ballot::wrapEachInCandidateList($this->darius, $this->bob, $this->alice);
+        $ballotWithoutTies = new Ballot(...Ballot::wrapEachInCandidateList($this->darius, $this->bob, $this->alice));
+
+        $actualCandidateOrder = $ballotWithoutTies->getCopyWithRandomlyResolvedTies()->toArray();
+        $this->assertEquals($expectedCandidateOrder, $actualCandidateOrder);
+    }
+
     public function testTieBreakingOnBallotWithTies() : void
     {
-        $expectedCandidateOrder = [$this->alice, $this->bob, $this->darius];
+        $expectedCandidateOrder = Ballot::wrapEachInCandidateList($this->bob, $this->alice, $this->darius);
         //seed the random number generator so that we can reliably test
         mt_srand(4242);
         try {

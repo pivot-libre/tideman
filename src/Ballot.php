@@ -17,7 +17,7 @@ class Ballot extends GenericCollection
      * last (high index). This method cannot construct a Ballot that contains ties. To do that, use the
      * Ballot constructor instead.
      */
-    protected function wrapEachInCandidateList(Candidate ...$candidates) : array
+    public static function wrapEachInCandidateList(Candidate ...$candidates) : array
     {
         $candidateLists = [];
         foreach ($candidates as $candidate) {
@@ -61,11 +61,13 @@ class Ballot extends GenericCollection
     {
         $candidatesWithTiesBroken = [];
         foreach ($this->values as $candidatesWithSameRank) {
-            if (1 < sizeof($candidatesWithSameRank)) {
-                $candidatesWithRandomRank = shuffle($candidatesWithSameRank);
-                array_push($canidatesWithTiesBroken, ...$candidatesWithRandomRank);
+            $candidatesWithSameRankArray = $candidatesWithSameRank->toArray();
+            if (1 == sizeof($candidatesWithSameRankArray)) {
+                $candidatesWithTiesBroken[] = $candidatesWithSameRankArray[0];
             } else {
-                $candidatesWithTiesBroken[] = $candidatesWithSameRank[0];
+                //randomize the order of the tied candidates
+                shuffle($candidatesWithSameRankArray);
+                array_push($candidatesWithTiesBroken, ...$candidatesWithSameRankArray);
             }
         }
         // now build a ballot
@@ -77,13 +79,13 @@ class Ballot extends GenericCollection
     }
 
     /**
-     * @eturn a copy of the current instance whose tied candidates have been put
+     * @return a copy of the current instance whose tied candidates have been put
      * in a random order. This method does not modify the current instance.
      */
     public function getCopyWithRandomlyResolvedTies() : Ballot
     {
         $candidatesWithTiesBroken = $this->getCandidatesWithTiesRandomlyBroken();
-        $candidatesWrappedInLists = $this->wrapEachInCandidateList($candidatesWithTiesBroken);
+        $candidatesWrappedInLists = Ballot::wrapEachInCandidateList(...$candidatesWithTiesBroken);
         $copy = new Ballot(...$candidatesWrappedInLists);
         return $copy;
     }

@@ -25,7 +25,7 @@ class NBallot extends Ballot
     public function getCopyWithRandomlyResovledTies() : Ballot
     {
         $candidatesWithTiesBroken = $this->getCandidatesWithTiesRandomlyBroken();
-        $candidatesWrappedInLists = $this->wrapEachInCandidateList($candidatesWithTiesBroken);
+        $candidatesWrappedInLists = NBallot::wrapEachInCandidateList(...$candidatesWithTiesBroken);
         $copy = new NBallot($this->count, ...$candidatesWrappedInLists);
         return $copy;
     }
