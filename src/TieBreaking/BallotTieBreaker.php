@@ -1,10 +1,12 @@
 <?php
 namespace PivotLibre\Tideman\TieBreaking;
+
 use PivotLibre\Tideman\Ballot;
 use PivotLibre\Tideman\Candidate;
 use PivotLibre\Tideman\CandidateList;
 
-class BallotTieBreaker {
+class BallotTieBreaker
+{
 
     /**
      * @param The most-preferred Candidates come first (low index). The least-preferred Candidates go
@@ -57,4 +59,4 @@ class BallotTieBreaker {
         $ballotWithoutTies = new Ballot(...$candidatesWrappedInLists);
         return $ballotWithoutTies;
     }
-} 
+}

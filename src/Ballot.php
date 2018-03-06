@@ -37,5 +37,4 @@ class Ballot extends GenericCollection
         $containsTies = ($numberOfNonTiedCandidates !== sizeof($this->values));
         return $containsTies;
     }
-
 }

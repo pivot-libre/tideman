@@ -6,7 +6,8 @@ use PivotLibre\Tideman\Candidate;
 use PivotLibre\Tideman\CandidateList;
 use PHPUnit\Framework\TestCase;
 
-class BallotTieBreakerTest extends TestCase {
+class BallotTieBreakerTest extends TestCase
+{
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
     private const BOB_ID = "B";
@@ -21,6 +22,9 @@ class BallotTieBreakerTest extends TestCase {
     protected $darius;
     protected $tiedCandidateList;
     protected $noTiesCandidateList;
+    protected $tiedBallot;
+    protected $noTiesBallot;
+    protected $instance;
 
     protected function setUp()
     {
