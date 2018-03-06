@@ -18,15 +18,4 @@ class NBallot extends Ballot
     {
         return $this->count;
     }
-    /**
-     * @eturn a copy of the current instance whose tied candidates have been put
-     * in a random order. This method does not modify the current instance.
-     */
-    public function getCopyWithRandomlyResovledTies() : Ballot
-    {
-        $candidatesWithTiesBroken = $this->getCandidatesWithTiesRandomlyBroken();
-        $candidatesWrappedInLists = NBallot::wrapEachInCandidateList(...$candidatesWithTiesBroken);
-        $copy = new NBallot($this->count, ...$candidatesWrappedInLists);
-        return $copy;
-    }
 }
