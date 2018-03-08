@@ -13,7 +13,7 @@ class BallotTieBreaker
      * last (high index). This method cannot construct a Ballot that contains ties. To do that, use the
      * Ballot constructor instead.
      */
-    public function wrapEachInCandidateList(Candidate ...$candidates) : array
+    protected function wrapEachInCandidateList(Candidate ...$candidates) : array
     {
         $candidateLists = [];
         foreach ($candidates as $candidate) {

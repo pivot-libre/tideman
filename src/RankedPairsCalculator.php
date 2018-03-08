@@ -15,6 +15,7 @@ use PivotLibre\Tideman\ListOfMarginLists;
 use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
 use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotMarginTieBreaker;
+use PivotLibre\Tideman\TieBreaking\BallotTieBreaker;
 
 class RankedPairsCalculator
 {
@@ -22,22 +23,22 @@ class RankedPairsCalculator
     private $tieBreakingCandidateComparator;
 
     /**
-     * Constructs a Ranked Pairs Calculator, verifying that the specified tie-breaking ballot contains no ties.
-     * Retains a copy of the tie-breaking Ballot so that the caller may modify the parameterized Ballot without
-     * affecting this class.
+     * Constructs a Ranked Pairs Calculator. If the parameterized tie-breaking Ballot contains ties,
+     * they will be resolved randomly. This instance retains a copy of the tie-breaking Ballot so that
+     * the caller may modify the parameterized Ballot without affecting this instance.
      * @param tieBreakingBallot
      */
-    //public function __construct(MarginTieBreaker $marginTieBreaker)
     public function __construct(Ballot $tieBreakingBallot)
     {
-        if ($tieBreakingBallot->containsTies()) {
-            throw new InvalidArgumentException("Tie breaking ballot must not contain any ties. $tieBreakingBallot");
-        } else {
-            $myTieBreakingBallot = clone $tieBreakingBallot;
-            $tieBreaker = new TotallyOrderedBallotMarginTieBreaker(new CandidateComparator($myTieBreakingBallot));
-            $this->tieBreakingMarginComparator = new TieBreakingMarginComparator($tieBreaker);
-            $this->tieBreakingCandidateComparator = new CandidateComparator($myTieBreakingBallot);
+        //make a copy so that the caller could modify it safely
+        $myTieBreakingBallot = clone $tieBreakingBallot;
+        if ($myTieBreakingBallot->containsTies()) {
+            $ballotTieBreaker = new BallotTieBreaker();
+            $myTieBreakingBallot = $ballotTieBreaker->breakTiesRandomly($myTieBreakingBallot);
         }
+        $tieBreaker = new TotallyOrderedBallotMarginTieBreaker(new CandidateComparator($myTieBreakingBallot));
+        $this->tieBreakingMarginComparator = new TieBreakingMarginComparator($tieBreaker);
+        $this->tieBreakingCandidateComparator = new CandidateComparator($myTieBreakingBallot);
     }
 
     /**

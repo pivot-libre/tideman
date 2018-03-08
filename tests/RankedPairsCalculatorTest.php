@@ -57,18 +57,18 @@ class RankedPairsCalculatorTest extends TestCase
     }
 
 
-    public function testConstructionFailsOnBadTieBreakingBallot() : void
+    public function testConstructionSucceedsWhenTieBreakingBallotContainsTies() : void
     {
-        $this->expectException(InvalidArgumentException::class);
         $ballotWithTies = new Ballot(
             new CandidateList($this->alice),
             new CandidateList($this->bob),
+            //the tie
             new CandidateList($this->claire, $this->dave)
         );
-        new RankedPairsCalculator($ballotWithTies);
+        $this->assertNotNull(new RankedPairsCalculator($ballotWithTies));
     }
 
-    public function testConstructionSucceedsOnGoodTieBreakingBallot() : void
+    public function testConstructionSucceedsWhenTieBreakingBallotContainsNoTies() : void
     {
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $this->assertNotNull($instance);
