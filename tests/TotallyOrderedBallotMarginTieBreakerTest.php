@@ -8,7 +8,8 @@ use PivotLibre\Tideman\MarginList;
 use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\ListOfMarginLists;
 use PivotLibre\Tideman\CandidateComparator;
-use PivotLibre\Tideman\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotMarginTieBreaker;
 use \InvalidArgumentException;
 
 class TotallyOrderedBallotMarginTieBreakerTest extends TestCase

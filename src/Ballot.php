@@ -4,12 +4,14 @@ namespace PivotLibre\Tideman;
 class Ballot extends GenericCollection
 {
     /**
-     * @param The most-preferred Candidates come first (low index). The least-preferred Candidates go last (high index).
+     * @param The most-preferred Candidates come first (low index). The least-preferred Candidates go
+     * last (high index). Tied Candidates are in the same CandidateList.
      */
     public function __construct(CandidateList ...$listsOfCandidates)
     {
         $this->values = $listsOfCandidates;
     }
+
     /**
      * @return
      *         TRUE if this Ballot contains ties

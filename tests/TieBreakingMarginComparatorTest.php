@@ -6,7 +6,8 @@ use PHPUnit\Framework\TestCase;
 use PivotLibre\Tideman\Margin;
 use PivotLibre\Tideman\MarginList;
 use PivotLibre\Tideman\ListOfMarginLists;
-use PivotLibre\Tideman\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotMarginTieBreaker;
 use \InvalidArgumentException;
 
 class TieBreakingMarginComparatorTest extends TestCase

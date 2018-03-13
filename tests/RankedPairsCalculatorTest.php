@@ -57,18 +57,18 @@ class RankedPairsCalculatorTest extends TestCase
     }
 
 
-    public function testConstructionFailsOnBadTieBreakingBallot() : void
+    public function testConstructionSucceedsWhenTieBreakingBallotContainsTies() : void
     {
-        $this->expectException(InvalidArgumentException::class);
         $ballotWithTies = new Ballot(
             new CandidateList($this->alice),
             new CandidateList($this->bob),
+            //the tie
             new CandidateList($this->claire, $this->dave)
         );
-        new RankedPairsCalculator($ballotWithTies);
+        $this->assertNotNull(new RankedPairsCalculator($ballotWithTies));
     }
 
-    public function testConstructionSucceedsOnGoodTieBreakingBallot() : void
+    public function testConstructionSucceedsWhenTieBreakingBallotContainsNoTies() : void
     {
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $this->assertNotNull($instance);
@@ -158,6 +158,75 @@ class RankedPairsCalculatorTest extends TestCase
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $actualWinners = $instance->calculate(3, ...$ballots);
         $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
+        $this->assertEquals($expectedWinners, $actualWinners);
+    }
+
+    public function testMarginTieBreakingWithNonTiedBallot() : void
+    {
+        $candidateListsForBallot = [
+            new CandidateList($this->alice),
+            new CandidateList($this->bob),
+            new CandidateList($this->claire)
+        ];
+        $ballot = new NBallot(1, ...$candidateListsForBallot);
+
+        $candidateListsForOppositeBallot = [
+            new CandidateList($this->claire),
+            new CandidateList($this->bob),
+            new CandidateList($this->alice)
+        ];
+        $oppositeBallot = new NBallot(1, ...$candidateListsForBallot);
+
+        $instance = new RankedPairsCalculator($this->tieBreakingBallot);
+        $actualWinners = $instance->calculate(3, $ballot, $oppositeBallot);
+        $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
+        $this->assertEquals($expectedWinners, $actualWinners);
+    }
+    
+    public function testMarginTieBreakingWitTiedBallot() : void
+    {
+        $candidateListsForBallot = [
+            new CandidateList($this->alice),
+            new CandidateList($this->bob),
+            new CandidateList($this->claire)
+        ];
+        $ballot = new NBallot(1, ...$candidateListsForBallot);
+ 
+        $candidateListsForOppositeBallot = [
+            new CandidateList($this->claire),
+            new CandidateList($this->bob),
+            new CandidateList($this->alice)
+        ];
+        $oppositeBallot = new NBallot(1, ...$candidateListsForOppositeBallot);
+
+        $tiedTieBreakingCandidateList = new CandidateList(
+            $this->claire,
+            $this->bob,
+            $this->alice
+        );
+        $tiedTieBreakingBallot = new Ballot($tiedTieBreakingCandidateList);
+
+        //seed the random number generator so that results are consistent across tests
+        try {
+            mt_srand(485);
+            $instance = new RankedPairsCalculator($tiedTieBreakingBallot);
+            $actualWinners = $instance->calculate(3, $ballot, $oppositeBallot);
+        } finally {
+            mt_srand();
+        }
+        $expectedWinners = new CandidateList($this->alice, $this->claire, $this->bob);
+        $this->assertEquals($expectedWinners, $actualWinners);
+        
+        //ensure that randomness is affecting the result by re-calculating with a different
+        //seed on the random number generator, and asserting different results
+        try {
+            mt_srand(95);
+            $instance = new RankedPairsCalculator($tiedTieBreakingBallot);
+            $actualWinners = $instance->calculate(3, $ballot, $oppositeBallot);
+        } finally {
+            mt_srand();
+        }
+        $expectedWinners = new CandidateList($this->claire, $this->bob, $this->alice);
         $this->assertEquals($expectedWinners, $actualWinners);
     }
 }

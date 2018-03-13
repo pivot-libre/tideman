@@ -1,9 +1,10 @@
 <?php
-namespace PivotLibre\Tideman;
+namespace PivotLibre\Tideman\TieBreaking;
 
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
+use PivotLibre\Tideman\Margin;
 
 class TieBreakingMarginComparator implements LoggerAwareInterface
 {

@@ -15,18 +15,20 @@ class BallotTest extends GenericCollectionTestCase
     private const DARIUS_ID = "D";
     private const DARIUS_NAME = "Darius";
 
-    private $alice;
-    private $bob;
+    protected $alice;
+    protected $bob;
+    protected $darius;
 
     protected function setUpValues() : void
     {
-        $alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
-        $bob = new Candidate(self::BOB_ID, self::BOB_NAME);
-        $oneCandidateList = new CandidateList($alice, $bob);
-        $darius = new Candidate(self::DARIUS_ID, self::DARIUS_NAME);
-        $anotherCandidateList = new CandidateList($darius);
-        $this->values = array($oneCandidateList, $anotherCandidateList);
+        $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
+        $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
+        $tiedCandidateList = new CandidateList($this->alice, $this->bob);
+        $this->darius = new Candidate(self::DARIUS_ID, self::DARIUS_NAME);
+        $anotherCandidateList = new CandidateList($this->darius);
+        $this->values = array($tiedCandidateList, $anotherCandidateList);
     }
+
     protected function setUp()
     {
         $this->setUpValues();

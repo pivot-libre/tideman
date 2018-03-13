@@ -1,10 +1,11 @@
 <?php
-namespace PivotLibre\Tideman;
+namespace PivotLibre\Tideman\TieBreaking;
 
 use \InvalidArgumentException;
 use PivotLibre\Tideman\Ballot;
+use PivotLibre\Tideman\Margin;
 use PivotLibre\Tideman\CandidateTest;
-use PivotLibre\Tideman\MarginTieBreaker;
+use PivotLibre\Tideman\TieBreaking\MarginTieBreaker;
 use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\SingleBallotMarginTieBreaker;
 

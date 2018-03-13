@@ -1,7 +1,8 @@
 <?php
-namespace PivotLibre\Tideman;
+namespace PivotLibre\Tideman\TieBreaking;
 
 use PivotLibre\Tideman\ListOfMarginLists;
+use PivotLibre\Tideman\Margin;
 
 /**
  * A MarginTieBreaker specifies some tie-breaking rule that determines which Margin should be considered the winner
