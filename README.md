@@ -25,9 +25,9 @@ See [tests/RankedPairsCalculatorTest.php](tests/RankedPairsCalculatorTest.php) f
 The original 1987 Ranked Pairs paper lacked a tie-breaking rule. The follow-up 1989 paper added a tie-breaking rule.
 
 ### Tie-Breaking
-In elections with a small number of voters, it is common to encounter margins of equal difference. The sort order of margins of equal difference needs to be determined by a tie-breaking rule. In this case, the tie-breaking rule is to sort the tied margins according to a tie-breaking ballot. For the sake of simplicity, this implementation requires that the tie-breaking ballot contain no ties itself.
+In elections with a small number of voters, it is common to encounter margins of equal difference. The sort order of margins of equal difference needs to be determined by a tie-breaking rule. In this case, the tie-breaking rule is to sort the tied margins according to a tie-breaking ballot. If the tie-breaking ballot contains ties itself, the ties within this ballot are broken randomly using [PHP's default random number generator](http://php.net/manual/en/function.mt-rand.php).
 
-This deviates from Zavist and Tideman's 1989 paper, which permitted a tie-breaking ballot to contain ties itself. This implementation also deviates from the 1989 paper in that it uses the tie-breaking ballot to break ties for all margins of identical strength, whereas the paper advocated that the tie-breaking rule be used only to break ties between margins whose differences were exactly zero.
+This implementation deviates from the 1989 paper in that it uses the tie-breaking ballot to break ties for all margins of identical strength, whereas the paper advocated that the tie-breaking rule be used only to break ties between margins whose differences were exactly zero.
 
 If this implementation finds that a completed graph contains multiple source nodes, then all of the candidates associated with the source nodes are considered winners and their order is determined by the tie-breaking ballot.
 
