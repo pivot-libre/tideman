@@ -1,6 +1,8 @@
 {
     "name": "pivot-libre/tideman",
-    "description": "Implementation of the Tideman ranked pair algorithm",
+    "description": "Implementation of the Tideman ranked pairs algorithm",
+    "keywords": ["voting", "ranked pairs", "Tideman", "preferential voting", "Condorcet"],
+    "homepage": "https://pivot-libre.github.io/",
     "type": "library",
     "require": {
         "psr/log": "^1.0.2",
