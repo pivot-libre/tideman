@@ -9,9 +9,19 @@ class WinningVoteCalculator extends PairCalculator
     /**
      *
      * This class...
-     * ...increments the A->B Pair in the Pair registry if A is preferred over B
-     * ...increments the B->A Pair in the Pair registry if B is preferred over A
-     * ...increments both the A->B and B->A Pairs in the Pair registry if A and B are tied
+     * ...increments the votes of the A->B Pair in the Pair registry if A is preferred over B
+     * ...increments the votes of the B->A Pair in the Pair registry if B is preferred over A
+     * ...increments the votes of both the A->B and B->A Pairs in the Pair registry if A and B are tied
+     * ...increments the indifference of both the A->B and B->A Pairs in the Pair registry if A and B are tied
+     *
+     * This handling of ties is functionally consistent with Ron McKinnon's interpretation that ties should be added
+     * to both the majority and the minority vote, as long as users understand that `p->getVotes()` for a Pair `p` is
+     * the sum of (the votes that preferred the winner over the loser) and (the votes that considered the winner and
+     * loser to be equivalent). In other words, a Pair `p`'s `p.getVotes()` ALREADY CONTAINS contributions from
+     * indifferent voters. To get a Pair `p`'s number of winning votes without contributions from indifferent voters,
+     * users should use `p->getVotes() - p->getDifference()`.
+     *
+     * Details: http://condorcet.ca/see-how-it-works/how-it-works/
      * @inheritdoc
      *
      */
@@ -24,7 +34,7 @@ class WinningVoteCalculator extends PairCalculator
     ) : void {
 
         if (1 === $comparisonFactor || 0 == $comparisonFactor) {
-            $this->incrementPairInRegistry(
+            $this->incrementVotesInRegistry(
                 $candidateA,
                 $candidateB,
                 $registry,
@@ -32,12 +42,16 @@ class WinningVoteCalculator extends PairCalculator
             );
         }
         if (-1 === $comparisonFactor || 0 == $comparisonFactor) {
-            $this->incrementPairInRegistry(
+            $this->incrementVotesInRegistry(
                 $candidateB,
                 $candidateA,
                 $registry,
                 $ballotCount
             );
+        }
+        if (0 === $comparisonFactor) {
+            $this->incrementIndifferenceInRegistry($candidateA, $candidateB, $registry, $ballotCount);
+            $this->incrementIndifferenceInRegistry($candidateB, $candidateA, $registry, $ballotCount);
         }
     }
 }

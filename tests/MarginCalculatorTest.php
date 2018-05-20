@@ -32,7 +32,7 @@ class MarginCalculatorTest extends TestCase
     {
         $registry = new PairRegistry();
         $registry->register(new Pair($this->alice, $this->bob, 0));
-        $this->instance->incrementPairInRegistry(
+        $this->instance->incrementVotesInRegistry(
             $this->alice,
             $this->bob,
             $registry,
@@ -47,7 +47,7 @@ class MarginCalculatorTest extends TestCase
         $registry->register(new Pair($this->alice, $this->bob, 0));
         $registry->register(new Pair($this->claire, $this->bob, 0));
 
-        $this->instance->incrementPairInRegistry(
+        $this->instance->incrementVotesInRegistry(
             $this->alice,
             $this->bob,
             $registry,
@@ -67,7 +67,7 @@ class MarginCalculatorTest extends TestCase
         $registry->register(new Pair($this->claire, $this->bob, 0));
 
         //add 1 to Alice->Bob, don't touch Claire->Bob
-        $this->instance->incrementPairInRegistry(
+        $this->instance->incrementVotesInRegistry(
             $this->alice,
             $this->bob,
             $registry,
@@ -80,7 +80,7 @@ class MarginCalculatorTest extends TestCase
         $this->assertEquals(0, $untouchedPair->getVotes());
 
         //add 17 to Alice->Bob, don't touch Claire->Bob
-        $this->instance->incrementPairInRegistry(
+        $this->instance->incrementVotesInRegistry(
             $this->alice,
             $this->bob,
             $registry,
@@ -93,7 +93,7 @@ class MarginCalculatorTest extends TestCase
         $this->assertEquals(0, $untouchedPair->getVotes());
 
         //Add 3 to Claire->Bob, don't touch Alice->Bob
-        $this->instance->incrementPairInRegistry(
+        $this->instance->incrementVotesInRegistry(
             $this->claire,
             $this->bob,
             $registry,

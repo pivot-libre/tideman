@@ -3,7 +3,6 @@ namespace PivotLibre\Tideman;
 
 use PivotLibre\Tideman\PairRegistry;
 
-
 /**
  * Class PairCalculator provides base functionality for building a PairRegistry from an Agenda and one or more Ballots.
  * Subclasses decide how values in the PairRegistry should be updated.
@@ -38,7 +37,7 @@ abstract class PairCalculator
 
     /**
      *
-     * Adds the $amountToAdd to the count already associated with the appropriate Pair in the
+     * Adds the $amountToAdd to the votes already associated with the appropriate Pair in the
      * PairRegistry.
      *
      * @param Candidate $winner
@@ -46,15 +45,36 @@ abstract class PairCalculator
      * @param PairRegistry $registry
      * @param int $amountToAdd
      */
-    public function incrementPairInRegistry(
+    public function incrementVotesInRegistry(
         Candidate $winner,
         Candidate $loser,
         PairRegistry $registry,
         int $amountToAdd
     ) : void {
         $pairToUpdate = $registry->get($winner, $loser);
-        $updatedPair = $pairToUpdate->getVotes() + $amountToAdd;
-        $pairToUpdate->setVotes($updatedPair);
+        $updatedVotes = $pairToUpdate->getVotes() + $amountToAdd;
+        $pairToUpdate->setVotes($updatedVotes);
+    }
+
+    /**
+     *
+     * Adds the $amountToAdd to the indifference already associated with the appropriate Pair in the
+     * PairRegistry.
+     *
+     * @param Candidate $winner
+     * @param Candidate $loser
+     * @param PairRegistry $registry
+     * @param int $amountToAdd
+     */
+    public function incrementIndifferenceInRegistry(
+        Candidate $winner,
+        Candidate $loser,
+        PairRegistry $registry,
+        int $amountToAdd
+    ) : void {
+        $pairToUpdate = $registry->get($winner, $loser);
+        $updatedIndifference = $pairToUpdate->getIndifference() + $amountToAdd;
+        $pairToUpdate->setIndifference($updatedIndifference);
     }
 
 
