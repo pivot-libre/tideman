@@ -54,21 +54,21 @@ class RankedPairsGraph
     /**
      * Locks in Margins in order of descending difference, ignoring any Margins that would contradict a
      * previously-locked-in Margin.
-     * @param MarginList a MarginList whose Margins are sorted in order of descending difference and all differences are
+     * @param PairList a MarginList whose Margins are sorted in order of descending difference and all differences are
      * greater than or equal to zero.
      */
-    public function addMargins(MarginList $sortedMarginList)
+    public function addMargins(PairList $sortedMarginList)
     {
         foreach ($sortedMarginList as $margin) {
             $this->addMargin($margin);
         }
     }
-    public function addMargin(Margin $margin)
+    public function addMargin(Pair $margin)
     {
         $winnerVertex = $this->addCandidateToGraph($margin->getWinner());
         $loserVertex = $this->addCandidateToGraph($margin->getLoser());
         $newEdge = $winnerVertex->createEdgeTo($loserVertex);
-        $newEdge->setWeight($margin->getDifference());
+        $newEdge->setWeight($margin->getVotes());
         //check for contradiction of stronger preferences
         if ($this->vertexIsInACycle($loserVertex)) {
             //don't contradict stronger preferences that have been locked in earlier

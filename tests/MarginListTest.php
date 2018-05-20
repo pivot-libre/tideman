@@ -3,9 +3,9 @@
 namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
-use PivotLibre\Tideman\Margin;
-use PivotLibre\Tideman\MarginList;
-use PivotLibre\Tideman\ListOfMarginLists;
+use PivotLibre\Tideman\Pair;
+use PivotLibre\Tideman\PairList;
+use PivotLibre\Tideman\ListOfPairLists;
 use \InvalidArgumentException;
 
 class MarginListTest extends GenericCollectionTestCase
@@ -30,22 +30,22 @@ class MarginListTest extends GenericCollectionTestCase
         $this->claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
         $this->dave = new Candidate(self::DAVE_ID, self::DAVE_NAME);
         $this->values = array(
-            new Margin($this->alice, $this->bob, 1),
-            new Margin($this->bob, $this->alice, -1),
-            new Margin($this->alice, $this->claire, 10),
-            new Margin($this->claire, $this->alice, -10),
-            new Margin($this->bob, $this->claire, 5),
-            new Margin($this->claire, $this->bob, -5)
+            new Pair($this->alice, $this->bob, 1),
+            new Pair($this->bob, $this->alice, -1),
+            new Pair($this->alice, $this->claire, 10),
+            new Pair($this->claire, $this->alice, -10),
+            new Pair($this->bob, $this->claire, 5),
+            new Pair($this->claire, $this->bob, -5)
         );
-        $this->instance = new MarginList(...$this->values);
-        $this->concreteType = MarginList::class;
+        $this->instance = new PairList(...$this->values);
+        $this->concreteType = PairList::class;
     }
 
     /**
      * Helper method to ensure that a ListOfMarginLists is correct.
      * See the documentation of MarginList.filterGroupAndSort for details.
      */
-    protected function assertGroupedAndInOrderOfDescendingDifference(ListOfMarginLists $listofMarginLists)
+    protected function assertGroupedAndInOrderOfDescendingDifference(ListOfPairLists $listofMarginLists)
     {
         $previousMarginGroupDifference = INF;
         $previousMarginDifference = INF;
@@ -85,7 +85,7 @@ class MarginListTest extends GenericCollectionTestCase
      * Note that you cannot specify a number of ties greater than half of $numMargins because each tie requires two
      * Margins.
      */
-    protected function generateMarginList($numMargins, $numberOfTies = 0) : MarginList
+    protected function generateMarginList($numMargins, $numberOfTies = 0) : PairList
     {
         $marginsWithoutTies = [];
         $marginsWithTies = [];
@@ -100,7 +100,7 @@ class MarginListTest extends GenericCollectionTestCase
                     $aCandidate = new Candidate("C#" . $i);
                     $bCandidate = new Candidate("C#" . ($i + $numMargins));
                     $difference = $i;
-                    $margin = new Margin($aCandidate, $bCandidate, $difference);
+                    $margin = new Pair($aCandidate, $bCandidate, $difference);
                     $marginsWithoutTies[] = $margin;
                 }
                 //php copies arrays on assignment
@@ -112,11 +112,11 @@ class MarginListTest extends GenericCollectionTestCase
                     $differenceToDuplicate = $marginToDuplicate->getDifference();
                     $aCandidate = new Candidate("C#" . $i);
                     $bCandidate = new Candidate("C#" . ($i + $numMargins));
-                    $marginWithDupicateDifference = new Margin($aCandidate, $bCandidate, $differenceToDuplicate);
+                    $marginWithDupicateDifference = new Pair($aCandidate, $bCandidate, $differenceToDuplicate);
                     $marginsWithTies[] = $marginWithDupicateDifference;
                 }
                 shuffle($marginsWithTies);
-                return new MarginList(...$marginsWithTies);
+                return new PairList(...$marginsWithTies);
             }
         } finally {
             //restore random number generator
@@ -125,48 +125,48 @@ class MarginListTest extends GenericCollectionTestCase
     }
     public function testEmptyList()
     {
-        $marginList = new MarginList();
+        $marginList = new PairList();
         $listOfMarginLists = $marginList->filterGroupAndSort();
-        $this->assertEquals(new ListOfMarginLists(), $listOfMarginLists);
+        $this->assertEquals(new ListOfPairLists(), $listOfMarginLists);
         $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
     }
 
     public function testOneMarginList()
     {
-        $marginList = new MarginList(new Margin($this->alice, $this->bob, 10));
+        $marginList = new PairList(new Pair($this->alice, $this->bob, 10));
         $listOfMarginLists = $marginList->filterGroupAndSort();
-        $expected = new ListOfMarginLists(new MarginList(new Margin($this->alice, $this->bob, 10)));
+        $expected = new ListOfPairLists(new PairList(new Pair($this->alice, $this->bob, 10)));
         $this->assertEquals($expected, $listOfMarginLists);
         $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
     }
     public function testTwoMarginTiedList()
     {
-        $marginList = new MarginList(
-            new Margin($this->alice, $this->bob, 10),
-            new Margin($this->alice, $this->claire, 10)
+        $marginList = new PairList(
+            new Pair($this->alice, $this->bob, 10),
+            new Pair($this->alice, $this->claire, 10)
         );
         $listOfMarginLists = $marginList->filterGroupAndSort();
-        $expected = new ListOfMarginLists(new MarginList(
-            new Margin($this->alice, $this->bob, 10),
-            new Margin($this->alice, $this->claire, 10)
+        $expected = new ListOfPairLists(new PairList(
+            new Pair($this->alice, $this->bob, 10),
+            new Pair($this->alice, $this->claire, 10)
         ));
         $this->assertEquals($expected, $listOfMarginLists);
         $this->assertGroupedAndInOrderOfDescendingDifference($listOfMarginLists);
     }
     public function testTwoMarginNonTiedList()
     {
-        $marginList = new MarginList(
-            new Margin($this->alice, $this->claire, 5),
-            new Margin($this->alice, $this->bob, 10)
+        $marginList = new PairList(
+            new Pair($this->alice, $this->claire, 5),
+            new Pair($this->alice, $this->bob, 10)
         );
 
         $listOfMarginLists = $marginList->filterGroupAndSort();
-        $expected = new ListOfMarginLists(
-            new MarginList(
-                new Margin($this->alice, $this->bob, 10)
+        $expected = new ListOfPairLists(
+            new PairList(
+                new Pair($this->alice, $this->bob, 10)
             ),
-            new MarginList(
-                new Margin($this->alice, $this->claire, 5)
+            new PairList(
+                new Pair($this->alice, $this->claire, 5)
             )
         );
         $this->assertEquals($expected, $listOfMarginLists);
@@ -174,21 +174,21 @@ class MarginListTest extends GenericCollectionTestCase
     }
     public function testThreeMarginsWithNoTies()
     {
-        $marginList = new MarginList(
-            new Margin($this->alice, $this->bob, 10),
-            new Margin($this->alice, $this->claire, 2),
-            new Margin($this->bob, $this->claire, 300)
+        $marginList = new PairList(
+            new Pair($this->alice, $this->bob, 10),
+            new Pair($this->alice, $this->claire, 2),
+            new Pair($this->bob, $this->claire, 300)
         );
         $listOfMarginLists = $marginList->filterGroupAndSort();
-        $expected = new ListOfMarginLists(
-            new MarginList(
-                new Margin($this->bob, $this->claire, 300)
+        $expected = new ListOfPairLists(
+            new PairList(
+                new Pair($this->bob, $this->claire, 300)
             ),
-            new MarginList(
-                new Margin($this->alice, $this->bob, 10)
+            new PairList(
+                new Pair($this->alice, $this->bob, 10)
             ),
-            new MarginList(
-                new Margin($this->alice, $this->claire, 2)
+            new PairList(
+                new Pair($this->alice, $this->claire, 2)
             )
         );
         $this->assertEquals($expected, $listOfMarginLists);
@@ -196,19 +196,19 @@ class MarginListTest extends GenericCollectionTestCase
     }
     public function testThreeMarginsWithATieOfStrongerDifference()
     {
-        $marginList = new MarginList(
-            new Margin($this->alice, $this->bob, 100),
-            new Margin($this->bob, $this->claire, 10),
-            new Margin($this->alice, $this->claire, 100)
+        $marginList = new PairList(
+            new Pair($this->alice, $this->bob, 100),
+            new Pair($this->bob, $this->claire, 10),
+            new Pair($this->alice, $this->claire, 100)
         );
         $listOfMarginLists = $marginList->filterGroupAndSort();
-        $expected = new ListOfMarginLists(
-            new MarginList(
-                new Margin($this->alice, $this->bob, 100),
-                new Margin($this->alice, $this->claire, 100)
+        $expected = new ListOfPairLists(
+            new PairList(
+                new Pair($this->alice, $this->bob, 100),
+                new Pair($this->alice, $this->claire, 100)
             ),
-            new MarginList(
-                new Margin($this->bob, $this->claire, 10)
+            new PairList(
+                new Pair($this->bob, $this->claire, 10)
             )
         );
         $this->assertEquals($expected, $listOfMarginLists);
@@ -216,19 +216,19 @@ class MarginListTest extends GenericCollectionTestCase
     }
     public function testThreeMarginsWithATieOfWeakerDifference()
     {
-        $marginList = new MarginList(
-            new Margin($this->alice, $this->bob, 2),
-            new Margin($this->bob, $this->claire, 100),
-            new Margin($this->alice, $this->claire, 2)
+        $marginList = new PairList(
+            new Pair($this->alice, $this->bob, 2),
+            new Pair($this->bob, $this->claire, 100),
+            new Pair($this->alice, $this->claire, 2)
         );
         $listOfMarginLists = $marginList->filterGroupAndSort();
-        $expected = new ListOfMarginLists(
-            new MarginList(
-                new Margin($this->bob, $this->claire, 100)
+        $expected = new ListOfPairLists(
+            new PairList(
+                new Pair($this->bob, $this->claire, 100)
             ),
-            new MarginList(
-                new Margin($this->alice, $this->bob, 2),
-                new Margin($this->alice, $this->claire, 2)
+            new PairList(
+                new Pair($this->alice, $this->bob, 2),
+                new Pair($this->alice, $this->claire, 2)
             )
         );
         $this->assertEquals($expected, $listOfMarginLists);

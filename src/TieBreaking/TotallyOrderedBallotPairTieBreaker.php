@@ -3,9 +3,9 @@ namespace PivotLibre\Tideman\TieBreaking;
 
 use \InvalidArgumentException;
 use PivotLibre\Tideman\Ballot;
-use PivotLibre\Tideman\Margin;
+use PivotLibre\Tideman\Pair;
 use PivotLibre\Tideman\CandidateTest;
-use PivotLibre\Tideman\TieBreaking\MarginTieBreaker;
+use PivotLibre\Tideman\TieBreaking\PairTieBreaker;
 use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\SingleBallotMarginTieBreaker;
 
@@ -14,7 +14,7 @@ use PivotLibre\Tideman\SingleBallotMarginTieBreaker;
  * paper "Complete Independence of Clones". The simplification is that this class requires that
  * the TBRC (aka Ballot) contains no ties.
  */
-class TotallyOrderedBallotMarginTieBreaker implements MarginTieBreaker
+class TotallyOrderedBallotPairTieBreaker implements PairTieBreaker
 {
     private $candidateComparator;
 
@@ -49,14 +49,14 @@ class TotallyOrderedBallotMarginTieBreaker implements MarginTieBreaker
      *   a negative int if $a is preferred over $b
      *   a postive int if $b is preferred over $a.
      */
-    public function breakTie(Margin $a, Margin $b) : int
+    public function breakTie(Pair $a, Pair $b) : int
     {
         //initialize to something invalid to ensure that a TypeError will be thrown on return if the body of the method
         //fails to assign a correct value;
         $returnValue = null;
 
         //if the Margins are actually tied
-        if ($a->getDifference() === $b->getDifference()) {
+        if ($a->getVotes() === $b->getVotes()) {
             $comparisonResult = $this->candidateComparator->compare($a->getWinner(), $b->getWinner());
             if (0 === $comparisonResult) {
                 //the winners are tied

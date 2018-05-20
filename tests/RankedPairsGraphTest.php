@@ -185,7 +185,7 @@ class RankedPairsGraphTest extends TestCase
 
     public function testAddOneMargin() : void
     {
-        $margin = new Margin($this->alice, $this->bob, 1);
+        $margin = new Pair($this->alice, $this->bob, 1);
         $this->instance->addMargin($margin);
         $graph = $this->instance->getGraph();
         $aliceVertex = $graph->getVertex(self::ALICE_ID);
@@ -199,8 +199,8 @@ class RankedPairsGraphTest extends TestCase
 
     public function testAddTwoMarginsWithCycle() : void
     {
-        $margin = new Margin($this->alice, $this->bob, 1);
-        $reverseMargin = new Margin($this->bob, $this->alice, -1);
+        $margin = new Pair($this->alice, $this->bob, 1);
+        $reverseMargin = new Pair($this->bob, $this->alice, -1);
 
         $this->instance->addMargin($margin);
         $this->instance->addMargin($reverseMargin);
@@ -229,7 +229,7 @@ class RankedPairsGraphTest extends TestCase
 
     public function testGetSimpleWinningCandidate() : void
     {
-        $margin = new Margin($this->alice, $this->bob, 1);
+        $margin = new Pair($this->alice, $this->bob, 1);
         $this->instance->addMargin($margin);
         $candidateList = $this->instance->getWinningCandidates();
         $candidates = $candidateList->toArray();
@@ -239,8 +239,8 @@ class RankedPairsGraphTest extends TestCase
 
     public function testSimpleToString() : void
     {
-        $margin = new Margin($this->alice, $this->bob, 1);
-        $reverseMargin = new Margin($this->bob, $this->alice, -1);
+        $margin = new Pair($this->alice, $this->bob, 1);
+        $reverseMargin = new Pair($this->bob, $this->alice, -1);
         $this->instance->addMargin($margin);
         $this->instance->addMargin($reverseMargin);
         $actual = $this->instance->toString();

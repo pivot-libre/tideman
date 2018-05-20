@@ -7,14 +7,14 @@ use \Exception;
 
 use PivotLibre\Tideman\Agenda;
 use PivotLibre\Tideman\Candidate;
-use PivotLibre\Tideman\MarginList;
+use PivotLibre\Tideman\PairList;
 use PivotLibre\Tideman\CandidateSet;
 use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\RankedPairsGraph;
-use PivotLibre\Tideman\ListOfMarginLists;
+use PivotLibre\Tideman\ListOfPairLists;
 use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
-use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotMarginTieBreaker;
+use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotPairTieBreaker;
 use PivotLibre\Tideman\TieBreaking\BallotTieBreaker;
 
 class RankedPairsCalculator
@@ -36,7 +36,7 @@ class RankedPairsCalculator
             $ballotTieBreaker = new BallotTieBreaker();
             $myTieBreakingBallot = $ballotTieBreaker->breakTiesRandomly($myTieBreakingBallot);
         }
-        $tieBreaker = new TotallyOrderedBallotMarginTieBreaker(new CandidateComparator($myTieBreakingBallot));
+        $tieBreaker = new TotallyOrderedBallotPairTieBreaker(new CandidateComparator($myTieBreakingBallot));
         $this->tieBreakingMarginComparator = new TieBreakingMarginComparator($tieBreaker);
         $this->tieBreakingCandidateComparator = new CandidateComparator($myTieBreakingBallot);
     }
@@ -92,13 +92,13 @@ class RankedPairsCalculator
      * @param Agenda $agenda a set of candidates. This is a non-strict subset of the Candidates in $nBallots.
      * @param ...NBallot $nBallots a list of NBallots. The set of Candidates in $nBallots is a non-strict
      * superset of the Candidates in $agenda.
-     * @return MarginList representing all of the pairwise differences in popular support for all Candidates specified
+     * @return PairList representing all of the pairwise differences in popular support for all Candidates specified
      * by $agenda. The length of the returned MarginList should be equal to `N(N - 1)`, where `N` is the number of
      * Candidates in $agenda.
      */
-    public function getMargins(Agenda $agenda, NBallot ...$nBallots) : MarginList
+    public function getMargins(Agenda $agenda, NBallot ...$nBallots) : PairList
     {
-        $marginCalculator = new MarginCalculator();
+        $marginCalculator = new PairCalculator();
         $marginRegistry = $marginCalculator->calculate($agenda, ...$nBallots);
         $allMargins = $marginRegistry->getAll();
         return $allMargins;
@@ -107,7 +107,7 @@ class RankedPairsCalculator
     /**
      * Sorts all Margins in order of descending getDifference(). Breaks ties. Filters out redundant negative margins.
      */
-    public function sortMargins(MarginList $marginList) : MarginList
+    public function sortMargins(PairList $marginList) : PairList
     {
         $marginsSortedDescGroupedByDifference = $marginList->filterGroupAndSort();
         $marginsWithTiesBroken = $marginsSortedDescGroupedByDifference->breakTies($this->tieBreakingMarginComparator);

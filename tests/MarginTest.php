@@ -20,7 +20,7 @@ class MarginTest extends TestCase
     public function testGetWinner() : void
     {
         $difference = 0;
-        $instance = new Margin($this->alice, $this->bob, $difference);
+        $instance = new Pair($this->alice, $this->bob, $difference);
         $actualWinner = $instance->getWinner();
         $this->assertEquals($this->alice, $actualWinner);
     }
@@ -28,7 +28,7 @@ class MarginTest extends TestCase
     public function testGetLoser() : void
     {
         $difference = 0;
-        $instance = new Margin($this->alice, $this->bob, $difference);
+        $instance = new Pair($this->alice, $this->bob, $difference);
         $actualLoser = $instance->getLoser();
         $this->assertEquals($this->bob, $actualLoser);
     }
@@ -36,23 +36,23 @@ class MarginTest extends TestCase
     public function testGetMargin() : void
     {
         $difference = 42;
-        $instance = new Margin($this->alice, $this->bob, $difference);
-        $actualMargin = $instance->getDifference();
+        $instance = new Pair($this->alice, $this->bob, $difference);
+        $actualMargin = $instance->getVotes();
         $this->assertEquals($difference, $actualMargin);
     }
     public function testSetMargin() : void
     {
         $originalMargin = 42;
-        $instance = new Margin($this->alice, $this->bob, $originalMargin);
+        $instance = new Pair($this->alice, $this->bob, $originalMargin);
         $newMargin = 3;
-        $instance->setDifference($newMargin);
-        $actualMargin = $instance->getDifference();
+        $instance->setVotes($newMargin);
+        $actualMargin = $instance->getVotes();
         $this->assertEquals($newMargin, $actualMargin);
     }
     public function testToStringPositiveDifference()
     {
         $difference = 21;
-        $instance = new Margin($this->bob, $this->alice, $difference);
+        $instance = new Pair($this->bob, $this->alice, $difference);
 
         $expectedToString = "(" . $this->bob->getId() . " --(" . $difference . ")--> " . $this->alice->getId() . ")";
         $actualToString = $instance->__toString();
@@ -61,7 +61,7 @@ class MarginTest extends TestCase
     public function testToStringNegativeDifference()
     {
         $difference = -21;
-        $instance = new Margin($this->alice, $this->bob, $difference);
+        $instance = new Pair($this->alice, $this->bob, $difference);
 
         $expectedToString = "(" . $this->alice->getId() . " --(" . $difference . ")--> " . $this->bob->getId() . ")";
         $actualToString = $instance->__toString();

@@ -3,13 +3,13 @@
 namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
-use PivotLibre\Tideman\Margin;
-use PivotLibre\Tideman\MarginList;
+use PivotLibre\Tideman\Pair;
+use PivotLibre\Tideman\PairList;
 use PivotLibre\Tideman\CandidateList;
-use PivotLibre\Tideman\ListOfMarginLists;
+use PivotLibre\Tideman\ListOfPairLists;
 use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
-use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotMarginTieBreaker;
+use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotPairTieBreaker;
 use \InvalidArgumentException;
 
 class TotallyOrderedBallotMarginTieBreakerTest extends TestCase
@@ -39,7 +39,7 @@ class TotallyOrderedBallotMarginTieBreakerTest extends TestCase
             new CandidateList($this->claire)
         );
         $candidateComparator = new CandidateComparator($tieBreakingBallot);
-        $this->instance = new TotallyOrderedBallotMarginTieBreaker($candidateComparator);
+        $this->instance = new TotallyOrderedBallotPairTieBreaker($candidateComparator);
     }
 
     public function testConstructUsingBadTieBreakingBallot() : void
@@ -47,27 +47,27 @@ class TotallyOrderedBallotMarginTieBreakerTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $badTieBreakingBallot = new Ballot(new CandidateList($this->alice, $this->bob));
         $badComparator = new CandidateComparator($badTieBreakingBallot);
-        new TotallyOrderedBallotMarginTieBreaker($badComparator);
+        new TotallyOrderedBallotPairTieBreaker($badComparator);
     }
     public function testNonTiedBallots() : void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $marginA = new Margin($this->alice, $this->bob, 10);
-        $marginB = new Margin($this->alice, $this->claire, 0);
+        $marginA = new Pair($this->alice, $this->bob, 10);
+        $marginB = new Pair($this->alice, $this->claire, 0);
         $this->instance->breakTie($marginB, $marginA);
     }
     public function testNonTiedWinners() : void
     {
-        $marginA = new Margin($this->alice, $this->bob, 10);
-        $marginB = new Margin($this->bob, $this->claire, 10);
+        $marginA = new Pair($this->alice, $this->bob, 10);
+        $marginB = new Pair($this->bob, $this->claire, 10);
         $this->assertLessThan(0, $this->instance->breakTie($marginA, $marginB));
         $this->assertGreaterThan(0, $this->instance->breakTie($marginB, $marginA));
     }
 
     public function testTiedWinners() : void
     {
-        $marginA = new Margin($this->alice, $this->bob, 10);
-        $marginB = new Margin($this->alice, $this->claire, 10);
+        $marginA = new Pair($this->alice, $this->bob, 10);
+        $marginB = new Pair($this->alice, $this->claire, 10);
         $this->assertLessThan(0, $this->instance->breakTie($marginA, $marginB));
         $this->assertGreaterThan(0, $this->instance->breakTie($marginB, $marginA));
     }

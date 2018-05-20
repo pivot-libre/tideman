@@ -3,8 +3,8 @@
 namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
-use PivotLibre\Tideman\MarginRegistry;
-use PivotLibre\Tideman\Margin;
+use PivotLibre\Tideman\PairRegistry;
+use PivotLibre\Tideman\Pair;
 
 class MarginRegistryTest extends TestCase
 {
@@ -20,7 +20,7 @@ class MarginRegistryTest extends TestCase
     {
         $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
-        $this->instance = new MarginRegistry();
+        $this->instance = new PairRegistry();
     }
     public function testGetFromEmptyRegistry() : void
     {
@@ -29,7 +29,7 @@ class MarginRegistryTest extends TestCase
     }
     public function testSimpleRegisterAndGet() : void
     {
-        $expectedMargin = new Margin($this->alice, $this->bob, 42);
+        $expectedMargin = new Pair($this->alice, $this->bob, 42);
         $this->instance->register($expectedMargin);
 
         $actualMargin = $this->instance->get($this->alice, $this->bob);
@@ -37,12 +37,12 @@ class MarginRegistryTest extends TestCase
         $this->assertEquals($expectedMargin, $actualMargin);
         $this->assertEquals($expectedMargin->getWinner(), $actualMargin->getWinner());
         $this->assertEquals($expectedMargin->getLoser(), $actualMargin->getLoser());
-        $this->assertEquals($expectedMargin->getDifference(), $actualMargin->getDifference());
+        $this->assertEquals($expectedMargin->getVotes(), $actualMargin->getDifference());
     }
     public function testCandidateOrderMatters() : void
     {
-        $expectedMarginOne = new Margin($this->alice, $this->bob, 42);
-        $expectedMarginTwo = new Margin($this->bob, $this->alice, -42);
+        $expectedMarginOne = new Pair($this->alice, $this->bob, 42);
+        $expectedMarginTwo = new Pair($this->bob, $this->alice, -42);
         $this->instance->register($expectedMarginOne);
         $this->instance->register($expectedMarginTwo);
 
@@ -56,8 +56,8 @@ class MarginRegistryTest extends TestCase
     public function testDuplicateRegistrationFails() : void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $expectedMarginOne = new Margin($this->alice, $this->bob, 42);
-        $expectedMarginTwo = new Margin($this->alice, $this->bob, 42);
+        $expectedMarginOne = new Pair($this->alice, $this->bob, 42);
+        $expectedMarginTwo = new Pair($this->alice, $this->bob, 42);
 
         $this->instance->register($expectedMarginOne);
         $this->instance->register($expectedMarginTwo);
@@ -70,21 +70,21 @@ class MarginRegistryTest extends TestCase
     public function testGetAllWithOneRegisteredMargin() : void
     {
         $margins = $this->instance->getAll();
-        $margin = new Margin($this->alice, $this->bob, 11);
+        $margin = new Pair($this->alice, $this->bob, 11);
         $this->instance->register($margin);
-        $expected = new MarginList($margin);
+        $expected = new PairList($margin);
         $actual = $this->instance->getAll();
         $this->assertEquals($expected, $actual);
     }
     public function testGetAllWithTwoRegisteredMargins() : void
     {
-        $marginOne = new Margin($this->alice, $this->bob, 11);
+        $marginOne = new Pair($this->alice, $this->bob, 11);
         $this->instance->register($marginOne);
 
-        $marginTwo = new Margin($this->bob, $this->alice, -11);
+        $marginTwo = new Pair($this->bob, $this->alice, -11);
         $this->instance->register($marginTwo);
 
-        $expected = new MarginList($marginOne, $marginTwo);
+        $expected = new PairList($marginOne, $marginTwo);
         $actual = $this->instance->getAll();
         //order-inspecific equality test
         $this->assertTrue(
@@ -112,10 +112,10 @@ class MarginRegistryTest extends TestCase
         $candidateOne = new Candidate(':', 'One Colon');
         $candidateEleven = new Candidate('::', 'Two Colon');
 
-        $margin = new Margin($candidateOne, $candidateEleven, 0);
+        $margin = new Pair($candidateOne, $candidateEleven, 0);
         $this->instance->register($margin);
 
-        $oppositeMargin = new Margin($candidateEleven, $candidateOne, 0);
+        $oppositeMargin = new Pair($candidateEleven, $candidateOne, 0);
         $this->instance->register($oppositeMargin);
         $this->assertEquals(2, $this->instance->getCount());
     }

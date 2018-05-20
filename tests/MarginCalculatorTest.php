@@ -5,7 +5,7 @@ namespace PivotLibre\Tideman;
 use PHPUnit\Framework\TestCase;
 use PivotLibre\Tideman\Agenda;
 use PivotLibre\Tideman\CandidateList;
-use PivotLibre\Tideman\MarginCalculator;
+use PivotLibre\Tideman\PairCalculator;
 use \InvalidArgumentException;
 
 class MarginCalculatorTest extends TestCase
@@ -25,13 +25,13 @@ class MarginCalculatorTest extends TestCase
         $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
         $this->claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
-        $this->instance = new MarginCalculator();
+        $this->instance = new PairCalculator();
     }
 
     public function testUpdatePairInRegistry() : void
     {
-        $registry = new MarginRegistry();
-        $registry->register(new Margin($this->alice, $this->bob, 0));
+        $registry = new PairRegistry();
+        $registry->register(new Pair($this->alice, $this->bob, 0));
         $this->instance->incrementMarginInRegistry(
             $this->alice,
             $this->bob,
@@ -39,13 +39,13 @@ class MarginCalculatorTest extends TestCase
             42
         );
         $actualMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(42, $actualMargin->getDifference());
+        $this->assertEquals(42, $actualMargin->getVotes());
     }
     public function testUpdatePairIgnoreAnotherPairInRegistry() : void
     {
-        $registry = new MarginRegistry();
-        $registry->register(new Margin($this->alice, $this->bob, 0));
-        $registry->register(new Margin($this->claire, $this->bob, 0));
+        $registry = new PairRegistry();
+        $registry->register(new Pair($this->alice, $this->bob, 0));
+        $registry->register(new Pair($this->claire, $this->bob, 0));
 
         $this->instance->incrementMarginInRegistry(
             $this->alice,
@@ -54,17 +54,17 @@ class MarginCalculatorTest extends TestCase
             5
         );
         $actualMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(5, $actualMargin->getDifference());
+        $this->assertEquals(5, $actualMargin->getVotes());
 
         $untouchedMargin = $registry->get($this->claire, $this->bob);
-        $this->assertEquals(0, $untouchedMargin->getDifference());
+        $this->assertEquals(0, $untouchedMargin->getVotes());
     }
 
     public function testTwoUpdatesOfTwoPairsInRegistry() : void
     {
-        $registry = new MarginRegistry();
-        $registry->register(new Margin($this->alice, $this->bob, 0));
-        $registry->register(new Margin($this->claire, $this->bob, 0));
+        $registry = new PairRegistry();
+        $registry->register(new Pair($this->alice, $this->bob, 0));
+        $registry->register(new Pair($this->claire, $this->bob, 0));
 
         //add 1 to Alice->Bob, don't touch Claire->Bob
         $this->instance->incrementMarginInRegistry(
@@ -74,10 +74,10 @@ class MarginCalculatorTest extends TestCase
             1
         );
         $actualMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(1, $actualMargin->getDifference());
+        $this->assertEquals(1, $actualMargin->getVotes());
 
         $untouchedMargin = $registry->get($this->claire, $this->bob);
-        $this->assertEquals(0, $untouchedMargin->getDifference());
+        $this->assertEquals(0, $untouchedMargin->getVotes());
 
         //add 17 to Alice->Bob, don't touch Claire->Bob
         $this->instance->incrementMarginInRegistry(
@@ -87,10 +87,10 @@ class MarginCalculatorTest extends TestCase
             17
         );
         $actualMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(18, $actualMargin->getDifference());
+        $this->assertEquals(18, $actualMargin->getVotes());
 
         $untouchedMargin = $registry->get($this->claire, $this->bob);
-        $this->assertEquals(0, $untouchedMargin->getDifference());
+        $this->assertEquals(0, $untouchedMargin->getVotes());
 
         //Add 3 to Claire->Bob, don't touch Alice->Bob
         $this->instance->incrementMarginInRegistry(
@@ -100,10 +100,10 @@ class MarginCalculatorTest extends TestCase
             3
         );
         $actualMargin = $registry->get($this->claire, $this->bob);
-        $this->assertEquals(3, $actualMargin->getDifference());
+        $this->assertEquals(3, $actualMargin->getVotes());
 
         $untouchedMargin = $registry->get($this->alice, $this->bob);
-        $this->assertEquals(18, $untouchedMargin->getDifference());
+        $this->assertEquals(18, $untouchedMargin->getVotes());
     }
 
     public function testInitializeRegistryWithEmptyAgenda() : void

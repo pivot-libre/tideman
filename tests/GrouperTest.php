@@ -3,8 +3,8 @@
 namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
-use PivotLibre\Tideman\Margin;
-use PivotLibre\Tideman\MarginList;
+use PivotLibre\Tideman\Pair;
+use PivotLibre\Tideman\PairList;
 
 class GrouperTest extends TestCase
 {
@@ -26,10 +26,10 @@ class GrouperTest extends TestCase
         $alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $bob = new Candidate(self::BOB_ID, self::BOB_NAME);
         $claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
-        $this->aliceBobMargin = new Margin($alice, $bob, 1);
-        $this->aliceClaireMargin = new Margin($alice, $claire, 1);
-        $this->claireBobMargin = new Margin($claire, $bob, 3);
-        $this->marginList = new MarginList(
+        $this->aliceBobMargin = new Pair($alice, $bob, 1);
+        $this->aliceClaireMargin = new Pair($alice, $claire, 1);
+        $this->claireBobMargin = new Pair($claire, $bob, 3);
+        $this->marginList = new PairList(
             $this->aliceBobMargin,
             $this->aliceClaireMargin,
             $this->claireBobMargin
@@ -38,8 +38,8 @@ class GrouperTest extends TestCase
 
     public function testGroupByDifference() : void
     {
-        $getDifference = function (Margin $margin) {
-            return $margin->getDifference();
+        $getDifference = function (Pair $margin) {
+            return $margin->getVotes();
         };
         $instance = new Grouper($getDifference);
         $actual = $instance->group($this->marginList);
@@ -57,7 +57,7 @@ class GrouperTest extends TestCase
 
     public function testGroupBySumOfLengthOfBothCandidatesNames() : void
     {
-        $sumLengthOfCandidateNames = function (Margin $margin) {
+        $sumLengthOfCandidateNames = function (Pair $margin) {
             $winnerNameLen = strlen($margin->getWinner()->getName());
             $loserNameLen = strlen($margin->getLoser()->getName());
             $combinedLength = $winnerNameLen + $loserNameLen;

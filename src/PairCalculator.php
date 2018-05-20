@@ -1,22 +1,22 @@
 <?php
 namespace PivotLibre\Tideman;
 
-use PivotLibre\Tideman\MarginRegistry;
+use PivotLibre\Tideman\PairRegistry;
 
 use \InvalidArgumentException;
 
-class MarginCalculator
+class PairCalculator
 {
     /**
-     * Register a Margin for all possible pairs of Candidates described in an Agenda. If the agenda contains N
+     * Register a Pair for all possible pairs of Candidates described in an Agenda. If the agenda contains N
      * Candidates, then this method should register (N^2) - N = N(N - 1) Candidates.
      *
      * @todo This basically registers all non-duplicating permutations of a list of Candidates. Consider moving this to
      * a more generic function. http://php.net/manual/en/language.generators.syntax.php
      */
-    public function initializeRegistry(Agenda $agenda) : MarginRegistry
+    public function initializeRegistry(Agenda $agenda) : PairRegistry
     {
-        $registry = new MarginRegistry();
+        $registry = new PairRegistry();
         foreach ($agenda->getCandidates() as $outerCandidate) {
             foreach ($agenda->getCandidates() as $innerCandidate) {
                 /**
@@ -25,8 +25,8 @@ class MarginCalculator
                  * public support of a candidate and themself.
                  */
                 if ($outerCandidate->getId() != $innerCandidate->getId()) {
-                    $margin = new Margin($outerCandidate, $innerCandidate, 0);
-                    $registry->register($margin);
+                    $pair = new Pair($outerCandidate, $innerCandidate, 0);
+                    $registry->register($pair);
                 }
             }
         }
@@ -35,23 +35,23 @@ class MarginCalculator
 
     /**
      *
-     * Adds the $amountToAdd to the count already associated with the appropriate Margin in the
-     * MarginRegistry.
+     * Adds the $amountToAdd to the count already associated with the appropriate Pair in the
+     * PairRegistry.
      *
      * @param Candidate $winner
      * @param Candidate $loser
-     * @param MarginRegistry $registry
+     * @param PairRegistry $registry
      * @param int $amountToAdd
      */
-    public function incrementMarginInRegistry(
+    public function incrementPairInRegistry(
         Candidate $winner,
         Candidate $loser,
-        MarginRegistry $registry,
+        PairRegistry $registry,
         int $amountToAdd
     ) : void {
-        $marginToUpdate = $registry->get($winner, $loser);
-        $updatedMargin = $marginToUpdate->getDifference() + $amountToAdd;
-        $marginToUpdate->setDifference($updatedMargin);
+        $pairToUpdate = $registry->get($winner, $loser);
+        $updatedPair = $pairToUpdate->getVotes() + $amountToAdd;
+        $pairToUpdate->setVotes($updatedPair);
     }
 
     /**
@@ -60,7 +60,7 @@ class MarginCalculator
      * -1 if comparisonResult is positive
      * 1 if comparisonResult is negative
      * The result of this function can be multiplied by NBallot->getCount() to determine how much
-     * a Margin should be incremented.
+     * a Pair should be incremented.
      */
     public function getComparisonFactor(int $comparisonResult) : int
     {
@@ -74,18 +74,18 @@ class MarginCalculator
     }
 
     /**
-     * Calculate the pairwise differences in popular support, a.k.a. the Margins.
+     * Calculate the pairwise differences in popular support, a.k.a. the Pairs.
      *
      * @param Agenda $agenda a set of candidates. This is a non-strict subset of the Candidates in $nBallots.
      * @param ...NBallot $nBallots a list of NBallots. The set of Candidates in $nBallots is a non-strict
      * superset of the Candidates in $agenda.
-     * @return a MarginRegistry whose Margins completely describe the pairwise
-     * difference in popular support between every Candidate. The number of Margins in the returned MarginRegistry
+     * @return a PairRegistry whose Pairs completely describe the pairwise
+     * difference in popular support between every Candidate. The number of Pairs in the returned PairRegistry
      * should be equal to `N(N - 1)`, where `N` is the number of Candidates in $agenda.
      * @todo this function generates all non-duplicating combinations of Candidates. Consider moving the combination
      * logic elsewhere. http://php.net/manual/en/language.generators.syntax.php
      */
-    public function calculate(Agenda $agenda, NBallot ...$nBallots) : MarginRegistry
+    public function calculate(Agenda $agenda, NBallot ...$nBallots) : PairRegistry
     {
         $registry = $this->initializeRegistry($agenda);
 
@@ -104,13 +104,13 @@ class MarginCalculator
                     $comparisonResult = $comparator->compare($outerCandidate, $innerCandidate);
                     $comparisonFactor = $this->getComparisonFactor($comparisonResult);
                     $updateAmount = $comparisonFactor * $ballotCount;
-                    $this->incrementMarginInRegistry(
+                    $this->incrementPairInRegistry(
                         $outerCandidate,
                         $innerCandidate,
                         $registry,
                         $updateAmount
                     );
-                    $this->incrementMarginInRegistry(
+                    $this->incrementPairInRegistry(
                         $innerCandidate,
                         $outerCandidate,
                         $registry,

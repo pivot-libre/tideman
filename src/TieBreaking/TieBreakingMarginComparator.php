@@ -4,7 +4,7 @@ namespace PivotLibre\Tideman\TieBreaking;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
-use PivotLibre\Tideman\Margin;
+use PivotLibre\Tideman\Pair;
 
 class TieBreakingMarginComparator implements LoggerAwareInterface
 {
@@ -12,7 +12,7 @@ class TieBreakingMarginComparator implements LoggerAwareInterface
 
     private $tieBreaker;
 
-    public function __construct(MarginTieBreaker $tieBreaker)
+    public function __construct(PairTieBreaker $tieBreaker)
     {
         $this->logger = new NullLogger();
         $this->tieBreaker = $tieBreaker;
@@ -20,8 +20,8 @@ class TieBreakingMarginComparator implements LoggerAwareInterface
 
     /**
      * Compares two Margins, returning an integer to indicate their relative ordering.
-     * @param Margin $a
-     * @param Margin $b
+     * @param Pair $a
+     * @param Pair $b
      * @return an int :
      *  A negative int if Margin $a is more preferred than Margin $b
      *  A positive int if Margin $b is more preferred than Margin $a
@@ -30,9 +30,9 @@ class TieBreakingMarginComparator implements LoggerAwareInterface
      * constructor to determine a nonzero integer indicating which Margin should be treated as though it were more
      * preferred than the other.
      */
-    public function compare(Margin $a, Margin $b) : int
+    public function compare(Pair $a, Pair $b) : int
     {
-        $differenceOfStrength = $b->getDifference() - $a->getDifference();
+        $differenceOfStrength = $b->getVotes() - $a->getVotes();
         if (0 == $differenceOfStrength) {
             $this->logger->notice("Tie between two Margins:\n$a\n$b\n");
             $result = $this->tieBreaker->breakTie($a, $b);
@@ -61,7 +61,7 @@ class TieBreakingMarginComparator implements LoggerAwareInterface
      * Additional details:
      * https://stackoverflow.com/a/35277180
      */
-    public function __invoke(Margin $a, Margin $b) : int
+    public function __invoke(Pair $a, Pair $b) : int
     {
         return $this->compare($a, $b);
     }

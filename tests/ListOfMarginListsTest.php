@@ -3,14 +3,14 @@
 namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
-use PivotLibre\Tideman\Margin;
+use PivotLibre\Tideman\Pair;
 use PivotLibre\Tideman\Candidate;
 use PivotLibre\Tideman\CandidateList;
-use PivotLibre\Tideman\TieBreaking\MarginTieBreaker;
-use PivotLibre\Tideman\ListOfMarginLists;
+use PivotLibre\Tideman\TieBreaking\PairTieBreaker;
+use PivotLibre\Tideman\ListOfPairLists;
 use PivotLibre\Tideman\CandidateComparator;
 use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
-use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotMarginTieBreaker;
+use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotPairTieBreaker;
 
 class ListOfMarginListsTest extends GenericCollectionTestCase
 {
@@ -47,90 +47,90 @@ class ListOfMarginListsTest extends GenericCollectionTestCase
         );
 
         $candidateComparator = new CandidateComparator($tieBreakingBallot);
-        $tieBreaker = new TotallyOrderedBallotMarginTieBreaker($candidateComparator);
+        $tieBreaker = new TotallyOrderedBallotPairTieBreaker($candidateComparator);
         $this->tieBreakingMarginComparator = new TieBreakingMarginComparator($tieBreaker);
 
-        $this->marginsWithTiedDifferences = new MarginList(
-            new Margin($this->alice, $this->bob, 1),
-            new Margin($this->alice, $this->claire, 1)
+        $this->marginsWithTiedDifferences = new PairList(
+            new Pair($this->alice, $this->bob, 1),
+            new Pair($this->alice, $this->claire, 1)
         );
-        $this->marginsWithoutTiedDifferences = new MarginList(
-            new Margin($this->bob, $this->claire, 5),
-            new Margin($this->alice, $this->dave, 4)
+        $this->marginsWithoutTiedDifferences = new PairList(
+            new Pair($this->bob, $this->claire, 5),
+            new Pair($this->alice, $this->dave, 4)
         );
         $this->values = [
             $this->marginsWithTiedDifferences,
             $this->marginsWithoutTiedDifferences
         ];
-        $this->instance = new ListOfMarginLists(...$this->values);
-        $this->concreteType = ListOfMarginLists::class;
+        $this->instance = new ListOfPairLists(...$this->values);
+        $this->concreteType = ListOfPairLists::class;
     }
 
     public function testNoOpTieBreak() : void
     {
         //empty
-        $instance = new ListOfMarginLists();
+        $instance = new ListOfPairLists();
         $actual = $instance->breakTies($this->tieBreakingMarginComparator);
         //empty
-        $expected = new MarginList();
+        $expected = new PairList();
 
         $this->assertEquals($expected, $actual);
     }
 
     public function testTieBreakingOnCompletelySortedCandidateList() : void
     {
-        $instance = new ListOfMarginLists(
-            new MarginList(
-                new Margin($this->bob, $this->claire, 5)
+        $instance = new ListOfPairLists(
+            new PairList(
+                new Pair($this->bob, $this->claire, 5)
             ),
-            new MarginList(
-                new Margin($this->alice, $this->dave, 4)
+            new PairList(
+                new Pair($this->alice, $this->dave, 4)
             )
         );
         $actual = $instance->breakTies($this->tieBreakingMarginComparator);
-        $expected = new MarginList(
-            new Margin($this->bob, $this->claire, 5),
-            new Margin($this->alice, $this->dave, 4)
+        $expected = new PairList(
+            new Pair($this->bob, $this->claire, 5),
+            new Pair($this->alice, $this->dave, 4)
         );
 
         $this->assertEquals($expected, $actual);
     }
     public function testTieBreakingOnTiedList() : void
     {
-        $instance = new ListOfMarginLists(
-            new MarginList(
-                new Margin($this->alice, $this->claire, 1),
-                new Margin($this->alice, $this->bob, 1)
+        $instance = new ListOfPairLists(
+            new PairList(
+                new Pair($this->alice, $this->claire, 1),
+                new Pair($this->alice, $this->bob, 1)
             )
         );
         $actual = $instance->breakTies($this->tieBreakingMarginComparator);
-        $expected = new MarginList(
-            new Margin($this->alice, $this->bob, 1),
-            new Margin($this->alice, $this->claire, 1)
+        $expected = new PairList(
+            new Pair($this->alice, $this->bob, 1),
+            new Pair($this->alice, $this->claire, 1)
         );
         $this->assertEquals($expected, $actual);
     }
 
     public function testTieBreakingOnMixedList() : void
     {
-        $instance = new ListOfMarginLists(
-            new MarginList(
-                new Margin($this->alice, $this->dave, 5)
+        $instance = new ListOfPairLists(
+            new PairList(
+                new Pair($this->alice, $this->dave, 5)
             ),
-            new MarginList(
-                new Margin($this->alice, $this->claire, 3),
-                new Margin($this->alice, $this->bob, 3)
+            new PairList(
+                new Pair($this->alice, $this->claire, 3),
+                new Pair($this->alice, $this->bob, 3)
             ),
-            new MarginList(
-                new Margin($this->bob, $this->claire, 2)
+            new PairList(
+                new Pair($this->bob, $this->claire, 2)
             )
         );
         $actual = $instance->breakTies($this->tieBreakingMarginComparator);
-        $expected = new MarginList(
-            new Margin($this->alice, $this->dave, 5),
-            new Margin($this->alice, $this->bob, 3),
-            new Margin($this->alice, $this->claire, 3),
-            new Margin($this->bob, $this->claire, 2)
+        $expected = new PairList(
+            new Pair($this->alice, $this->dave, 5),
+            new Pair($this->alice, $this->bob, 3),
+            new Pair($this->alice, $this->claire, 3),
+            new Pair($this->bob, $this->claire, 2)
         );
         $this->assertEquals($expected, $actual);
     }
