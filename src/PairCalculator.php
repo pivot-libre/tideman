@@ -93,7 +93,6 @@ class PairCalculator
             $comparator = new CandidateComparator($nBallot);
             $ballotCount = $nBallot->getCount();
             $candidatesList = $agenda->getCandidates();
-            //it is very important to convert this to an array, otherwise count() will always return 1
             $candidates = $candidatesList->toArray();
             $candidatesCount = count($candidates);
             //Loop through all combinations of candidates in the Agenda.

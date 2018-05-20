@@ -49,9 +49,4 @@ class CandidateSet extends GenericCollection implements Countable
     {
         return null == $this->get($candidate);
     }
-
-    public function count() : int
-    {
-        return sizeof($this->values);
-    }
 }

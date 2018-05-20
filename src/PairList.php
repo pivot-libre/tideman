@@ -65,9 +65,4 @@ class PairList extends GenericCollection implements Countable
         $listOfPairLists = new ListOfPairLists(...$allPairLists);
         return $listOfPairLists;
     }
-
-    public function count() : int
-    {
-        return sizeof($this->values);
-    }
 }
