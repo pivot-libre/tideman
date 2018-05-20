@@ -1,10 +1,6 @@
 <?php
 namespace PivotLibre\Tideman;
 
-use PivotLibre\Tideman\MarginRegistry;
-
-use \InvalidArgumentException;
-
 class MarginRegistrar extends PairRegistrar
 {
     /**
@@ -29,7 +25,7 @@ class MarginRegistrar extends PairRegistrar
             $registry,
             $comparisonFactor * $ballotCount
         );
-        //since margins record the difference, we also need to decrement the pair representing the mirror image
+        //since margins record the difference, we also need to decrement the transposed pair
         $this->incrementVotesInRegistry(
             $candidateB,
             $candidateA,

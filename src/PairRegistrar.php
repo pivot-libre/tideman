@@ -121,7 +121,7 @@ abstract class PairRegistrar
      * -1 if comparisonResult is positive
      * 1 if comparisonResult is negative
      * The result of this function can be multiplied by NBallot->getCount() to determine how much
-     * a Margin should be incremented.
+     * a Pair should be incremented.
      */
     public function getComparisonFactor(int $comparisonResult) : int
     {
