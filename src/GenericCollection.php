@@ -2,6 +2,7 @@
 namespace PivotLibre\Tideman;
 
 use IteratorAggregate;
+use Countable;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
@@ -12,7 +13,7 @@ use Psr\Log\LoggerAwareTrait;
  * safety using PHP's type hinting on variadic arguments. Subclasses inherit array-like behavior from this parent
  * abstract class.
  */
-abstract class GenericCollection implements IteratorAggregate, LoggerAwareInterface
+abstract class GenericCollection implements IteratorAggregate, LoggerAwareInterface, Countable
 {
     use LoggerAwareTrait;
 
@@ -34,5 +35,10 @@ abstract class GenericCollection implements IteratorAggregate, LoggerAwareInterf
         $string .= join(", ", $this->values);
         $string .= " ]";
         return $string;
+    }
+
+    public function count() : int
+    {
+        return count($this->values);
     }
 }

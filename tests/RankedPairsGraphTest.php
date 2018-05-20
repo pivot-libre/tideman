@@ -183,10 +183,10 @@ class RankedPairsGraphTest extends TestCase
         $this->assertTrue($this->instance->vertexIsInACycle($vertexC));
     }
 
-    public function testAddOneMargin() : void
+    public function testAddOnePair() : void
     {
-        $margin = new Margin($this->alice, $this->bob, 1);
-        $this->instance->addMargin($margin);
+        $pair = new Pair($this->alice, $this->bob, 1);
+        $this->instance->addPair($pair);
         $graph = $this->instance->getGraph();
         $aliceVertex = $graph->getVertex(self::ALICE_ID);
         $bobVertex = $graph->getVertex(self::BOB_ID);
@@ -197,13 +197,13 @@ class RankedPairsGraphTest extends TestCase
         $this->assertFalse($bobVertex->hasEdgeTo($aliceVertex));
     }
 
-    public function testAddTwoMarginsWithCycle() : void
+    public function testAddTwoPairsWithCycle() : void
     {
-        $margin = new Margin($this->alice, $this->bob, 1);
-        $reverseMargin = new Margin($this->bob, $this->alice, -1);
+        $pair = new Pair($this->alice, $this->bob, 1);
+        $reversePair = new Pair($this->bob, $this->alice, -1);
 
-        $this->instance->addMargin($margin);
-        $this->instance->addMargin($reverseMargin);
+        $this->instance->addPair($pair);
+        $this->instance->addPair($reversePair);
         $graph = $this->instance->getGraph();
         $aliceVertex = $graph->getVertex(self::ALICE_ID);
         $bobVertex = $graph->getVertex(self::BOB_ID);
@@ -229,8 +229,8 @@ class RankedPairsGraphTest extends TestCase
 
     public function testGetSimpleWinningCandidate() : void
     {
-        $margin = new Margin($this->alice, $this->bob, 1);
-        $this->instance->addMargin($margin);
+        $pair = new Pair($this->alice, $this->bob, 1);
+        $this->instance->addPair($pair);
         $candidateList = $this->instance->getWinningCandidates();
         $candidates = $candidateList->toArray();
         $this->assertEquals(1, sizeof($candidates));
@@ -239,10 +239,10 @@ class RankedPairsGraphTest extends TestCase
 
     public function testSimpleToString() : void
     {
-        $margin = new Margin($this->alice, $this->bob, 1);
-        $reverseMargin = new Margin($this->bob, $this->alice, -1);
-        $this->instance->addMargin($margin);
-        $this->instance->addMargin($reverseMargin);
+        $pair = new Pair($this->alice, $this->bob, 1);
+        $reversePair = new Pair($this->bob, $this->alice, -1);
+        $this->instance->addPair($pair);
+        $this->instance->addPair($reversePair);
         $actual = $this->instance->toString();
         $expected = "[A : ( 1, B)  ] [B :  ] ";
         $this->assertEquals($expected, $actual);

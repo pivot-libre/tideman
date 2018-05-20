@@ -3,8 +3,8 @@
 namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
-use PivotLibre\Tideman\Margin;
-use PivotLibre\Tideman\MarginList;
+use PivotLibre\Tideman\Pair;
+use PivotLibre\Tideman\PairList;
 
 class GrouperTest extends TestCase
 {
@@ -15,41 +15,41 @@ class GrouperTest extends TestCase
     private const CLAIRE_ID = "C";
     private const CLAIRE_NAME = "Claire";
 
-    private $aliceBobMargin;
-    private $aliceClaireMargin;
-    private $claireBobMargin;
+    private $aliceBobPair;
+    private $aliceClairePair;
+    private $claireBobPair;
 
-    private $marginList;
+    private $pairList;
 
     protected function setUp()
     {
         $alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $bob = new Candidate(self::BOB_ID, self::BOB_NAME);
         $claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
-        $this->aliceBobMargin = new Margin($alice, $bob, 1);
-        $this->aliceClaireMargin = new Margin($alice, $claire, 1);
-        $this->claireBobMargin = new Margin($claire, $bob, 3);
-        $this->marginList = new MarginList(
-            $this->aliceBobMargin,
-            $this->aliceClaireMargin,
-            $this->claireBobMargin
+        $this->aliceBobPair = new Pair($alice, $bob, 1);
+        $this->aliceClairePair = new Pair($alice, $claire, 1);
+        $this->claireBobPair = new Pair($claire, $bob, 3);
+        $this->pairList = new PairList(
+            $this->aliceBobPair,
+            $this->aliceClairePair,
+            $this->claireBobPair
         );
     }
 
-    public function testGroupByDifference() : void
+    public function testGroupByVotes() : void
     {
-        $getDifference = function (Margin $margin) {
-            return $margin->getDifference();
+        $getVotes = function (Pair $pair) {
+            return $pair->getVotes();
         };
-        $instance = new Grouper($getDifference);
-        $actual = $instance->group($this->marginList);
+        $instance = new Grouper($getVotes);
+        $actual = $instance->group($this->pairList);
         $expected = [
             1 => [
-                $this->aliceBobMargin,
-                $this->aliceClaireMargin
+                $this->aliceBobPair,
+                $this->aliceClairePair
             ],
             3 => [
-                $this->claireBobMargin
+                $this->claireBobPair
             ]
         ];
         $this->assertEquals($expected, $actual);
@@ -57,23 +57,23 @@ class GrouperTest extends TestCase
 
     public function testGroupBySumOfLengthOfBothCandidatesNames() : void
     {
-        $sumLengthOfCandidateNames = function (Margin $margin) {
-            $winnerNameLen = strlen($margin->getWinner()->getName());
-            $loserNameLen = strlen($margin->getLoser()->getName());
+        $sumLengthOfCandidateNames = function (Pair $pair) {
+            $winnerNameLen = strlen($pair->getWinner()->getName());
+            $loserNameLen = strlen($pair->getLoser()->getName());
             $combinedLength = $winnerNameLen + $loserNameLen;
             return $combinedLength;
         };
         $instance = new Grouper($sumLengthOfCandidateNames);
-        $actual = $instance->group($this->marginList);
+        $actual = $instance->group($this->pairList);
         $expected = [
             8 => [
-                $this->aliceBobMargin,
+                $this->aliceBobPair,
             ],
             11 => [
-                $this->aliceClaireMargin
+                $this->aliceClairePair
             ],
             9 => [
-                $this->claireBobMargin
+                $this->claireBobPair
             ]
         ];
         $this->assertEquals($expected, $actual);
