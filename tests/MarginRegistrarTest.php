@@ -8,7 +8,7 @@ use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\MarginRegistrar;
 use \InvalidArgumentException;
 
-class MarginCalculatorTest extends TestCase
+class MarginRegistrarTest extends TestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
@@ -188,7 +188,7 @@ class MarginCalculatorTest extends TestCase
     public function testCalculateWithEmptyBallot() : void
     {
         $ballot = new NBallot(0);
-        $registry = $this->instance->calculate(
+        $registry = $this->instance->register(
             new Agenda($ballot),
             $ballot
         );
@@ -207,7 +207,7 @@ class MarginCalculatorTest extends TestCase
                 )
             )
         ];
-        $registry = $this->instance->calculate(
+        $registry = $this->instance->register(
             new Agenda(...$nBallots),
             ...$nBallots
         );
@@ -227,7 +227,7 @@ class MarginCalculatorTest extends TestCase
                 )
             )
         ];
-        $registry = $this->instance->calculate(
+        $registry = $this->instance->register(
             new Agenda(...$nBallots),
             ...$nBallots
         );
@@ -251,7 +251,7 @@ class MarginCalculatorTest extends TestCase
                 )
             )
         ];
-        $registry = $this->instance->calculate(
+        $registry = $this->instance->register(
             new Agenda(...$nBallots),
             ...$nBallots
         );
@@ -281,7 +281,7 @@ class MarginCalculatorTest extends TestCase
                 )
             )
         ];
-        $registry = $this->instance->calculate(
+        $registry = $this->instance->register(
             new Agenda(...$nBallots),
             ...$nBallots
         );
@@ -313,7 +313,7 @@ class MarginCalculatorTest extends TestCase
                 )
             )
         ];
-        $registry = $this->instance->calculate(
+        $registry = $this->instance->register(
             new Agenda(...$nBallots),
             ...$nBallots
         );

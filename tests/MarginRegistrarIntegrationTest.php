@@ -21,12 +21,12 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  * Generate a php class from the TSV by running:
  *     python parse_ballot.py <name_of_individual_ballot.tsv> > TestScenarioN.php
  * Update the name of the generated class to match the name of the file it is inside of.
- * Create a new method in MarginCalculatorIntegrationTest.
+ * Create a new method in MarginRegistrarIntegrationTest.
  * Inside of the method, manually construct a list of expected pairs by looking at the expected pairs worksheet.
  * Compare the expected pairs and the actual pairs using the `checkPairs()` utility method.
  *
  */
-class MarginCalculatorIntegrationTest extends TestCase
+class MarginRegistrarIntegrationTest extends TestCase
 {
     protected function checkPairs($expectedPairs, $ballots)
     {
