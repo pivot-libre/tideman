@@ -99,7 +99,7 @@ class RankedPairsCalculator
     public function getPairs(Agenda $agenda, NBallot ...$nBallots) : PairList
     {
         $pairRegistrar = new MarginRegistrar();
-        $pairRegistry = $pairRegistrar->calculate($agenda, ...$nBallots);
+        $pairRegistry = $pairRegistrar->register($agenda, ...$nBallots);
         $allPairs = $pairRegistry->getAll();
         return $allPairs;
     }

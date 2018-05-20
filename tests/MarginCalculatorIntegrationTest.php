@@ -31,7 +31,7 @@ class MarginCalculatorIntegrationTest extends TestCase
     protected function checkPairs($expectedPairs, $ballots)
     {
         $agenda = new Agenda(...$ballots);
-        $pairRegistry = (new MarginRegistrar())->calculate($agenda, ...$ballots);
+        $pairRegistry = (new MarginRegistrar())->register($agenda, ...$ballots);
         $this->assertEquals(sizeof($expectedPairs), $pairRegistry->getCount());
         foreach ($expectedPairs as $expectedPair) {
             $winner = $expectedPair->getWinner();

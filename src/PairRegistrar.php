@@ -91,7 +91,7 @@ abstract class PairRegistrar
      * @todo this function generates all non-duplicating combinations of Candidates. Consider moving the combination
      * logic elsewhere. http://php.net/manual/en/language.generators.syntax.php
      */
-    public function calculate(Agenda $agenda, NBallot ...$nBallots) : PairRegistry
+    public function register(Agenda $agenda, NBallot ...$nBallots) : PairRegistry
     {
         $registry = $this->initializeRegistry($agenda);
 
