@@ -3,7 +3,7 @@
 namespace PivotLibre\Tideman;
 
 use PivotLibre\Tideman\TestScenario1;
-use PivotLibre\Tideman\PairCalculator;
+use PivotLibre\Tideman\MarginCalculator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -21,17 +21,17 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  * Generate a php class from the TSV by running:
  *     python parse_ballot.py <name_of_individual_ballot.tsv> > TestScenarioN.php
  * Update the name of the generated class to match the name of the file it is inside of.
- * Create a new method in PairCalculatorIntegrationTest.
+ * Create a new method in MarginCalculatorIntegrationTest.
  * Inside of the method, manually construct a list of expected pairs by looking at the expected pairs worksheet.
  * Compare the expected pairs and the actual pairs using the `checkPairs()` utility method.
  *
  */
-class PairCalculatorIntegrationTest extends TestCase
+class MarginCalculatorIntegrationTest extends TestCase
 {
     protected function checkPairs($expectedPairs, $ballots)
     {
         $agenda = new Agenda(...$ballots);
-        $pairRegistry = (new PairCalculator())->calculate($agenda, ...$ballots);
+        $pairRegistry = (new MarginCalculator())->calculate($agenda, ...$ballots);
         $this->assertEquals(sizeof($expectedPairs), $pairRegistry->getCount());
         foreach ($expectedPairs as $expectedPair) {
             $winner = $expectedPair->getWinner();

@@ -5,10 +5,10 @@ namespace PivotLibre\Tideman;
 use PHPUnit\Framework\TestCase;
 use PivotLibre\Tideman\Agenda;
 use PivotLibre\Tideman\CandidateList;
-use PivotLibre\Tideman\PairCalculator;
+use PivotLibre\Tideman\MarginCalculator;
 use \InvalidArgumentException;
 
-class PairCalculatorTest extends TestCase
+class MarginCalculatorTest extends TestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
@@ -25,7 +25,7 @@ class PairCalculatorTest extends TestCase
         $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
         $this->claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
-        $this->instance = new PairCalculator();
+        $this->instance = new MarginCalculator();
     }
 
     public function testUpdatePairInRegistry() : void

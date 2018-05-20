@@ -98,7 +98,7 @@ class RankedPairsCalculator
      */
     public function getPairs(Agenda $agenda, NBallot ...$nBallots) : PairList
     {
-        $pairCalculator = new PairCalculator();
+        $pairCalculator = new MarginCalculator();
         $pairRegistry = $pairCalculator->calculate($agenda, ...$nBallots);
         $allPairs = $pairRegistry->getAll();
         return $allPairs;

@@ -4,7 +4,7 @@ namespace PivotLibre\Tideman;
 use PivotLibre\Tideman\PairRegistry;
 
 
-abstract class PairCalculator
+class MarginCalculator
 {
     /**
      * Register a Pair for all possible pairs of Candidates described in an Agenda. If the agenda contains N
@@ -84,13 +84,17 @@ abstract class PairCalculator
                     $sortedCandidates = [$outerCandidate, $innerCandidate];
                     usort($sortedCandidates, $comparator);
                     list($winner, $loser) = $sortedCandidates;
-                    $this->updateRegistry($registry, $winner, $loser, $ballotCount);
+                    $updateAmount = $ballotCount;
+                    $this->incrementPairInRegistry(
+                        $winner,
+                        $loser,
+                        $registry,
+                        $updateAmount
+                    );
 
                 }
             }
         }
         return $registry;
     }
-
-    public abstract function updateRegistry(PairRegistry $registry, Candidate $winner, Candidate $loser, int $ballotCount);
 }
