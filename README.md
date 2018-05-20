@@ -1,6 +1,7 @@
 # Tideman
 [![Travis status](https://img.shields.io/travis/pivot-libre/tideman/0.x.svg)](https://travis-ci.org/pivot-libre/tideman/)
 [![Coveralls coverage](https://img.shields.io/coveralls/pivot-libre/tideman/0.x.svg)](https://coveralls.io/github/pivot-libre/tideman)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/d8a90cacf38b4d70afe97b1065cdb7e7)](https://www.codacy.com/app/pivot-libre/tideman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=pivot-libre/tideman&amp;utm_campaign=Badge_Grade)
 [![PDD status](http://www.0pdd.com/svg?name=pivot-libre/tideman)](http://www.0pdd.com/p?name=pivot-libre/tideman)
 
 ## Purpose
