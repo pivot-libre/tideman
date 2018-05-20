@@ -9,10 +9,10 @@ use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\TieBreaking\PairTieBreaker;
 use PivotLibre\Tideman\ListOfPairLists;
 use PivotLibre\Tideman\CandidateComparator;
-use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TieBreakingPairComparator;
 use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotPairTieBreaker;
 
-class ListOfMarginListsTest extends GenericCollectionTestCase
+class ListOfPairListsTest extends GenericCollectionTestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
@@ -28,9 +28,9 @@ class ListOfMarginListsTest extends GenericCollectionTestCase
     private $claire;
     private $dave;
 
-    private $marginsWithTiedDifferences;
-    private $marginsWithoutTiedDifferences;
-    private $tieBreakingMarginComparator;
+    private $pairsWithTiedDifferences;
+    private $pairsWithoutTiedDifferences;
+    private $tieBreakingPairComparator;
 
     protected function setUp()
     {
@@ -48,19 +48,19 @@ class ListOfMarginListsTest extends GenericCollectionTestCase
 
         $candidateComparator = new CandidateComparator($tieBreakingBallot);
         $tieBreaker = new TotallyOrderedBallotPairTieBreaker($candidateComparator);
-        $this->tieBreakingMarginComparator = new TieBreakingMarginComparator($tieBreaker);
+        $this->tieBreakingPairComparator = new TieBreakingPairComparator($tieBreaker);
 
-        $this->marginsWithTiedDifferences = new PairList(
+        $this->pairsWithTiedDifferences = new PairList(
             new Pair($this->alice, $this->bob, 1),
             new Pair($this->alice, $this->claire, 1)
         );
-        $this->marginsWithoutTiedDifferences = new PairList(
+        $this->pairsWithoutTiedDifferences = new PairList(
             new Pair($this->bob, $this->claire, 5),
             new Pair($this->alice, $this->dave, 4)
         );
         $this->values = [
-            $this->marginsWithTiedDifferences,
-            $this->marginsWithoutTiedDifferences
+            $this->pairsWithTiedDifferences,
+            $this->pairsWithoutTiedDifferences
         ];
         $this->instance = new ListOfPairLists(...$this->values);
         $this->concreteType = ListOfPairLists::class;
@@ -70,7 +70,7 @@ class ListOfMarginListsTest extends GenericCollectionTestCase
     {
         //empty
         $instance = new ListOfPairLists();
-        $actual = $instance->breakTies($this->tieBreakingMarginComparator);
+        $actual = $instance->breakTies($this->tieBreakingPairComparator);
         //empty
         $expected = new PairList();
 
@@ -87,7 +87,7 @@ class ListOfMarginListsTest extends GenericCollectionTestCase
                 new Pair($this->alice, $this->dave, 4)
             )
         );
-        $actual = $instance->breakTies($this->tieBreakingMarginComparator);
+        $actual = $instance->breakTies($this->tieBreakingPairComparator);
         $expected = new PairList(
             new Pair($this->bob, $this->claire, 5),
             new Pair($this->alice, $this->dave, 4)
@@ -103,7 +103,7 @@ class ListOfMarginListsTest extends GenericCollectionTestCase
                 new Pair($this->alice, $this->bob, 1)
             )
         );
-        $actual = $instance->breakTies($this->tieBreakingMarginComparator);
+        $actual = $instance->breakTies($this->tieBreakingPairComparator);
         $expected = new PairList(
             new Pair($this->alice, $this->bob, 1),
             new Pair($this->alice, $this->claire, 1)
@@ -125,7 +125,7 @@ class ListOfMarginListsTest extends GenericCollectionTestCase
                 new Pair($this->bob, $this->claire, 2)
             )
         );
-        $actual = $instance->breakTies($this->tieBreakingMarginComparator);
+        $actual = $instance->breakTies($this->tieBreakingPairComparator);
         $expected = new PairList(
             new Pair($this->alice, $this->dave, 5),
             new Pair($this->alice, $this->bob, 3),

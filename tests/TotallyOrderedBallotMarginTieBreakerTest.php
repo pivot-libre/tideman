@@ -8,11 +8,11 @@ use PivotLibre\Tideman\PairList;
 use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\ListOfPairLists;
 use PivotLibre\Tideman\CandidateComparator;
-use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TieBreakingPairComparator;
 use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotPairTieBreaker;
 use \InvalidArgumentException;
 
-class TotallyOrderedBallotMarginTieBreakerTest extends TestCase
+class TotallyOrderedBallotPairTieBreakerTest extends TestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
@@ -52,23 +52,23 @@ class TotallyOrderedBallotMarginTieBreakerTest extends TestCase
     public function testNonTiedBallots() : void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->alice, $this->claire, 0);
-        $this->instance->breakTie($marginB, $marginA);
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->alice, $this->claire, 0);
+        $this->instance->breakTie($pairB, $pairA);
     }
     public function testNonTiedWinners() : void
     {
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->bob, $this->claire, 10);
-        $this->assertLessThan(0, $this->instance->breakTie($marginA, $marginB));
-        $this->assertGreaterThan(0, $this->instance->breakTie($marginB, $marginA));
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->bob, $this->claire, 10);
+        $this->assertLessThan(0, $this->instance->breakTie($pairA, $pairB));
+        $this->assertGreaterThan(0, $this->instance->breakTie($pairB, $pairA));
     }
 
     public function testTiedWinners() : void
     {
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->alice, $this->claire, 10);
-        $this->assertLessThan(0, $this->instance->breakTie($marginA, $marginB));
-        $this->assertGreaterThan(0, $this->instance->breakTie($marginB, $marginA));
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->alice, $this->claire, 10);
+        $this->assertLessThan(0, $this->instance->breakTie($pairA, $pairB));
+        $this->assertGreaterThan(0, $this->instance->breakTie($pairB, $pairA));
     }
 }

@@ -3,7 +3,7 @@ namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
 
-class MarginTest extends TestCase
+class PairTest extends TestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
@@ -33,21 +33,21 @@ class MarginTest extends TestCase
         $this->assertEquals($this->bob, $actualLoser);
     }
 
-    public function testGetMargin() : void
+    public function testGetPair() : void
     {
         $difference = 42;
         $instance = new Pair($this->alice, $this->bob, $difference);
-        $actualMargin = $instance->getVotes();
-        $this->assertEquals($difference, $actualMargin);
+        $actualPair = $instance->getVotes();
+        $this->assertEquals($difference, $actualPair);
     }
-    public function testSetMargin() : void
+    public function testSetPair() : void
     {
-        $originalMargin = 42;
-        $instance = new Pair($this->alice, $this->bob, $originalMargin);
-        $newMargin = 3;
-        $instance->setVotes($newMargin);
-        $actualMargin = $instance->getVotes();
-        $this->assertEquals($newMargin, $actualMargin);
+        $originalPair = 42;
+        $instance = new Pair($this->alice, $this->bob, $originalPair);
+        $newPair = 3;
+        $instance->setVotes($newPair);
+        $actualPair = $instance->getVotes();
+        $this->assertEquals($newPair, $actualPair);
     }
     public function testToStringPositiveDifference()
     {

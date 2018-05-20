@@ -161,7 +161,7 @@ class RankedPairsCalculatorTest extends TestCase
         $this->assertEquals($expectedWinners, $actualWinners);
     }
 
-    public function testMarginTieBreakingWithNonTiedBallot() : void
+    public function testPairTieBreakingWithNonTiedBallot() : void
     {
         $candidateListsForBallot = [
             new CandidateList($this->alice),
@@ -183,7 +183,7 @@ class RankedPairsCalculatorTest extends TestCase
         $this->assertEquals($expectedWinners, $actualWinners);
     }
     
-    public function testMarginTieBreakingWitTiedBallot() : void
+    public function testPairTieBreakingWitTiedBallot() : void
     {
         $candidateListsForBallot = [
             new CandidateList($this->alice),

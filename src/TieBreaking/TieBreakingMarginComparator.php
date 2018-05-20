@@ -6,7 +6,7 @@ use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
 use PivotLibre\Tideman\Pair;
 
-class TieBreakingMarginComparator implements LoggerAwareInterface
+class TieBreakingPairComparator implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -19,22 +19,22 @@ class TieBreakingMarginComparator implements LoggerAwareInterface
     }
 
     /**
-     * Compares two Margins, returning an integer to indicate their relative ordering.
+     * Compares two Pairs, returning an integer to indicate their relative ordering.
      * @param Pair $a
      * @param Pair $b
      * @return an int :
-     *  A negative int if Margin $a is more preferred than Margin $b
-     *  A positive int if Margin $b is more preferred than Margin $a
+     *  A negative int if Pair $a is more preferred than Pair $b
+     *  A positive int if Pair $b is more preferred than Pair $a
      *
      * This function should never return zero. In the event of a tie, it should use the TieBreaker specified in the
-     * constructor to determine a nonzero integer indicating which Margin should be treated as though it were more
+     * constructor to determine a nonzero integer indicating which Pair should be treated as though it were more
      * preferred than the other.
      */
     public function compare(Pair $a, Pair $b) : int
     {
         $differenceOfStrength = $b->getVotes() - $a->getVotes();
         if (0 == $differenceOfStrength) {
-            $this->logger->notice("Tie between two Margins:\n$a\n$b\n");
+            $this->logger->notice("Tie between two Pairs:\n$a\n$b\n");
             $result = $this->tieBreaker->breakTie($a, $b);
             $winner = $result < 0 ? $a : $b;
             $loser = $result < 0 ? $b : $a;
@@ -51,12 +51,12 @@ class TieBreakingMarginComparator implements LoggerAwareInterface
      * For example, the wrapper permits us to write:
      *
      * $tieBreaker = new MyGreatTieBreaker();
-     * usort($array, new TieBreakingMarginComparator($tieBreaker));
+     * usort($array, new TieBreakingPairComparator($tieBreaker));
      *
      * instead of:
      *
      * $tieBreaker = new MyGreatTieBreaker();
-     * usort($array, array(new TieBreakingMarginComparator($tieBreaker), "compare"));
+     * usort($array, array(new TieBreakingPairComparator($tieBreaker), "compare"));
      *
      * Additional details:
      * https://stackoverflow.com/a/35277180

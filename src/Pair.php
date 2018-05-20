@@ -2,7 +2,7 @@
 namespace PivotLibre\Tideman;
 
 /**
- * A Margin describes the difference in popular support between two Candidates.
+ * A Pair describes the difference in popular support between two Candidates.
  */
 class Pair
 {
@@ -36,9 +36,9 @@ class Pair
         $this->votes = $votes;
     }
     /**
-     * Represent the Margin by placing the winning candidate's ID on the left, followed by an arrow pointing to the
+     * Represent the Pair by placing the winning candidate's ID on the left, followed by an arrow pointing to the
      * ID of the losing candidate on the right. The arrow is interrupted with a parenthesized number of votes
-     * For example, to represent a Margin with a winning Candidate A, a losing Candidate B, and 10 votes:
+     * For example, to represent a Pair with a winning Candidate A, a losing Candidate B, and 10 votes:
      * (A--(10)-->B)
      * To represent the inverse of the same relationship:
      * (B--(-10)-->A)

@@ -13,13 +13,13 @@ use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\RankedPairsGraph;
 use PivotLibre\Tideman\ListOfPairLists;
 use PivotLibre\Tideman\CandidateComparator;
-use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TieBreakingPairComparator;
 use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotPairTieBreaker;
 use PivotLibre\Tideman\TieBreaking\BallotTieBreaker;
 
 class RankedPairsCalculator
 {
-    private $tieBreakingMarginComparator;
+    private $tieBreakingPairComparator;
     private $tieBreakingCandidateComparator;
 
     /**
@@ -37,7 +37,7 @@ class RankedPairsCalculator
             $myTieBreakingBallot = $ballotTieBreaker->breakTiesRandomly($myTieBreakingBallot);
         }
         $tieBreaker = new TotallyOrderedBallotPairTieBreaker(new CandidateComparator($myTieBreakingBallot));
-        $this->tieBreakingMarginComparator = new TieBreakingMarginComparator($tieBreaker);
+        $this->tieBreakingPairComparator = new TieBreakingPairComparator($tieBreaker);
         $this->tieBreakingCandidateComparator = new CandidateComparator($myTieBreakingBallot);
     }
 
@@ -75,10 +75,10 @@ class RankedPairsCalculator
         if (1 === $agenda->count()) {
             return $agenda->getCandidates();
         } else {
-            $marginList = $this->getMargins($agenda, ...$nBallots);
-            $sortedMarginList = $this->sortMargins($marginList);
+            $pairList = $this->getPairs($agenda, ...$nBallots);
+            $sortedPairList = $this->sortPairs($pairList);
             $rankedPairsGraph = new RankedPairsGraph();
-            $rankedPairsGraph->addMargins($sortedMarginList);
+            $rankedPairsGraph->addPairs($sortedPairList);
             $winnersOfTheRound = $rankedPairsGraph->getWinningCandidates();
             //winners may contain ties. Ensure that they are sorted according to our tie-breaking ballot.
             $winnersOfTheRound->sort($this->tieBreakingCandidateComparator);
@@ -87,30 +87,30 @@ class RankedPairsCalculator
     }
 
     /**
-     * Calculate the pairwise differences in popular support, a.k.a. the Margins.
+     * Calculate the pairwise differences in popular support, a.k.a. the Pairs.
      *
      * @param Agenda $agenda a set of candidates. This is a non-strict subset of the Candidates in $nBallots.
      * @param ...NBallot $nBallots a list of NBallots. The set of Candidates in $nBallots is a non-strict
      * superset of the Candidates in $agenda.
      * @return PairList representing all of the pairwise differences in popular support for all Candidates specified
-     * by $agenda. The length of the returned MarginList should be equal to `N(N - 1)`, where `N` is the number of
+     * by $agenda. The length of the returned PairList should be equal to `N(N - 1)`, where `N` is the number of
      * Candidates in $agenda.
      */
-    public function getMargins(Agenda $agenda, NBallot ...$nBallots) : PairList
+    public function getPairs(Agenda $agenda, NBallot ...$nBallots) : PairList
     {
-        $marginCalculator = new PairCalculator();
-        $marginRegistry = $marginCalculator->calculate($agenda, ...$nBallots);
-        $allMargins = $marginRegistry->getAll();
-        return $allMargins;
+        $pairCalculator = new PairCalculator();
+        $pairRegistry = $pairCalculator->calculate($agenda, ...$nBallots);
+        $allPairs = $pairRegistry->getAll();
+        return $allPairs;
     }
 
     /**
-     * Sorts all Margins in order of descending getDifference(). Breaks ties. Filters out redundant negative margins.
+     * Sorts all Pairs in order of descending getDifference(). Breaks ties. Filters out redundant negative pairs.
      */
-    public function sortMargins(PairList $marginList) : PairList
+    public function sortPairs(PairList $pairList) : PairList
     {
-        $marginsSortedDescGroupedByDifference = $marginList->filterGroupAndSort();
-        $marginsWithTiesBroken = $marginsSortedDescGroupedByDifference->breakTies($this->tieBreakingMarginComparator);
-        return $marginsWithTiesBroken;
+        $pairsSortedDescGroupedByDifference = $pairList->filterGroupAndSort();
+        $pairsWithTiesBroken = $pairsSortedDescGroupedByDifference->breakTies($this->tieBreakingPairComparator);
+        return $pairsWithTiesBroken;
     }
 }

@@ -15,37 +15,37 @@ use Symfony\Component\EventDispatcher\GenericEvent;
  *
  * (Optionally create a worksheet describing a collection of ballots that are grouped with a count)
  * Create a worksheet describing a collection of individuals' ballots.
- * Create a worksheet describing the expected margins.
+ * Create a worksheet describing the expected pairs.
  *
  * Download the individual ballots worksheet as a TSV.
  * Generate a php class from the TSV by running:
  *     python parse_ballot.py <name_of_individual_ballot.tsv> > TestScenarioN.php
  * Update the name of the generated class to match the name of the file it is inside of.
  * Create a new method in PairCalculatorIntegrationTest.
- * Inside of the method, manually construct a list of expected margins by looking at the expected margins worksheet.
- * Compare the expected margins and the actual margins using the `checkMargins()` utility method.
+ * Inside of the method, manually construct a list of expected pairs by looking at the expected pairs worksheet.
+ * Compare the expected pairs and the actual pairs using the `checkPairs()` utility method.
  *
  */
 class PairCalculatorIntegrationTest extends TestCase
 {
-    protected function checkMargins($expectedMargins, $ballots)
+    protected function checkPairs($expectedPairs, $ballots)
     {
         $agenda = new Agenda(...$ballots);
-        $marginRegistry = (new PairCalculator())->calculate($agenda, ...$ballots);
-        $this->assertEquals(sizeof($expectedMargins), $marginRegistry->getCount());
-        foreach ($expectedMargins as $expectedMargin) {
-            $winner = $expectedMargin->getWinner();
-            $loser = $expectedMargin->getLoser();
-            $marginAsString = "{$winner->getId()} -> {$loser->getId()}";
-            $actualMargin = $marginRegistry->get($winner, $loser);
-            $this->assertEquals($expectedMargin, $actualMargin, $marginAsString);
+        $pairRegistry = (new PairCalculator())->calculate($agenda, ...$ballots);
+        $this->assertEquals(sizeof($expectedPairs), $pairRegistry->getCount());
+        foreach ($expectedPairs as $expectedPair) {
+            $winner = $expectedPair->getWinner();
+            $loser = $expectedPair->getLoser();
+            $pairAsString = "{$winner->getId()} -> {$loser->getId()}";
+            $actualPair = $pairRegistry->get($winner, $loser);
+            $this->assertEquals($expectedPair, $actualPair, $pairAsString);
         }
     }
 
     public function testScenario1() : void
     {
             $ballots = (new TestScenario1())->getBallots();
-            $expectedMargins = [
+            $expectedPairs = [
                 new Pair(new Candidate('MM'), new Candidate('DD'), 14),
                 new Pair(new Candidate('MM'), new Candidate('SY'), 12),
                 new Pair(new Candidate('MM'), new Candidate('YW'), 14),
@@ -71,13 +71,13 @@ class PairCalculatorIntegrationTest extends TestCase
                 new Pair(new Candidate('RR'), new Candidate('SY'), -6),
                 new Pair(new Candidate('RR'), new Candidate('YW'), -6)
             ];
-            $this->checkMargins($expectedMargins, $ballots);
+            $this->checkPairs($expectedPairs, $ballots);
     }
 
     public function testScenario2() : void
     {
             $ballots = (new TestScenario2())->getBallots();
-            $expectedMargins = [
+            $expectedPairs = [
                 new Pair(new Candidate('MM'), new Candidate('BT'), 6),
                 new Pair(new Candidate('MM'), new Candidate('CS'), 8),
                 new Pair(new Candidate('MM'), new Candidate('FE'), -1),
@@ -104,13 +104,13 @@ class PairCalculatorIntegrationTest extends TestCase
                 new Pair(new Candidate('RR'), new Candidate('CS'), -3),
                 new Pair(new Candidate('RR'), new Candidate('FE'), -4)
             ];
-            $this->checkMargins($expectedMargins, $ballots);
+            $this->checkPairs($expectedPairs, $ballots);
     }
 
     public function testScenario3() : void
     {
             $ballots = (new TestScenario3())->getBallots();
-            $expectedMargins = [
+            $expectedPairs = [
                 new Pair(new Candidate('CS'), new Candidate('MC'), -8),
                 new Pair(new Candidate('CS'), new Candidate('BT'), -4),
                 new Pair(new Candidate('CS'), new Candidate('FE'), 0),
@@ -147,13 +147,13 @@ class PairCalculatorIntegrationTest extends TestCase
                 new Pair(new Candidate('MN'), new Candidate('FE'), 0),
                 new Pair(new Candidate('MN'), new Candidate('RR'), 6)
             ];
-            $this->checkMargins($expectedMargins, $ballots);
+            $this->checkPairs($expectedPairs, $ballots);
     }
 
     public function testScenario4() : void
     {
             $ballots = (new TestScenario4())->getBallots();
-            $expectedMargins = [
+            $expectedPairs = [
                 new Pair(new Candidate('CW'), new Candidate('BB'), 2),
                 new Pair(new Candidate('CW'), new Candidate('CS'), 2),
                 new Pair(new Candidate('CW'), new Candidate('BT'), 2),
@@ -179,13 +179,13 @@ class PairCalculatorIntegrationTest extends TestCase
                 new Pair(new Candidate('SY'), new Candidate('CS'), -2),
                 new Pair(new Candidate('SY'), new Candidate('BT'), 0)
             ];
-            $this->checkMargins($expectedMargins, $ballots);
+            $this->checkPairs($expectedPairs, $ballots);
     }
 
     public function testTideman1987Example2() : void
     {
         $ballots = (new TestScenarioTideman1987Example2())->getBallots();
-        $expectedMargins = [
+        $expectedPairs = [
             new Pair(new Candidate('V'), new Candidate('W'), 2),
             new Pair(new Candidate('V'), new Candidate('X'), 18),
             new Pair(new Candidate('V'), new Candidate('Y'), -14),
@@ -211,13 +211,13 @@ class PairCalculatorIntegrationTest extends TestCase
             new Pair(new Candidate('Z'), new Candidate('X'), -16),
             new Pair(new Candidate('Z'), new Candidate('Y'), -2)
         ];
-        $this->checkMargins($expectedMargins, $ballots);
+        $this->checkPairs($expectedPairs, $ballots);
     }
 
     public function testTideman1987Example4() : void
     {
         $ballots = (new TestScenarioTideman1987Example4())->getBallots();
-        $expectedMargins = [
+        $expectedPairs = [
             new Pair(new Candidate('W'), new Candidate('X'), 9),
             new Pair(new Candidate('W'), new Candidate('Y'), -5),
             new Pair(new Candidate('W'), new Candidate('Z'), 3),
@@ -234,13 +234,13 @@ class PairCalculatorIntegrationTest extends TestCase
             new Pair(new Candidate('Z'), new Candidate('X'), -3),
             new Pair(new Candidate('Z'), new Candidate('Y'), -3),
         ];
-        $this->checkMargins($expectedMargins, $ballots);
+        $this->checkPairs($expectedPairs, $ballots);
     }
 
     public function testTideman1987Example5() : void
     {
         $ballots = (new TestScenarioTideman1987Example5())->getBallots();
-        $expectedMargins = [
+        $expectedPairs = [
             new Pair(new Candidate('V'), new Candidate('W'), 9),
             new Pair(new Candidate('V'), new Candidate('X'), -7),
             new Pair(new Candidate('V'), new Candidate('Y'), 3),
@@ -266,6 +266,6 @@ class PairCalculatorIntegrationTest extends TestCase
             new Pair(new Candidate('Z'), new Candidate('X'), 1),
             new Pair(new Candidate('Z'), new Candidate('Y'), -5),
         ];
-        $this->checkMargins($expectedMargins, $ballots);
+        $this->checkPairs($expectedPairs, $ballots);
     }
 }

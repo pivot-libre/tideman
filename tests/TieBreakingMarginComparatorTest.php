@@ -6,11 +6,11 @@ use PHPUnit\Framework\TestCase;
 use PivotLibre\Tideman\Pair;
 use PivotLibre\Tideman\PairList;
 use PivotLibre\Tideman\ListOfPairLists;
-use PivotLibre\Tideman\TieBreaking\TieBreakingMarginComparator;
+use PivotLibre\Tideman\TieBreaking\TieBreakingPairComparator;
 use PivotLibre\Tideman\TieBreaking\TotallyOrderedBallotPairTieBreaker;
 use \InvalidArgumentException;
 
-class TieBreakingMarginComparatorTest extends TestCase
+class TieBreakingPairComparatorTest extends TestCase
 {
     private const ALICE_ID = "A";
     private const ALICE_NAME = "Alice";
@@ -40,7 +40,7 @@ class TieBreakingMarginComparatorTest extends TestCase
         );
         $candidateComparator = new CandidateComparator($tieBreakingBallot);
         $tieBreaker = new TotallyOrderedBallotPairTieBreaker($candidateComparator);
-        $this->instance = new TieBreakingMarginComparator($tieBreaker);
+        $this->instance = new TieBreakingPairComparator($tieBreaker);
 
         $loggerFactory = new LoggerFactory();
         $loggerFactory($this->instance);
@@ -48,97 +48,97 @@ class TieBreakingMarginComparatorTest extends TestCase
 
     public function testNonTiedComparison() : void
     {
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->dave, $this->claire, 5);
-        $this->assertLessThan(0, $this->instance->compare($marginA, $marginB));
-        $this->assertGreaterThan(0, $this->instance->compare($marginB, $marginA));
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->dave, $this->claire, 5);
+        $this->assertLessThan(0, $this->instance->compare($pairA, $pairB));
+        $this->assertGreaterThan(0, $this->instance->compare($pairB, $pairA));
     }
 
-    public function testTiedMarginsWithDifferentWinners() : void
+    public function testTiedPairsWithDifferentWinners() : void
     {
-        //in these test margins, the differences are the same and the winners are different Candidates
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->dave, $this->claire, 10);
-        $this->assertLessThan(0, $this->instance->compare($marginA, $marginB));
-        $this->assertGreaterThan(0, $this->instance->compare($marginB, $marginA));
+        //in these test pairs, the differences are the same and the winners are different Candidates
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->dave, $this->claire, 10);
+        $this->assertLessThan(0, $this->instance->compare($pairA, $pairB));
+        $this->assertGreaterThan(0, $this->instance->compare($pairB, $pairA));
     }
 
-    public function testTiedMarginsWithTheSameWinners() : void
+    public function testTiedPairsWithTheSameWinners() : void
     {
-        //in these test margins, the differences are the same and the winners are the same Candidate
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->alice, $this->claire, 10);
-        $this->assertLessThan(0, $this->instance->compare($marginA, $marginB));
-        $this->assertGreaterThan(0, $this->instance->compare($marginB, $marginA));
+        //in these test pairs, the differences are the same and the winners are the same Candidate
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->alice, $this->claire, 10);
+        $this->assertLessThan(0, $this->instance->compare($pairA, $pairB));
+        $this->assertGreaterThan(0, $this->instance->compare($pairB, $pairA));
     }
 
     public function testSimpleDifferentWinnerSort() : void
     {
-        //in these test margins, the differences are the same and the winners are different Candidates
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->dave, $this->claire, 10);
-        $margins = [$marginB, $marginA];
-        $expected = [$marginA, $marginB];
-        $actual = usort($margins, $this->instance);
-        $this->assertEquals($expected, $margins);
+        //in these test pairs, the differences are the same and the winners are different Candidates
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->dave, $this->claire, 10);
+        $pairs = [$pairB, $pairA];
+        $expected = [$pairA, $pairB];
+        $actual = usort($pairs, $this->instance);
+        $this->assertEquals($expected, $pairs);
     }
 
     public function testSimpleSameWinnerSort() : void
     {
-        //in these test margins, the differences are the same and the winners are the same Candidate
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->alice, $this->claire, 10);
-        $margins = [$marginB, $marginA];
-        $expected = [$marginA, $marginB];
-        $actual = usort($margins, $this->instance);
-        $this->assertEquals($expected, $margins);
+        //in these test pairs, the differences are the same and the winners are the same Candidate
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->alice, $this->claire, 10);
+        $pairs = [$pairB, $pairA];
+        $expected = [$pairA, $pairB];
+        $actual = usort($pairs, $this->instance);
+        $this->assertEquals($expected, $pairs);
     }
 
     public function testBiggerDifferentWinnerSort() : void
     {
-        //in these test margins, the differences are the same and the winners are different Candidates
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->bob, $this->claire, 10);
-        $marginC = new Pair($this->claire, $this->dave, 10);
-        $margins = [$marginB, $marginC, $marginA];
-        $expected = [$marginA, $marginB, $marginC];
-        $actual = usort($margins, $this->instance);
-        $this->assertEquals($expected, $margins);
+        //in these test pairs, the differences are the same and the winners are different Candidates
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->bob, $this->claire, 10);
+        $pairC = new Pair($this->claire, $this->dave, 10);
+        $pairs = [$pairB, $pairC, $pairA];
+        $expected = [$pairA, $pairB, $pairC];
+        $actual = usort($pairs, $this->instance);
+        $this->assertEquals($expected, $pairs);
     }
 
     public function testBiggerSameWinnerSort() : void
     {
-        //in these test margins, the differences are the same and the winners are the same Candidate
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->alice, $this->claire, 10);
-        $marginC = new Pair($this->alice, $this->dave, 10);
-        $margins = [$marginB, $marginC, $marginA];
-        $expected = [$marginA, $marginB, $marginC];
-        $actual = usort($margins, $this->instance);
-        $this->assertEquals($expected, $margins);
+        //in these test pairs, the differences are the same and the winners are the same Candidate
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->alice, $this->claire, 10);
+        $pairC = new Pair($this->alice, $this->dave, 10);
+        $pairs = [$pairB, $pairC, $pairA];
+        $expected = [$pairA, $pairB, $pairC];
+        $actual = usort($pairs, $this->instance);
+        $this->assertEquals($expected, $pairs);
     }
 
     public function testBiggestSort() : void
     {
-        //in these test margins, the differences are the same and the winners are a mix of various Candidates
+        //in these test pairs, the differences are the same and the winners are a mix of various Candidates
 
         //alice as the winner
-        $marginA = new Pair($this->alice, $this->bob, 10);
-        $marginB = new Pair($this->alice, $this->claire, 10);
-        $marginC = new Pair($this->alice, $this->dave, 10);
+        $pairA = new Pair($this->alice, $this->bob, 10);
+        $pairB = new Pair($this->alice, $this->claire, 10);
+        $pairC = new Pair($this->alice, $this->dave, 10);
 
         //bob as the winner
-        $marginD = new Pair($this->bob, $this->claire, 10);
-        $marginE = new Pair($this->bob, $this->dave, 10);
+        $pairD = new Pair($this->bob, $this->claire, 10);
+        $pairE = new Pair($this->bob, $this->dave, 10);
 
         //claire as the winner
-        $marginF = new Pair($this->claire, $this->dave, 10);
+        $pairF = new Pair($this->claire, $this->dave, 10);
 
-        $margins = [$marginB, $marginC, $marginA, $marginE, $marginF, $marginD];
-        usort($margins, $this->instance);
+        $pairs = [$pairB, $pairC, $pairA, $pairE, $pairF, $pairD];
+        usort($pairs, $this->instance);
 
-        $expected = [$marginA, $marginB, $marginC, $marginD, $marginE, $marginF];
+        $expected = [$pairA, $pairB, $pairC, $pairD, $pairE, $pairF];
 
-        $this->assertEquals($expected, $margins);
+        $this->assertEquals($expected, $pairs);
     }
 }
