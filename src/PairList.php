@@ -53,12 +53,12 @@ class PairList extends GenericCollection implements Countable
         $positivePairs = array_filter($pairArray, function (Pair $pair) {
             return $pair->getVotes() >= 0;
         });
-        $pairsGroupedByDifference = $this->grouper->group($positivePairs);
-        ksort($pairsGroupedByDifference, SORT_NUMERIC);
+        $pairsGroupedByVotes = $this->grouper->group($positivePairs);
+        ksort($pairsGroupedByVotes, SORT_NUMERIC);
         //we want DESCENDING order
-        $pairsSortedDescGroupedByDifference = array_reverse($pairsGroupedByDifference);
+        $pairsSortedDescGroupedByVotes = array_reverse($pairsGroupedByVotes);
         $allPairLists = [];
-        foreach ($pairsSortedDescGroupedByDifference as $difference => $group) {
+        foreach ($pairsSortedDescGroupedByVotes as $difference => $group) {
             $PairList = new PairList(...$group);
             $allPairLists[] = $PairList;
         }

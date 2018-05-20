@@ -28,8 +28,8 @@ class ListOfPairListsTest extends GenericCollectionTestCase
     private $claire;
     private $dave;
 
-    private $pairsWithTiedDifferences;
-    private $pairsWithoutTiedDifferences;
+    private $pairsWithTiedVotess;
+    private $pairsWithoutTiedVotess;
     private $tieBreakingPairComparator;
 
     protected function setUp()
@@ -50,17 +50,17 @@ class ListOfPairListsTest extends GenericCollectionTestCase
         $tieBreaker = new TotallyOrderedBallotPairTieBreaker($candidateComparator);
         $this->tieBreakingPairComparator = new TieBreakingPairComparator($tieBreaker);
 
-        $this->pairsWithTiedDifferences = new PairList(
+        $this->pairsWithTiedVotess = new PairList(
             new Pair($this->alice, $this->bob, 1),
             new Pair($this->alice, $this->claire, 1)
         );
-        $this->pairsWithoutTiedDifferences = new PairList(
+        $this->pairsWithoutTiedVotess = new PairList(
             new Pair($this->bob, $this->claire, 5),
             new Pair($this->alice, $this->dave, 4)
         );
         $this->values = [
-            $this->pairsWithTiedDifferences,
-            $this->pairsWithoutTiedDifferences
+            $this->pairsWithTiedVotess,
+            $this->pairsWithoutTiedVotess
         ];
         $this->instance = new ListOfPairLists(...$this->values);
         $this->concreteType = ListOfPairLists::class;

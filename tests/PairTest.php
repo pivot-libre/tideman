@@ -19,26 +19,26 @@ class PairTest extends TestCase
 
     public function testGetWinner() : void
     {
-        $difference = 0;
-        $instance = new Pair($this->alice, $this->bob, $difference);
+        $votes = 0;
+        $instance = new Pair($this->alice, $this->bob, $votes);
         $actualWinner = $instance->getWinner();
         $this->assertEquals($this->alice, $actualWinner);
     }
 
     public function testGetLoser() : void
     {
-        $difference = 0;
-        $instance = new Pair($this->alice, $this->bob, $difference);
+        $votes = 0;
+        $instance = new Pair($this->alice, $this->bob, $votes);
         $actualLoser = $instance->getLoser();
         $this->assertEquals($this->bob, $actualLoser);
     }
 
     public function testGetPair() : void
     {
-        $difference = 42;
-        $instance = new Pair($this->alice, $this->bob, $difference);
+        $votes = 42;
+        $instance = new Pair($this->alice, $this->bob, $votes);
         $actualPair = $instance->getVotes();
-        $this->assertEquals($difference, $actualPair);
+        $this->assertEquals($votes, $actualPair);
     }
     public function testSetPair() : void
     {
@@ -49,21 +49,21 @@ class PairTest extends TestCase
         $actualPair = $instance->getVotes();
         $this->assertEquals($newPair, $actualPair);
     }
-    public function testToStringPositiveDifference()
+    public function testToStringPositiveVotes()
     {
-        $difference = 21;
-        $instance = new Pair($this->bob, $this->alice, $difference);
+        $votes = 21;
+        $instance = new Pair($this->bob, $this->alice, $votes);
 
-        $expectedToString = "(" . $this->bob->getId() . " --(" . $difference . ")--> " . $this->alice->getId() . ")";
+        $expectedToString = "(" . $this->bob->getId() . " --(" . $votes . ")--> " . $this->alice->getId() . ")";
         $actualToString = $instance->__toString();
         $this->assertEquals($expectedToString, $actualToString);
     }
-    public function testToStringNegativeDifference()
+    public function testToStringNegativeVotes()
     {
-        $difference = -21;
-        $instance = new Pair($this->alice, $this->bob, $difference);
+        $votes = -21;
+        $instance = new Pair($this->alice, $this->bob, $votes);
 
-        $expectedToString = "(" . $this->alice->getId() . " --(" . $difference . ")--> " . $this->bob->getId() . ")";
+        $expectedToString = "(" . $this->alice->getId() . " --(" . $votes . ")--> " . $this->bob->getId() . ")";
         $actualToString = $instance->__toString();
         $this->assertEquals($expectedToString, $actualToString);
     }

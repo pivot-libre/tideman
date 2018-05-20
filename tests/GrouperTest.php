@@ -36,12 +36,12 @@ class GrouperTest extends TestCase
         );
     }
 
-    public function testGroupByDifference() : void
+    public function testGroupByVotes() : void
     {
-        $getDifference = function (Pair $pair) {
+        $getVotes = function (Pair $pair) {
             return $pair->getVotes();
         };
-        $instance = new Grouper($getDifference);
+        $instance = new Grouper($getVotes);
         $actual = $instance->group($this->pairList);
         $expected = [
             1 => [

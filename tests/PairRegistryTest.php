@@ -37,7 +37,7 @@ class PairRegistryTest extends TestCase
         $this->assertEquals($expectedPair, $actualPair);
         $this->assertEquals($expectedPair->getWinner(), $actualPair->getWinner());
         $this->assertEquals($expectedPair->getLoser(), $actualPair->getLoser());
-        $this->assertEquals($expectedPair->getVotes(), $actualPair->getDifference());
+        $this->assertEquals($expectedPair->getVotes(), $actualPair->getVotes());
     }
     public function testCandidateOrderMatters() : void
     {

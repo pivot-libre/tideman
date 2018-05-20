@@ -213,8 +213,8 @@ class PairCalculatorTest extends TestCase
         );
         // N(N-1)
         $this->assertEquals(2, $registry->getCount());
-        $this->assertEquals(1, $registry->get($this->alice, $this->bob)->getDifference());
-        $this->assertEquals(-1, $registry->get($this->bob, $this->alice)->getDifference());
+        $this->assertEquals(1, $registry->get($this->alice, $this->bob)->getVotes());
+        $this->assertEquals(-1, $registry->get($this->bob, $this->alice)->getVotes());
     }
     public function testCalculateForSimpleTiedPair() : void
     {
@@ -233,8 +233,8 @@ class PairCalculatorTest extends TestCase
         );
         // N(N-1)
         $this->assertEquals(2, $registry->getCount());
-        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getDifference());
-        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getDifference());
+        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getVotes());
+        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getVotes());
     }
     public function testCalculateForTiedPairOfCandidatesAheadOfNonTiedCandidate() : void
     {
@@ -258,13 +258,13 @@ class PairCalculatorTest extends TestCase
         // N(N-1)
         $this->assertEquals(6, $registry->getCount());
         //check that tied candidates' pairs reflect that they are tied
-        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getDifference());
-        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getDifference());
+        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getVotes());
+        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getVotes());
         //check that the pairs indicate that Claire is ranked behind Alice and Bob
-        $this->assertEquals($ballotCount, $registry->get($this->alice, $this->claire)->getDifference());
-        $this->assertEquals($ballotCount, $registry->get($this->bob, $this->claire)->getDifference());
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->claire, $this->alice)->getDifference());
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->claire, $this->bob)->getDifference());
+        $this->assertEquals($ballotCount, $registry->get($this->alice, $this->claire)->getVotes());
+        $this->assertEquals($ballotCount, $registry->get($this->bob, $this->claire)->getVotes());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->claire, $this->alice)->getVotes());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->claire, $this->bob)->getVotes());
     }
     public function testCalculateForTiedPairOfCandidatesBehindNonTiedCandidate() : void
     {
@@ -288,13 +288,13 @@ class PairCalculatorTest extends TestCase
         // N(N-1)
         $this->assertEquals(6, $registry->getCount());
         //check that tied candidates' pairs reflect that they are tied
-        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getDifference());
-        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getDifference());
+        $this->assertEquals(0, $registry->get($this->alice, $this->bob)->getVotes());
+        $this->assertEquals(0, $registry->get($this->bob, $this->alice)->getVotes());
         //check that the pairs indicate that Claire is ahead of Alice and Bob
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->alice, $this->claire)->getDifference());
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->claire)->getDifference());
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getDifference());
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->bob)->getDifference());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->alice, $this->claire)->getVotes());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->claire)->getVotes());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getVotes());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->bob)->getVotes());
     }
     public function testCalculateForThreeNonTiedCandidates() : void
     {
@@ -323,16 +323,16 @@ class PairCalculatorTest extends TestCase
         //Now check all N(N-1) pairs in the registry
 
         //check that Claire is ranked higher than Alice
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getDifference());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getVotes());
         //check that Alice is ranked lower than Claire
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->alice, $this->claire)->getDifference());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->alice, $this->claire)->getVotes());
         //check that Claire is ranked higher than Bob
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->bob)->getDifference());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->bob)->getVotes());
         //check that Bob is ranked lower than Claire
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->claire)->getDifference());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->claire)->getVotes());
         //check that Alice is ranked higher than Bob
-        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getDifference());
+        $this->assertEquals($ballotCount, $registry->get($this->claire, $this->alice)->getVotes());
         //check that Bob is ranked lower than Alice
-        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->alice)->getDifference());
+        $this->assertEquals(-1 * $ballotCount, $registry->get($this->bob, $this->alice)->getVotes());
     }
 }

@@ -45,23 +45,23 @@ class PairListTest extends GenericCollectionTestCase
      * Helper method to ensure that a ListOfPairLists is correct.
      * See the documentation of PairList.filterGroupAndSort for details.
      */
-    protected function assertGroupedAndInOrderOfDescendingDifference(ListOfPairLists $listofPairLists)
+    protected function assertGroupedAndInOrderOfDescendingVotes(ListOfPairLists $listofPairLists)
     {
-        $previousPairGroupDifference = INF;
-        $previousPairDifference = INF;
+        $previousPairGroupVotes = INF;
+        $previousPairVotes = INF;
         foreach ($listofPairLists as $pairList) {
             //reset each time
-            $pairGroupDifference = INF;
+            $pairGroupVotes = INF;
             foreach ($pairList as $pair) {
-                $currentPairDifference = $pair->getDifference();
+                $currentPairVotes = $pair->getVotes();
                 //if this is the first time through this group
-                if (is_infinite($pairGroupDifference)) {
+                if (is_infinite($pairGroupVotes)) {
                     //use the difference from the first Pair in the group as the expected difference for the next
                     //Pairs in the group
-                    $pairGroupDifference = $currentPairDifference;
+                    $pairGroupVotes = $currentPairVotes;
 
                     $this->assertTrue(
-                        $pairGroupDifference < $previousPairGroupDifference,
+                        $pairGroupVotes < $previousPairGroupVotes,
                         "All Pairs of the same difference must be placed in the same group. " .
                         "This Pair was found outside of the group that it should be inside of:" .
                         $pair .
@@ -69,14 +69,14 @@ class PairListTest extends GenericCollectionTestCase
                         $listofPairLists
                     );
 
-                    $previousPairGroupDifference = $pairGroupDifference;
+                    $previousPairGroupVotes = $pairGroupVotes;
                 } else {
                     //each Pair must have the same difference as other Pairs in the same PairList
-                    $this->assertEquals($pairGroupDifference, $currentPairDifference);
+                    $this->assertEquals($pairGroupVotes, $currentPairVotes);
                 }
                 //each difference should be less than or equal to the previous difference
-                $this->assertTrue($previousPairDifference >= $currentPairDifference);
-                $previousPairDifference = $currentPairDifference;
+                $this->assertTrue($previousPairVotes >= $currentPairVotes);
+                $previousPairVotes = $currentPairVotes;
             }
         }
     }
@@ -109,11 +109,11 @@ class PairListTest extends GenericCollectionTestCase
                 for ($i = $numPairs - $numberOfTies; $i < $numPairs; $i++) {
                     $randomIndex = array_rand($pairsWithoutTies);
                     $pairToDuplicate = $pairsWithoutTies[$randomIndex];
-                    $differenceToDuplicate = $pairToDuplicate->getDifference();
+                    $differenceToDuplicate = $pairToDuplicate->getVotes();
                     $aCandidate = new Candidate("C#" . $i);
                     $bCandidate = new Candidate("C#" . ($i + $numPairs));
-                    $pairWithDupicateDifference = new Pair($aCandidate, $bCandidate, $differenceToDuplicate);
-                    $pairsWithTies[] = $pairWithDupicateDifference;
+                    $pairWithDupicateVotes = new Pair($aCandidate, $bCandidate, $differenceToDuplicate);
+                    $pairsWithTies[] = $pairWithDupicateVotes;
                 }
                 shuffle($pairsWithTies);
                 return new PairList(...$pairsWithTies);
@@ -128,7 +128,7 @@ class PairListTest extends GenericCollectionTestCase
         $pairList = new PairList();
         $listOfPairLists = $pairList->filterGroupAndSort();
         $this->assertEquals(new ListOfPairLists(), $listOfPairLists);
-        $this->assertGroupedAndInOrderOfDescendingDifference($listOfPairLists);
+        $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
     }
 
     public function testOnePairList()
@@ -137,7 +137,7 @@ class PairListTest extends GenericCollectionTestCase
         $listOfPairLists = $pairList->filterGroupAndSort();
         $expected = new ListOfPairLists(new PairList(new Pair($this->alice, $this->bob, 10)));
         $this->assertEquals($expected, $listOfPairLists);
-        $this->assertGroupedAndInOrderOfDescendingDifference($listOfPairLists);
+        $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
     }
     public function testTwoPairTiedList()
     {
@@ -151,7 +151,7 @@ class PairListTest extends GenericCollectionTestCase
             new Pair($this->alice, $this->claire, 10)
         ));
         $this->assertEquals($expected, $listOfPairLists);
-        $this->assertGroupedAndInOrderOfDescendingDifference($listOfPairLists);
+        $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
     }
     public function testTwoPairNonTiedList()
     {
@@ -170,7 +170,7 @@ class PairListTest extends GenericCollectionTestCase
             )
         );
         $this->assertEquals($expected, $listOfPairLists);
-        $this->assertGroupedAndInOrderOfDescendingDifference($listOfPairLists);
+        $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
     }
     public function testThreePairsWithNoTies()
     {
@@ -192,9 +192,9 @@ class PairListTest extends GenericCollectionTestCase
             )
         );
         $this->assertEquals($expected, $listOfPairLists);
-        $this->assertGroupedAndInOrderOfDescendingDifference($listOfPairLists);
+        $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
     }
-    public function testThreePairsWithATieOfStrongerDifference()
+    public function testThreePairsWithATieOfStrongerVotes()
     {
         $pairList = new PairList(
             new Pair($this->alice, $this->bob, 100),
@@ -212,9 +212,9 @@ class PairListTest extends GenericCollectionTestCase
             )
         );
         $this->assertEquals($expected, $listOfPairLists);
-        $this->assertGroupedAndInOrderOfDescendingDifference($listOfPairLists);
+        $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
     }
-    public function testThreePairsWithATieOfWeakerDifference()
+    public function testThreePairsWithATieOfWeakerVotes()
     {
         $pairList = new PairList(
             new Pair($this->alice, $this->bob, 2),
@@ -232,7 +232,7 @@ class PairListTest extends GenericCollectionTestCase
             )
         );
         $this->assertEquals($expected, $listOfPairLists);
-        $this->assertGroupedAndInOrderOfDescendingDifference($listOfPairLists);
+        $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
     }
     public function testTenPairListWithSomeTies()
     {
@@ -240,7 +240,7 @@ class PairListTest extends GenericCollectionTestCase
         for ($i = 0; $i < $listSize / 2; $i++) {
             $pairList = $this->generatePairList($listSize, $i);
             $actual = $pairList->filterGroupAndSort();
-            $this->assertGroupedAndInOrderOfDescendingDifference($actual);
+            $this->assertGroupedAndInOrderOfDescendingVotes($actual);
         }
     }
     public function testThirtyOnePairListWithSomeTies()
@@ -249,7 +249,7 @@ class PairListTest extends GenericCollectionTestCase
         for ($i = 0; $i < $listSize / 2; $i++) {
             $pairList = $this->generatePairList($listSize, $i);
             $actual = $pairList->filterGroupAndSort();
-            $this->assertGroupedAndInOrderOfDescendingDifference($actual);
+            $this->assertGroupedAndInOrderOfDescendingVotes($actual);
         }
     }
     public function LONGtestOneHundredPairListWithSomeTies()
@@ -258,7 +258,7 @@ class PairListTest extends GenericCollectionTestCase
         for ($i = 0; $i < $listSize / 2; $i++) {
             $pairList = $this->generatePairList($listSize, $i);
             $actual = $pairList->filterGroupAndSort();
-            $this->assertGroupedAndInOrderOfDescendingDifference($actual);
+            $this->assertGroupedAndInOrderOfDescendingVotes($actual);
         }
     }
 }
