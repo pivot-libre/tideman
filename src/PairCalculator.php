@@ -20,9 +20,8 @@ class PairCalculator
         foreach ($agenda->getCandidates() as $outerCandidate) {
             foreach ($agenda->getCandidates() as $innerCandidate) {
                 /**
-                 * It only makes sense to keep track of the difference of public support between
-                 * two DIFFERENT candidates. It doesn't make sense to keep track of the difference between
-                 * public support of a candidate and themself.
+                 * It only makes sense to compare the support between two DIFFERENT candidates.
+                 * It doesn't make sense to compare support of a candidate and themself.
                  */
                 if ($outerCandidate->getId() != $innerCandidate->getId()) {
                     $pair = new Pair($outerCandidate, $innerCandidate, 0);
@@ -74,14 +73,15 @@ class PairCalculator
     }
 
     /**
-     * Calculate the pairwise differences in popular support, a.k.a. the Pairs.
+     * Create the pairwise comparisons of popular support, a.k.a. the Pairs.
      *
      * @param Agenda $agenda a set of candidates. This is a non-strict subset of the Candidates in $nBallots.
      * @param ...NBallot $nBallots a list of NBallots. The set of Candidates in $nBallots is a non-strict
      * superset of the Candidates in $agenda.
-     * @return a PairRegistry whose Pairs completely describe the pairwise
-     * difference in popular support between every Candidate. The number of Pairs in the returned PairRegistry
-     * should be equal to `N(N - 1)`, where `N` is the number of Candidates in $agenda.
+     * @return a PairRegistry whose Pairs completely completely compare popular support between every Candidate.
+     * The number of Pairs in the returned PairRegistry should be equal to `N(N - 1)`, where `N` is the number of
+     * Candidates in $agenda.
+     *
      * @todo this function generates all non-duplicating combinations of Candidates. Consider moving the combination
      * logic elsewhere. http://php.net/manual/en/language.generators.syntax.php
      */

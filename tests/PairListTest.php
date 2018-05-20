@@ -56,7 +56,7 @@ class PairListTest extends GenericCollectionTestCase
                 $currentPairVotes = $pair->getVotes();
                 //if this is the first time through this group
                 if (is_infinite($pairGroupVotes)) {
-                    //use the difference from the first Pair in the group as the expected difference for the next
+                    //use the votes from the first Pair in the group as the expected votes for the next
                     //Pairs in the group
                     $pairGroupVotes = $currentPairVotes;
 
@@ -71,10 +71,10 @@ class PairListTest extends GenericCollectionTestCase
 
                     $previousPairGroupVotes = $pairGroupVotes;
                 } else {
-                    //each Pair must have the same difference as other Pairs in the same PairList
+                    //each Pair must have the same votes as other Pairs in the same PairList
                     $this->assertEquals($pairGroupVotes, $currentPairVotes);
                 }
-                //each difference should be less than or equal to the previous difference
+                //each Pair's votes should be less than or equal to the previous votes
                 $this->assertTrue($previousPairVotes >= $currentPairVotes);
                 $previousPairVotes = $currentPairVotes;
             }

@@ -52,9 +52,9 @@ class RankedPairsGraph
         return $tiedWinners;
     }
     /**
-     * Locks in Pairs in order of descending difference, ignoring any Pairs that would contradict a
+     * Locks in Pairs in order of descending votes, ignoring any Pairs that would contradict a
      * previously-locked-in Pair.
-     * @param PairList a PairList whose Pairs are sorted in order of descending difference and all differences are
+     * @param PairList a PairList whose Pairs are sorted in order of descending votes and all votes are
      * greater than or equal to zero.
      */
     public function addPairs(PairList $sortedPairList)

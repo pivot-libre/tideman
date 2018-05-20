@@ -42,7 +42,7 @@ class TotallyOrderedBallotPairTieBreaker implements PairTieBreaker
      * Break the tie between the Pairs by preferring the Pair whose winner ranks higher in a
      * tie-breaking Ballot. If the winners are the same in both Pairs, resolve the tie by preferring the Pair whose
      * loser ranks higher in a tie-breaking Ballot. If the winner and the loser are the same in both Pairs, throw an
-     * InvalidArgumentException because they are the same Pair. If the Pair's difference properties are not equal,
+     * InvalidArgumentException because they are the same Pair. If the Pair's votes properties are not equal,
      * throw an InvalidArgumentException because they are not tied.
      *
      * @return int

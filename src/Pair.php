@@ -2,7 +2,7 @@
 namespace PivotLibre\Tideman;
 
 /**
- * A Pair describes the difference in popular support between two Candidates.
+ * A Pair compares the popular support between two Candidates.
  */
 class Pair
 {

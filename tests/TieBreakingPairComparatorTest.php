@@ -56,7 +56,7 @@ class TieBreakingPairComparatorTest extends TestCase
 
     public function testTiedPairsWithDifferentWinners() : void
     {
-        //in these test pairs, the differences are the same and the winners are different Candidates
+        //in these test pairs, the votes are the same and the winners are different Candidates
         $pairA = new Pair($this->alice, $this->bob, 10);
         $pairB = new Pair($this->dave, $this->claire, 10);
         $this->assertLessThan(0, $this->instance->compare($pairA, $pairB));
@@ -65,7 +65,7 @@ class TieBreakingPairComparatorTest extends TestCase
 
     public function testTiedPairsWithTheSameWinners() : void
     {
-        //in these test pairs, the differences are the same and the winners are the same Candidate
+        //in these test pairs, the votes are the same and the winners are the same Candidate
         $pairA = new Pair($this->alice, $this->bob, 10);
         $pairB = new Pair($this->alice, $this->claire, 10);
         $this->assertLessThan(0, $this->instance->compare($pairA, $pairB));
@@ -74,7 +74,7 @@ class TieBreakingPairComparatorTest extends TestCase
 
     public function testSimpleDifferentWinnerSort() : void
     {
-        //in these test pairs, the differences are the same and the winners are different Candidates
+        //in these test pairs, the votes are the same and the winners are different Candidates
         $pairA = new Pair($this->alice, $this->bob, 10);
         $pairB = new Pair($this->dave, $this->claire, 10);
         $pairs = [$pairB, $pairA];
@@ -85,7 +85,7 @@ class TieBreakingPairComparatorTest extends TestCase
 
     public function testSimpleSameWinnerSort() : void
     {
-        //in these test pairs, the differences are the same and the winners are the same Candidate
+        //in these test pairs, the votes are the same and the winners are the same Candidate
         $pairA = new Pair($this->alice, $this->bob, 10);
         $pairB = new Pair($this->alice, $this->claire, 10);
         $pairs = [$pairB, $pairA];
@@ -96,7 +96,7 @@ class TieBreakingPairComparatorTest extends TestCase
 
     public function testBiggerDifferentWinnerSort() : void
     {
-        //in these test pairs, the differences are the same and the winners are different Candidates
+        //in these test pairs, the votes are the same and the winners are different Candidates
         $pairA = new Pair($this->alice, $this->bob, 10);
         $pairB = new Pair($this->bob, $this->claire, 10);
         $pairC = new Pair($this->claire, $this->dave, 10);
@@ -108,7 +108,7 @@ class TieBreakingPairComparatorTest extends TestCase
 
     public function testBiggerSameWinnerSort() : void
     {
-        //in these test pairs, the differences are the same and the winners are the same Candidate
+        //in these test pairs, the votes are the same and the winners are the same Candidate
         $pairA = new Pair($this->alice, $this->bob, 10);
         $pairB = new Pair($this->alice, $this->claire, 10);
         $pairC = new Pair($this->alice, $this->dave, 10);
@@ -120,7 +120,7 @@ class TieBreakingPairComparatorTest extends TestCase
 
     public function testBiggestSort() : void
     {
-        //in these test pairs, the differences are the same and the winners are a mix of various Candidates
+        //in these test pairs, the votes are the same and the winners are a mix of various Candidates
 
         //alice as the winner
         $pairA = new Pair($this->alice, $this->bob, 10);

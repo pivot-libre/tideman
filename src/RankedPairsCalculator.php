@@ -87,12 +87,12 @@ class RankedPairsCalculator
     }
 
     /**
-     * Calculate the pairwise differences in popular support, a.k.a. the Pairs.
+     * Calculate the pairwise comparisons in popular support, a.k.a. the Pairs.
      *
      * @param Agenda $agenda a set of candidates. This is a non-strict subset of the Candidates in $nBallots.
      * @param ...NBallot $nBallots a list of NBallots. The set of Candidates in $nBallots is a non-strict
      * superset of the Candidates in $agenda.
-     * @return PairList representing all of the pairwise differences in popular support for all Candidates specified
+     * @return PairList comparing popular support for all Candidates specified
      * by $agenda. The length of the returned PairList should be equal to `N(N - 1)`, where `N` is the number of
      * Candidates in $agenda.
      */
@@ -105,12 +105,12 @@ class RankedPairsCalculator
     }
 
     /**
-     * Sorts all Pairs in order of descending getDifference(). Breaks ties. Filters out redundant negative pairs.
+     * Sorts all Pairs in order of descending "getVotes()". Breaks ties. Filters out redundant negative pairs.
      */
     public function sortPairs(PairList $pairList) : PairList
     {
-        $pairsSortedDescGroupedByDifference = $pairList->filterGroupAndSort();
-        $pairsWithTiesBroken = $pairsSortedDescGroupedByDifference->breakTies($this->tieBreakingPairComparator);
+        $pairsSortedDescGroupedByVotes = $pairList->filterGroupAndSort();
+        $pairsWithTiesBroken = $pairsSortedDescGroupedByVotes->breakTies($this->tieBreakingPairComparator);
         return $pairsWithTiesBroken;
     }
 }

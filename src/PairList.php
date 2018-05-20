@@ -18,9 +18,9 @@ class PairList extends GenericCollection implements Countable
 
     /**
      * This method returns the result of filtering, grouping, and sorting this PairList's Pairs.
-     * This method filters out Pairs with negative difference values.
-     * This method sorts the PairList in order of descending difference properties.
-     * This method groups this PairList's Pairs into multiple PairLists based on Pairs' difference properties.
+     * This method filters out Pairs with negative "votes" values.
+     * This method sorts the PairList in order of descending "votes" properties.
+     * This method groups this PairList's Pairs into multiple PairLists based on Pairs' "votes" properties.
      *
      *
      * For example, if this PairList were comprised of:
@@ -45,7 +45,7 @@ class PairList extends GenericCollection implements Countable
      * two that contains $pairX and $pairY would be sorted to a lower index in the resulting ListOfPairLists than
      * the PairList of length one that contains $pairZ because ten (the getVotes() of both $pairX and
      * $pairY) is greater than five (the getVotes() of $pairZ). $pairW is excluded from the output because it
-     * has a negative difference value, and negative difference values are redundant.
+     * has a negative "votes" value, and negative "votes" values are redundant.
      */
     public function filterGroupAndSort() : ListOfPairLists
     {
