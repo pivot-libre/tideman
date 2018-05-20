@@ -3,7 +3,7 @@
 
 namespace PivotLibre\Tideman;
 
-class WinningVoteCalculator extends PairCalculator
+class WinningVoteRegistrar extends PairRegistrar
 {
 
     /**

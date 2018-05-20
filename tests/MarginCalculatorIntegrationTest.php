@@ -3,7 +3,7 @@
 namespace PivotLibre\Tideman;
 
 use PivotLibre\Tideman\TestScenario1;
-use PivotLibre\Tideman\MarginCalculator;
+use PivotLibre\Tideman\MarginRegistrar;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\EventDispatcher\GenericEvent;
 
@@ -31,7 +31,7 @@ class MarginCalculatorIntegrationTest extends TestCase
     protected function checkPairs($expectedPairs, $ballots)
     {
         $agenda = new Agenda(...$ballots);
-        $pairRegistry = (new MarginCalculator())->calculate($agenda, ...$ballots);
+        $pairRegistry = (new MarginRegistrar())->calculate($agenda, ...$ballots);
         $this->assertEquals(sizeof($expectedPairs), $pairRegistry->getCount());
         foreach ($expectedPairs as $expectedPair) {
             $winner = $expectedPair->getWinner();

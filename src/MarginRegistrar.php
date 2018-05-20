@@ -5,7 +5,7 @@ use PivotLibre\Tideman\MarginRegistry;
 
 use \InvalidArgumentException;
 
-class MarginCalculator extends PairCalculator
+class MarginRegistrar extends PairRegistrar
 {
     /**
      *

@@ -4,11 +4,11 @@ namespace PivotLibre\Tideman;
 use PivotLibre\Tideman\PairRegistry;
 
 /**
- * Class PairCalculator provides base functionality for building a PairRegistry from an Agenda and one or more Ballots.
+ * Class PairRegistrar provides base functionality for building a PairRegistry from an Agenda and one or more Ballots.
  * Subclasses decide how values in the PairRegistry should be updated.
  * @package PivotLibre\Tideman
  */
-abstract class PairCalculator
+abstract class PairRegistrar
 {
     /**
      * Register a Pair for all possible pairs of Candidates described in an Agenda. If the agenda contains N

@@ -5,7 +5,7 @@ namespace PivotLibre\Tideman;
 use PHPUnit\Framework\TestCase;
 use PivotLibre\Tideman\Agenda;
 use PivotLibre\Tideman\CandidateList;
-use PivotLibre\Tideman\MarginCalculator;
+use PivotLibre\Tideman\MarginRegistrar;
 use \InvalidArgumentException;
 
 class MarginCalculatorTest extends TestCase
@@ -25,7 +25,7 @@ class MarginCalculatorTest extends TestCase
         $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
         $this->claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
-        $this->instance = new MarginCalculator();
+        $this->instance = new MarginRegistrar();
     }
 
     public function testUpdatePairInRegistry() : void
