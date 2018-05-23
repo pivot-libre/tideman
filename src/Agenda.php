@@ -19,6 +19,23 @@ class Agenda implements Countable
         $this->addCandidatesFromBallots(...$ballots);
     }
 
+
+    /**
+     * @param Candidate ...$candidates
+     */
+    public function addCandidates(Candidate ...$candidates) : void
+    {
+
+        foreach ($candidates as $candidate) {
+            $this->candidateSet->add($candidate);
+            /**
+             * Since we are only using the candidateId as the key, we will set the value to a new Candidate
+             * every time. That means that if the Ballots store differing information on the same Candidate,
+             * then the attributes of the Candidate most-recently iterated over will be used.
+             */
+        }
+    }
+
     public function removeCandidates(Candidate ...$candidates)
     {
         $this->candidateSet->remove(...$candidates);
@@ -29,15 +46,7 @@ class Agenda implements Countable
         foreach ($ballots as $ballot) {
             //a ballot has multiple CandidateLists
             foreach ($ballot as $candidateList) {
-                //a CandidateList has multiple Candidates
-                foreach ($candidateList as $candidate) {
-                    $this->candidateSet->add($candidate);
-                    /**
-                     * Since we are only using the candidateId as the key, we will set the value to a new Candidate
-                     * every time. That means that if the Ballots store differing information on the same Candidate,
-                     * then the attributes of the Candidate most-recently iterated over will be used.
-                     */
-                }
+                $this->addCandidates(...$candidateList);
             }
         }
     }

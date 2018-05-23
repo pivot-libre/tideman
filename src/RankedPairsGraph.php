@@ -12,7 +12,7 @@ use PivotLibre\Tideman\Candidate;
 class RankedPairsGraph
 {
     private $graph;
-    //vertices have named attributes that we can associate artbitrary data to. This constant defines the name of an
+    //vertices have named attributes that we can associate arbitrary data to. This constant defines the name of an
     //attribute that we will use to store the original Candidate object that a vertex corresponds to.
     public const CANDIDATE_ATTRIBUTE_NAME = "candidate";
 
@@ -22,7 +22,7 @@ class RankedPairsGraph
     }
 
     /**
-     * @return an human-readable adjacency list describing the graph
+     * @return a human-readable adjacency list describing the graph
      */
     public function toString() : string
     {
@@ -37,8 +37,7 @@ class RankedPairsGraph
         return $graphStr;
     }
     /**
-    * @return CandidateList - a list of Candidates in descending order of preference. Candidates that are more
-    * preferred have a lower index than Candidates that are less preferred.
+    * @return CandidateList - a list of Candidates who win this round of the election.
     */
     public function getWinningCandidates() : CandidateList
     {
@@ -57,16 +56,24 @@ class RankedPairsGraph
      * @param PairList a PairList whose Pairs are sorted in order of descending votes and all votes are
      * greater than or equal to zero.
      */
-    public function addPairs(PairList $sortedPairList)
+    public function addPairs(PairList $sortedPairList) : void
     {
         foreach ($sortedPairList as $pair) {
             $this->addPair($pair);
         }
     }
-    public function addPair(Pair $pair)
+
+    /**
+     * Conditionally add an edge to the graph that originates at the node for `$pair->getWinner()` and ends at the node
+     * for `$pair->getLoser()`. The edge is only added if it would not introduce a cycle.
+     * @param Pair $pair
+     */
+    public function addPair(Pair $pair) : void
     {
+        //add candidates to graph or get them if they already exist
         $winnerVertex = $this->addCandidateToGraph($pair->getWinner());
         $loserVertex = $this->addCandidateToGraph($pair->getLoser());
+
         $newEdge = $winnerVertex->createEdgeTo($loserVertex);
         $newEdge->setWeight($pair->getVotes());
         //check for contradiction of stronger preferences
@@ -77,8 +84,11 @@ class RankedPairsGraph
     }
 
     /**
-    * @todo #8 optimize this so that it uses a depth first search that returns early if the source node is discovered.
-    */
+     *
+     * @todo #8 optimize this so that it uses a depth first search that returns early if the source node is discovered.
+     * @param Vertex $vertex
+     * @return bool
+     */
     public function vertexIsInACycle(Vertex $vertex) : bool
     {
         //the graph algorithms package does not provide cycle detection. Luckily we can use a shortest path algorithm
@@ -87,6 +97,7 @@ class RankedPairsGraph
         $cycleExists = $shortestPath->hasVertex($vertex);
         return $cycleExists;
     }
+
     /**
      * Get nodes which have no inbound edges. These nodes are the winners.
      */
@@ -98,11 +109,16 @@ class RankedPairsGraph
         return $sourceVertices;
     }
 
+    /**
+     * @param Vertex $vertex
+     * @return Candidate
+     */
     public function getCandidateFromVertex(Vertex $vertex) : Candidate
     {
         $candidate = $vertex->getAttribute(self::CANDIDATE_ATTRIBUTE_NAME);
         return $candidate;
     }
+
     /**
      * get Candidates from Vertices
      */
@@ -114,12 +130,32 @@ class RankedPairsGraph
         $candidateList = new CandidateList(...$candidates);
         return $candidateList;
     }
+
+    /**
+     * Adds a node to the graph for every Candidate in the Agenda.
+     * @param Agenda $agenda
+     */
+    public function addCandidatesFromAgenda(Agenda $agenda) : void
+    {
+        $this->addCandidatesFromList($agenda->getCandidates());
+    }
+
+    /**
+     * Adds a node to the graph for every Candidate in the CandidateList.
+     * @param CandidateList $candidateList
+     */
+    public function addCandidatesFromList(CandidateList $candidateList) : void
+    {
+        foreach ($candidateList as $candidate) {
+            $this->addCandidateToGraph($candidate);
+        }
+    }
+
     /**
      * Adds a Vertex to the Graph that corresponds to the Candidate if it is not already present. Otherwise returns the
      * existing Vertex associated with the Candidate.
      * @param Candidate to add to the Graph
-     * @param Graph to wihich we will add a vertex containing the Candidate.
-     * @return a Vertex whose attribute 'self::CANDIDATE_ATTRIBUTE_NAME' is the parameterized Candidate.
+     * @return Vertex whose attribute 'self::CANDIDATE_ATTRIBUTE_NAME' is the parameterized Candidate.
      */
     public function addCandidateToGraph(Candidate $candidate) : Vertex
     {
@@ -134,7 +170,7 @@ class RankedPairsGraph
     }
 
     /**
-     * @return the underlying Graph data structure
+     * @return Graph underlying Graph data structure
      */
     public function getGraph() : Graph
     {
