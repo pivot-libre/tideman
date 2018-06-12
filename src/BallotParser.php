@@ -2,6 +2,7 @@
 
 
 namespace PivotLibre\Tideman;
+
 use \InvalidArgumentException;
 
 class BallotParser
@@ -42,12 +43,10 @@ class BallotParser
      */
     private function enforceOneDirection($text) : void
     {
-        if (
-            $this->contains(">", $text)
-            &&
-            $this->contains("<", $text)
-        ) {
-            throw new InvalidArgumentException("Ballot contained both '>' and '<'. It should only contain one or the other");
+        if ($this->contains(">", $text) && $this->contains("<", $text)) {
+            throw new InvalidArgumentException(
+                "Ballot contained both '>' and '<'. It should only contain one or the other"
+            );
         }
     }
 

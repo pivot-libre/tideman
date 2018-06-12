@@ -4,7 +4,6 @@ namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
 
-
 class BallotParserTest extends TestCase
 {
     private $instance;
@@ -61,5 +60,4 @@ class BallotParserTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->instance->parse("A<B>C");
     }
-
 }
