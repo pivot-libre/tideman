@@ -114,5 +114,4 @@ class RankedPairsCalculator
         $pairsWithTiesBroken = $pairsSortedDescGroupedByVotes->breakTies($this->tieBreakingPairComparator);
         return $pairsWithTiesBroken;
     }
-
 }
