@@ -185,6 +185,8 @@ class RankedPairsCalculatorTest extends TestCase
     
     public function testPairTieBreakingWitTiedBallot() : void
     {
+        $this->markTestSkipped('This test should be restored once candidate ties are surfaced');
+
         $candidateListsForBallot = [
             new CandidateList($this->alice),
             new CandidateList($this->bob),
