@@ -23,9 +23,9 @@ class BallotTieBreaker
     }
 
     /**
-     * @param Ballot to linearize
-     * @return a CandidateList. All of the CandidateLists are of length 1.
-     * The original ordering is unaffected.
+     * @param Ballot $ballot. The ordering of candidates in the Ballot is unaffected by this method.
+     * @return CandidateList a total ordering of the Candidates in the Ballot (no ties).
+     *
      */
     protected function getCandidatesWithTiesRandomlyBroken(Ballot $ballot) : CandidateList
     {

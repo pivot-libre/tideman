@@ -126,7 +126,7 @@ class PairListTest extends GenericCollectionTestCase
     public function testEmptyList()
     {
         $pairList = new PairList();
-        $listOfPairLists = $pairList->filterGroupAndSort();
+        $listOfPairLists = $pairList->groupAndSort();
         $this->assertEquals(new ListOfPairLists(), $listOfPairLists);
         $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
     }
@@ -134,7 +134,7 @@ class PairListTest extends GenericCollectionTestCase
     public function testOnePairList()
     {
         $pairList = new PairList(new Pair($this->alice, $this->bob, 10));
-        $listOfPairLists = $pairList->filterGroupAndSort();
+        $listOfPairLists = $pairList->groupAndSort();
         $expected = new ListOfPairLists(new PairList(new Pair($this->alice, $this->bob, 10)));
         $this->assertEquals($expected, $listOfPairLists);
         $this->assertGroupedAndInOrderOfDescendingVotes($listOfPairLists);
@@ -145,7 +145,7 @@ class PairListTest extends GenericCollectionTestCase
             new Pair($this->alice, $this->bob, 10),
             new Pair($this->alice, $this->claire, 10)
         );
-        $listOfPairLists = $pairList->filterGroupAndSort();
+        $listOfPairLists = $pairList->groupAndSort();
         $expected = new ListOfPairLists(new PairList(
             new Pair($this->alice, $this->bob, 10),
             new Pair($this->alice, $this->claire, 10)
@@ -160,7 +160,7 @@ class PairListTest extends GenericCollectionTestCase
             new Pair($this->alice, $this->bob, 10)
         );
 
-        $listOfPairLists = $pairList->filterGroupAndSort();
+        $listOfPairLists = $pairList->groupAndSort();
         $expected = new ListOfPairLists(
             new PairList(
                 new Pair($this->alice, $this->bob, 10)
@@ -179,7 +179,7 @@ class PairListTest extends GenericCollectionTestCase
             new Pair($this->alice, $this->claire, 2),
             new Pair($this->bob, $this->claire, 300)
         );
-        $listOfPairLists = $pairList->filterGroupAndSort();
+        $listOfPairLists = $pairList->groupAndSort();
         $expected = new ListOfPairLists(
             new PairList(
                 new Pair($this->bob, $this->claire, 300)
@@ -201,7 +201,7 @@ class PairListTest extends GenericCollectionTestCase
             new Pair($this->bob, $this->claire, 10),
             new Pair($this->alice, $this->claire, 100)
         );
-        $listOfPairLists = $pairList->filterGroupAndSort();
+        $listOfPairLists = $pairList->groupAndSort();
         $expected = new ListOfPairLists(
             new PairList(
                 new Pair($this->alice, $this->bob, 100),
@@ -221,7 +221,7 @@ class PairListTest extends GenericCollectionTestCase
             new Pair($this->bob, $this->claire, 100),
             new Pair($this->alice, $this->claire, 2)
         );
-        $listOfPairLists = $pairList->filterGroupAndSort();
+        $listOfPairLists = $pairList->groupAndSort();
         $expected = new ListOfPairLists(
             new PairList(
                 new Pair($this->bob, $this->claire, 100)
@@ -239,7 +239,7 @@ class PairListTest extends GenericCollectionTestCase
         $listSize = 10;
         for ($i = 0; $i < $listSize / 2; $i++) {
             $pairList = $this->generatePairList($listSize, $i);
-            $actual = $pairList->filterGroupAndSort();
+            $actual = $pairList->groupAndSort();
             $this->assertGroupedAndInOrderOfDescendingVotes($actual);
         }
     }
@@ -248,7 +248,7 @@ class PairListTest extends GenericCollectionTestCase
         $listSize = 31;
         for ($i = 0; $i < $listSize / 2; $i++) {
             $pairList = $this->generatePairList($listSize, $i);
-            $actual = $pairList->filterGroupAndSort();
+            $actual = $pairList->groupAndSort();
             $this->assertGroupedAndInOrderOfDescendingVotes($actual);
         }
     }
@@ -257,7 +257,7 @@ class PairListTest extends GenericCollectionTestCase
         $listSize = 100;
         for ($i = 0; $i < $listSize / 2; $i++) {
             $pairList = $this->generatePairList($listSize, $i);
-            $actual = $pairList->filterGroupAndSort();
+            $actual = $pairList->groupAndSort();
             $this->assertGroupedAndInOrderOfDescendingVotes($actual);
         }
     }

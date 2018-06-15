@@ -56,27 +56,6 @@ abstract class PairRegistrar
         $pairToUpdate->setVotes($updatedVotes);
     }
 
-    /**
-     *
-     * Adds the $amountToAdd to the indifference already associated with the appropriate Pair in the
-     * PairRegistry.
-     *
-     * @param Candidate $winner
-     * @param Candidate $loser
-     * @param PairRegistry $registry
-     * @param int $amountToAdd
-     */
-    public function incrementIndifferenceInRegistry(
-        Candidate $winner,
-        Candidate $loser,
-        PairRegistry $registry,
-        int $amountToAdd
-    ) : void {
-        $pairToUpdate = $registry->get($winner, $loser);
-        $updatedIndifference = $pairToUpdate->getIndifference() + $amountToAdd;
-        $pairToUpdate->setIndifference($updatedIndifference);
-    }
-
 
     /**
      * Create the pairwise comparisons of popular support, a.k.a. the Pairs.

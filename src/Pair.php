@@ -17,6 +17,7 @@ class Pair
         $this->winner = $winner;
         $this->loser = $loser;
         $this->votes = $votes;
+        $this->indifference = 0;
     }
 
     public function getWinner() : Candidate

@@ -3,8 +3,33 @@
 
 namespace PivotLibre\Tideman;
 
+/**
+ * Class WinningVoteRegistrar tallies the votes in a "winning votes" fashion.
+ * @package PivotLibre\Tideman
+ */
 class WinningVoteRegistrar extends PairRegistrar
 {
+
+    /**
+     *
+     * Adds the $amountToAdd to the indifference already associated with the appropriate Pair in the
+     * PairRegistry.
+     *
+     * @param Candidate $winner
+     * @param Candidate $loser
+     * @param PairRegistry $registry
+     * @param int $amountToAdd
+     */
+    public function incrementIndifferenceInRegistry(
+        Candidate $winner,
+        Candidate $loser,
+        PairRegistry $registry,
+        int $amountToAdd
+    ) : void {
+        $pairToUpdate = $registry->get($winner, $loser);
+        $updatedIndifference = $pairToUpdate->getIndifference() + $amountToAdd;
+        $pairToUpdate->setIndifference($updatedIndifference);
+    }
 
     /**
      *
@@ -19,7 +44,7 @@ class WinningVoteRegistrar extends PairRegistrar
      * the sum of (the votes that preferred the winner over the loser) and (the votes that considered the winner and
      * loser to be equivalent). In other words, a Pair `p`'s `p.getVotes()` ALREADY CONTAINS contributions from
      * indifferent voters. To get a Pair `p`'s number of winning votes without contributions from indifferent voters,
-     * users should use `p->getVotes() - p->getDifference()`.
+     * users should use `p->getVotes() - p->getIndifference()`.
      *
      * Details: http://condorcet.ca/see-how-it-works/how-it-works/
      * @inheritdoc

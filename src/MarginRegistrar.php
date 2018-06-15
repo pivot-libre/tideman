@@ -1,11 +1,15 @@
 <?php
 namespace PivotLibre\Tideman;
 
+/**
+ * Class MarginRegistrar tallies the votes in a "margins" fashion.
+ * @package PivotLibre\Tideman
+ */
 class MarginRegistrar extends PairRegistrar
 {
     /**
      *
-     * This class...
+     * This method...
      * ...increments the A->B Pair and decrements the B->A Pair if A is preferred over B
      * ...increments the B->A Pair and decrements the A->B Pair if B is preferred over A
      * ...changes the votes on neither A->B and B->A Pairs in the Pair registry a tie
