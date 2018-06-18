@@ -15,7 +15,7 @@ class BallotParser
      *
      * @return Ballot
      */
-    public function parse(string $text) : Ballot
+    public function parse(string $text) : NBallot
     {
         $this->enforceOneDirection($text);
         $listOfCandidateLists = [];
@@ -27,13 +27,15 @@ class BallotParser
             $equallyPreferredTokens = $this->tokenize($orderedToken, self::EQUAL_DELIM);
             $equallyPreferredCandidates = [];
             foreach ($equallyPreferredTokens as $equallyPreferredToken) {
-                $candidate = new Candidate($equallyPreferredToken);
+                $id = $equallyPreferredToken;
+                $name = "";
+                $candidate = new Candidate($id, $name);
                 $equallyPreferredCandidates[] = $candidate;
             }
             $candidateList = new CandidateList(...$equallyPreferredCandidates);
             $listOfCandidateLists[] = $candidateList;
         }
-        $ballot = new Ballot(...$listOfCandidateLists);
+        $ballot = new NBallot(1, ...$listOfCandidateLists);
         return $ballot;
     }
 
