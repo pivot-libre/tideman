@@ -61,4 +61,53 @@ class BallotParserTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->instance->parse("A<B>C");
     }
+
+    public function testEnforceOneDirectionFurtherApart() : void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("A<B<C>D");
+    }
+
+    public function testEnforceOneDirectionImmediate() : void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("A<>B");
+    }
+
+    public function testSimpleBallotWithTie() : void
+    {
+        //assertion equality is order-dependent, so we create both
+        //permutations
+
+        $aTiedWithB = new Ballot(
+            //alice and bob are tied
+            new CandidateList($this->alice, $this->bob)
+        );
+
+        $bTiedWithA = new Ballot(
+            //alice and bob are tied
+            new CandidateList($this->bob, $this->alice)
+        );
+        $actual = $this->instance->parse("A=B");
+        $this->assertEquals($aTiedWithB, $actual);
+        $actual = $this->instance->parse("B=A");
+        $this->assertEquals($bTiedWithA, $actual);
+
+
+        //ensure spaces are ignored
+        $actual = $this->instance->parse("A =B");
+        $this->assertEquals($aTiedWithB, $actual);
+        $actual = $this->instance->parse("B =A");
+        $this->assertEquals($bTiedWithA, $actual);
+
+        $actual = $this->instance->parse("A = B");
+        $this->assertEquals($aTiedWithB, $actual);
+        $actual = $this->instance->parse("B = A");
+        $this->assertEquals($bTiedWithA, $actual);
+
+        $actual = $this->instance->parse(" A  =   B    ");
+        $this->assertEquals($aTiedWithB, $actual);
+        $actual = $this->instance->parse("    B   =  A ");
+        $this->assertEquals($bTiedWithA, $actual);
+    }
 }
