@@ -14,7 +14,7 @@ class Candidate implements LoggerAwareInterface
 
     public function __construct(string $id, string $name = "")
     {
-        if (empty($id) || empty(trim($id))) {
+        if (strlen(trim($id)) == 0) {
             throw new InvalidArgumentException("A Candidate must have an id");
         }
         $this->id = $id;

@@ -21,14 +21,15 @@ class BallotParserTest extends TestCase
 
     public function testParseEmptyString() : void
     {
-        $expected = new Ballot();
+        $expected = new NBallot(1);
         $actual = $this->instance->parse("");
         $this->assertEquals($expected, $actual);
     }
 
     public function testParseEasyBallot() : void
     {
-        $expected = new Ballot(
+        $expected = new NBallot(
+            1,
             new CandidateList($this->alice),
             new CandidateList($this->bob)
         );
