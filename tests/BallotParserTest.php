@@ -35,43 +35,16 @@ class BallotParserTest extends TestCase
         );
         $actual = $this->instance->parse("A>B");
         $this->assertEquals($expected, $actual);
-        $actual = $this->instance->parse("B<A");
-        $this->assertEquals($expected, $actual);
-
 
         //ensure spaces are ignored
         $actual = $this->instance->parse("A >B");
         $this->assertEquals($expected, $actual);
-        $actual = $this->instance->parse("B <A");
-        $this->assertEquals($expected, $actual);
 
         $actual = $this->instance->parse("A > B");
-        $this->assertEquals($expected, $actual);
-        $actual = $this->instance->parse("B < A");
         $this->assertEquals($expected, $actual);
 
         $actual = $this->instance->parse(" A  >   B    ");
         $this->assertEquals($expected, $actual);
-        $actual = $this->instance->parse("    B   <  A ");
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function testEnforceOneDirection() : void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->instance->parse("A<B>C");
-    }
-
-    public function testEnforceOneDirectionFurtherApart() : void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->instance->parse("A<B<C>D");
-    }
-
-    public function testEnforceOneDirectionImmediate() : void
-    {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->instance->parse("A<>B");
     }
 
     public function testSimpleBallotWithTie() : void

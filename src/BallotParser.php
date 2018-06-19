@@ -7,7 +7,7 @@ use \InvalidArgumentException;
 
 class BallotParser
 {
-    private const ORDERED_DELIM = "<>";
+    private const ORDERED_DELIM = ">";
     private const EQUAL_DELIM = "=";
 
     /**
@@ -17,12 +17,9 @@ class BallotParser
      */
     public function parse(string $text) : NBallot
     {
-        $this->enforceOneDirection($text);
         $listOfCandidateLists = [];
         $orderedTokens = $this->tokenize($text, self::ORDERED_DELIM);
-        if ($this->contains("<", $text)) {
-            $orderedTokens = array_reverse($orderedTokens);
-        }
+
         foreach ($orderedTokens as $orderedToken) {
             $equallyPreferredTokens = $this->tokenize($orderedToken, self::EQUAL_DELIM);
             $equallyPreferredCandidates = [];
@@ -37,30 +34,6 @@ class BallotParser
         }
         $ballot = new NBallot(1, ...$listOfCandidateLists);
         return $ballot;
-    }
-
-    /**
-     * @param $text
-     * @throws \InvalidArgumentException if the ballot string contains both ">" and "<"
-     */
-    private function enforceOneDirection($text) : void
-    {
-        if ($this->contains(">", $text) && $this->contains("<", $text)) {
-            throw new InvalidArgumentException(
-                "Ballot contained both '>' and '<'. It should only contain one or the other"
-            );
-        }
-    }
-
-
-    /**
-     * @param $needle
-     * @param $haystack
-     * @return bool true if $needle is in $haystack, false otherwise.
-     */
-    private function contains($needle, $haystack)
-    {
-        return strpos($haystack, $needle) !== false;
     }
 
     private function tokenize(string $toTokenize, string $delim) : array
