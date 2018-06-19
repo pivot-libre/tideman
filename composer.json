@@ -30,6 +30,7 @@
             "PHP_CodeSniffer\\": "vendor/squizlabs/php_codesniffer/src/"
         }
     },
+    "bin": ["bin/bulk_ballot_test.php"],
     "license": "Apache-2.0",
     "minimum-stability": "dev"
 }
