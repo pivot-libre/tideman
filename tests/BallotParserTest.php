@@ -83,4 +83,25 @@ class BallotParserTest extends TestCase
         $actual = $this->instance->parse("    B   =  A ");
         $this->assertEquals($bTiedWithA, $actual);
     }
+
+    public function testThreeCandidateBallot() : void
+    {
+        $expected = new Ballot(
+            new CandidateList($this->alice),
+            new CandidateList($this->bob, $this->claire)
+        );
+
+        $actual = $this->instance->parse("A>B=C");
+        $this->assertEquals($expected, $actual);
+
+        //add some spaces
+        $actual = $this->instance->parse(" A>B=C");
+        $this->assertEquals($expected, $actual);
+
+        $actual = $this->instance->parse(" A> B  =C");
+        $this->assertEquals($expected, $actual);
+
+        $actual = $this->instance->parse(" A  >   B    =     C      ");
+        $this->assertEquals($expected, $actual);
+    }
 }
