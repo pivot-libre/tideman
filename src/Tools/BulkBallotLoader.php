@@ -7,15 +7,16 @@ use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\RankedPairsCalculator;
 use PivotLibre\Tideman\NBallot;
 
-
-class BulkBallotLoader 
+class BulkBallotLoader
 {
-    public static function Usage() {
+    public static function usage()
+    {
         echo "Usage:\n";
         echo "  php tools/pivot_load.php -b <ballot-file> -c <cordorcet-file>\n";
     }
 
-    public static function ParseRawBallots($ballot_path) {
+    public static function parseRawBAllots($ballot_path)
+    {
         $handle = fopen($ballot_path, "r");
         if (! $handle) {
             echo 'Could not open file: '.$ballot_path;
@@ -36,11 +37,13 @@ class BulkBallotLoader
         return $ballots;
     }
 
-    public static function ParseCondorcetRequirements($condorcet_path) {
-        return json_decode(file_get_contents($condorcet_path), $assoc=true);
+    public static function parseCondorcetRequirements($condorcet_path)
+    {
+        return json_decode(file_get_contents($condorcet_path), $assoc = true);
     }
 
-    public static function ExtractCandidates($ballots) {
+    public static function extractCandidates($ballots)
+    {
         // name => tideman candidate
         $candidate_map = array();
 
@@ -59,19 +62,20 @@ class BulkBallotLoader
         return $candidate_map;
     }
 
-    public static function CheckTidemanAgainstCondorcet($candidate_map, $ballots, $tie_breaker, $condorcet_path) {
+    public static function checkTidemanAgainstCondorcet($candidate_map, $ballots, $tie_breaker, $condorcet_path)
+    {
         $calculator = new RankedPairsCalculator($tie_breaker);
         $num_of_winners = count($candidate_map);
         $winnerOrder = $calculator->calculate($num_of_winners, ...$ballots)->toArray();
 
         # display result
         echo "Winning Order:\n";
-        for($i = 0; $i < sizeof($winnerOrder); $i++) {
+        for ($i = 0; $i < sizeof($winnerOrder); $i++) {
             echo "Candidate: '" . $winnerOrder[$i]->getName() . "'\n";
         }
 
         # parse condorcet requirements
-        $condorcet = self::ParseCondorcetRequirements($condorcet_path);
+        $condorcet = self::parseCondorcetRequirements($condorcet_path);
         $rank = 1;
         for ($i=0; $i<count($condorcet); $i++) {
             $candidate_group = $condorcet[$i];
@@ -82,7 +86,7 @@ class BulkBallotLoader
             $condorcet[$i] = $candidates;
         }
 
-        for($i = 0; $i < sizeof($winnerOrder); $i++) {
+        for ($i = 0; $i < sizeof($winnerOrder); $i++) {
             $c = $winnerOrder[$i]->getName();
             if (! isset($condorcet[0][$c])) {
                 die("found an unexpected winner " . $c . " beat " . key($condorcet[0]) . "\n");
@@ -94,21 +98,22 @@ class BulkBallotLoader
         }
     }
 
-    public static function Main() {
+    public static function main()
+    {
         $options = getopt("b:c:");
         $ballot_path = $options["b"] ?? null;
         $condorcet_path = $options["c"] ?? null;
         if (is_null($ballot_path) or is_null($condorcet_path)) {
-            self::Usage();
+            self::usage();
             return 1;
         }
 
         # parse ballots/candidates, and convert to Tideman library format
-        $ballots = self::ParseRawBallots($ballot_path);
+        $ballots = self::parseRawBAllots($ballot_path);
         if (is_null($ballot_path)) {
             return 1;
         }
-        $candidate_map = self::ExtractCandidates($ballots);
+        $candidate_map = self::extractCandidates($ballots);
 
         for ($i=0; $i<count($ballots); $i++) {
             for ($j=0; $j<count($ballots[$i]); $j++) {
@@ -125,8 +130,12 @@ class BulkBallotLoader
 
         # compute result
         foreach ($ballots as $tie_breaker) {
-            self::CheckTidemanAgainstCondorcet($candidate_map, $ballots,
-                                               $tie_breaker, $condorcet_path);
+            self::checkTidemanAgainstCondorcet(
+                $candidate_map,
+                $ballots,
+                $tie_breaker,
+                $condorcet_path
+            );
         }
 
         return 0;
