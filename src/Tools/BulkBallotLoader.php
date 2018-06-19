@@ -1,16 +1,14 @@
 <?php
 
-namespace PivotLibre\Tideman;
+namespace PivotLibre\Tideman\Tools;
 
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+use PivotLibre\Tideman\Candidate;
+use PivotLibre\Tideman\CandidateList;
+use PivotLibre\Tideman\RankedPairsCalculator;
+use PivotLibre\Tideman\NBallot;
 
-require_once(dirname(__FILE__) .
-             DIRECTORY_SEPARATOR . '..' .
-             DIRECTORY_SEPARATOR . 'vendor/autoload.php');
 
-class Main
+class BulkBallotLoader 
 {
     public static function Usage() {
         echo "Usage:\n";
@@ -134,5 +132,3 @@ class Main
         return 0;
     }
 }
-
-return Main::Main();
