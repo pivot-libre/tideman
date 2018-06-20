@@ -5,7 +5,7 @@ namespace PivotLibre\Tideman;
 
 use \InvalidArgumentException;
 
-class BallotParser
+class NBallotParser
 {
     private const ORDERED_DELIM = ">";
     private const EQUAL_DELIM = "=";
