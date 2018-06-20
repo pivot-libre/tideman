@@ -5,7 +5,7 @@ ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 
 // To use composer's autoload
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use PivotLibre\Tideman\Tools\CondorcetChecker;
 
