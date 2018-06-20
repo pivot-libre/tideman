@@ -7,6 +7,6 @@ ini_set('display_startup_errors', TRUE);
 // To use composer's autoload
 require_once '../vendor/autoload.php';
 
-use PivotLibre\Tideman\Tools\BulkBallotLoader;
+use PivotLibre\Tideman\Tools\CondorcetChecker;
 
-BulkBallotLoader::main();
+CondorcetChecker::main();

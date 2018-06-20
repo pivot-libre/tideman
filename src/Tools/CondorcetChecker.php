@@ -1,24 +1,24 @@
 <?php
 
-namespace PivotLibre\Tideman;
+namespace PivotLibre\Tideman\Tools;
 
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+use PivotLibre\Tideman\Candidate;
+use PivotLibre\Tideman\CandidateList;
+use PivotLibre\Tideman\RankedPairsCalculator;
+use PivotLibre\Tideman\BallotParser;
+use PivotLibre\Tideman\NBallot;
 
-require_once(dirname(__FILE__) .
-             DIRECTORY_SEPARATOR . '..' .
-             DIRECTORY_SEPARATOR . 'vendor/autoload.php');
-
-class Main
+class CondorcetChecker
 {
-    public static function Usage() {
+    public static function usage()
+    {
         echo "Usage:\n";
-        echo "  php tools/pivot_load.php -b <ballot-file> -c <cordorcet-file>\n";
+        echo "  php condorcet_check.php -b <ballot-file> -c <cordorcet-file>\n";
         exit(1);
     }
 
-    public static function ParseRawBallots($ballot_path) {
+    public static function parseRawBallots($ballot_path)
+    {
         $handle = fopen($ballot_path, "r");
         if (! $handle) {
             echo 'Could not open file: '.$ballot_path;
@@ -36,11 +36,13 @@ class Main
         return $ballots;
     }
 
-    public static function ParseCondorcetRequirements($condorcet_path) {
+    public static function parseCondorcetRequirements($condorcet_path)
+    {
         return json_decode(file_get_contents($condorcet_path), true);
     }
 
-    public static function CountUniqueCandidates($ballots) {
+    public static function countUniqueCandidates($ballots)
+    {
         $candidates = array();
         foreach ($ballots as $ballot) {
             foreach ($ballot as $candidate_list) {
@@ -52,19 +54,20 @@ class Main
         return count($candidates);
     }
     
-    public static function CheckTidemanAgainstCondorcet($ballots, $tie_breaker, $condorcet_path) {
+    public static function checkTidemanAgainstCondorcet($ballots, $tie_breaker, $condorcet_path)
+    {
         $calculator = new RankedPairsCalculator($tie_breaker);
-        $num_of_winners = self::CountUniqueCandidates($ballots);
+        $num_of_winners = self::countUniqueCandidates($ballots);
         $winnerOrder = $calculator->calculate($num_of_winners, ...$ballots)->toArray();
 
         # display result
         echo "Winning Order:\n";
-        for($i = 0; $i < sizeof($winnerOrder); $i++) {
+        for ($i = 0; $i < sizeof($winnerOrder); $i++) {
             echo "Candidate: '" . $winnerOrder[$i]->getId() . "'\n";
         }
 
         # parse condorcet requirements
-        $condorcet = self::ParseCondorcetRequirements($condorcet_path);
+        $condorcet = self::parseCondorcetRequirements($condorcet_path);
         $rank = 1;
         for ($i=0; $i<count($condorcet); $i++) {
             $candidate_group = $condorcet[$i];
@@ -76,7 +79,7 @@ class Main
             $condorcet[$i] = $candidates;
         }
 
-        for($i = 0; $i < sizeof($winnerOrder); $i++) {
+        for ($i = 0; $i < sizeof($winnerOrder); $i++) {
             $c = $winnerOrder[$i]->getId();
 
             // does condorcet specify which candidates should win next?
@@ -98,24 +101,23 @@ class Main
         }
     }
 
-    public static function Main() {
+    public static function main()
+    {
         $options = getopt("b:c:");
         $ballot_path = $options["b"] ?? null;
         $condorcet_path = $options["c"] ?? null;
         if (is_null($ballot_path) or is_null($condorcet_path)) {
-            self::Usage();
+            self::usage();
         }
 
         # parse ballots/candidates, and convert to Tideman library format
-        $ballots = self::ParseRawBallots($ballot_path);
+        $ballots = self::parseRawBallots($ballot_path);
         
         # check result for every possible tie breaker
         foreach ($ballots as $tie_breaker) {
-            self::CheckTidemanAgainstCondorcet($ballots, $tie_breaker, $condorcet_path);
+            self::checkTidemanAgainstCondorcet($ballots, $tie_breaker, $condorcet_path);
         }
 
         return 0;
     }
 }
-
-exit(Main::Main());
