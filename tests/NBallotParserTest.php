@@ -4,7 +4,7 @@ namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
 
-class BallotParserTest extends TestCase
+class NBallotParserTest extends TestCase
 {
     private $instance;
     private $alice;
@@ -13,7 +13,7 @@ class BallotParserTest extends TestCase
 
     public function setUp() : void
     {
-        $this->instance = new BallotParser();
+        $this->instance = new NBallotParser();
         $this->alice = new Candidate("A");
         $this->bob = new Candidate("B");
         $this->claire = new Candidate("C");
@@ -52,12 +52,14 @@ class BallotParserTest extends TestCase
         //assertion equality is order-dependent, so we create both
         //permutations
 
-        $aTiedWithB = new Ballot(
+        $aTiedWithB = new NBallot(
+            1,
             //alice and bob are tied
             new CandidateList($this->alice, $this->bob)
         );
 
-        $bTiedWithA = new Ballot(
+        $bTiedWithA = new NBallot(
+            1,
             //alice and bob are tied
             new CandidateList($this->bob, $this->alice)
         );
@@ -86,7 +88,8 @@ class BallotParserTest extends TestCase
 
     public function testThreeCandidateBallot() : void
     {
-        $expected = new Ballot(
+        $expected = new NBallot(
+            1,
             new CandidateList($this->alice),
             new CandidateList($this->bob, $this->claire)
         );
