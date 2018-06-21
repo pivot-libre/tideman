@@ -5,7 +5,7 @@ namespace PivotLibre\Tideman\Tools;
 use PivotLibre\Tideman\Candidate;
 use PivotLibre\Tideman\CandidateList;
 use PivotLibre\Tideman\RankedPairsCalculator;
-use PivotLibre\Tideman\BallotParser;
+use PivotLibre\Tideman\NBallotParser;
 use PivotLibre\Tideman\NBallot;
 
 class CondorcetChecker
@@ -13,7 +13,7 @@ class CondorcetChecker
     public static function usage()
     {
         echo "Usage:\n";
-        echo "  php condorcet_check.php -b <ballot-file> -c <cordorcet-file>\n";
+        echo "  php condorcet_check.php -b <ballot-file> -c <cordorcet-file> [-s <seed>]\n";
         exit(1);
     }
 
@@ -26,7 +26,7 @@ class CondorcetChecker
         }
 
         $ballots = array();
-        $parser = new BallotParser();
+        $parser = new NBallotParser();
 
         while (($line = fgets($handle)) !== false) {
             array_push($ballots, $parser->parse($line));
@@ -68,46 +68,41 @@ class CondorcetChecker
 
         # parse condorcet requirements
         $condorcet = self::parseCondorcetRequirements($condorcet_path);
-        $rank = 1;
-        for ($i=0; $i<count($condorcet); $i++) {
-            $candidate_group = $condorcet[$i];
-            if ($candidate_group["rank"] != $rank++) {
+
+        # compare condorcet with tideman
+        for ($i = 0; $i < sizeof($winnerOrder); $i++) {
+            if ($i >= count($condorcet)) {
+                break;
+            }
+            
+            if ($condorcet[$i]["rank"] != $i+1) {
                 echo("expected results not sorted by rank\n");
                 exit(1);
             }
-            $candidates = array_flip($candidate_group["candidates"]);
-            $condorcet[$i] = $candidates;
-        }
+            
+            $actual = $winnerOrder[$i]->getId();
+            $expected = $condorcet[$i]["candidate"];
 
-        for ($i = 0; $i < sizeof($winnerOrder); $i++) {
-            $c = $winnerOrder[$i]->getId();
-
-            // does condorcet specify which candidates should win next?
-            if (! isset($condorcet[0])) {
-                break;
-            }
-
-            // is the winner in the list of expected winners?
-            if (! isset($condorcet[0][$c])) {
-                echo("candidate with ID=" . $c . " unexpectedly beat candidate with ID=" . key($condorcet[0]) . "\n");
+            if ($actual != $expected) {
+                echo("candidate with ID=" . $actual . " unexpectedly beat candidate with ID=" . $expected . "\n");
                 exit(1);
-            }
-            unset($condorcet[0][$c]);
-
-            // no more candidates expected to tie in this group
-            if (count($condorcet[0]) == 0) {
-                array_shift($condorcet);
             }
         }
     }
 
     public static function main()
     {
-        $options = getopt("b:c:");
+        $options = getopt("b:c:s:");
         $ballot_path = $options["b"] ?? null;
         $condorcet_path = $options["c"] ?? null;
+        $seed = $options["s"] ?? null;
         if (is_null($ballot_path) or is_null($condorcet_path)) {
             self::usage();
+        }
+
+        if (! is_null($seed)) {
+            echo "Use seed: " . $seed . "\n";
+            srand((int)$seed);
         }
 
         # parse ballots/candidates, and convert to Tideman library format
