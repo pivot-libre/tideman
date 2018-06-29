@@ -10,6 +10,8 @@ class NBallotParserTest extends TestCase
     private $alice;
     private $bob;
     private $claire;
+    private $dave;
+    private $eve;
 
     public function setUp() : void
     {
@@ -17,12 +19,33 @@ class NBallotParserTest extends TestCase
         $this->alice = new Candidate("A");
         $this->bob = new Candidate("B");
         $this->claire = new Candidate("C");
+        $this->dave = new Candidate("D");
+        $this->eve= new Candidate("E");
     }
 
     public function testParseEmptyString() : void
     {
-        $expected = new NBallot(1);
+        $this->expectException(\InvalidArgumentException::class);
         $actual = $this->instance->parse("");
+    }
+
+    public function testOneCandidateBallot() : void
+    {
+        $expected = new NBallot(
+            1,
+            new CandidateList($this->alice)
+        );
+        $actual = $this->instance->parse("A");
+        $this->assertEquals($expected, $actual);
+
+        //add some spaces
+        $actual = $this->instance->parse(" A");
+        $this->assertEquals($expected, $actual);
+
+        $actual = $this->instance->parse(" A ");
+        $this->assertEquals($expected, $actual);
+
+        $actual = $this->instance->parse("A ");
         $this->assertEquals($expected, $actual);
     }
 
@@ -105,6 +128,90 @@ class NBallotParserTest extends TestCase
         $this->assertEquals($expected, $actual);
 
         $actual = $this->instance->parse(" A  >   B    =     C      ");
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testFourCandidateBallot() : void
+    {
+        $expected = new NBallot(
+            1,
+            new CandidateList($this->alice),
+            new CandidateList($this->bob, $this->claire),
+            new CandidateList($this->dave)
+        );
+
+        $actual = $this->instance->parse("A>B=C>D");
+        $this->assertEquals($expected, $actual);
+
+        //add some spaces
+        $actual = $this->instance->parse(" A>B=C>D");
+        $this->assertEquals($expected, $actual);
+
+        $actual = $this->instance->parse(" A> B  =C>D");
+        $this->assertEquals($expected, $actual);
+
+        $actual = $this->instance->parse(" A  >   B    =     C      >       D         ");
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testMissingTrailingCandidate() :void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("A>");
+    }
+
+    public function testMissingLeadingCandidate() :void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse(">A");
+    }
+
+    public function testMissingAnyCandidate() :void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse(">");
+    }
+
+    public function testMissingLeadingCandidateInTie() :void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("=A");
+    }
+
+    public function testMissingTrailingCandidateInTie() :void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("A=");
+    }
+
+    public function testBallotWithThreeAdjacentTotallyOrderedCandidates() : void
+    {
+        $expected = new NBallot(
+            1,
+            new CandidateList($this->alice),
+            new CandidateList($this->bob),
+            new CandidateList($this->claire),
+            new CandidateList($this->dave, $this->eve)
+        );
+
+        $actual = $this->instance->parse("A>B>C>D=E");
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testBallotWithThreeAdjacentTiedCandidates() : void
+    {
+        $expected = new NBallot(
+            1,
+            new CandidateList(
+                $this->alice,
+                $this->bob,
+                $this->claire,
+                $this->dave
+            ),
+            new CandidateList($this->eve)
+        );
+
+        $actual = $this->instance->parse("A=B=C=D>E");
         $this->assertEquals($expected, $actual);
     }
 }
