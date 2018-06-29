@@ -172,6 +172,12 @@ class NBallotParserTest extends TestCase
         $this->instance->parse(">");
     }
 
+    public function testMissingMiddleCandidate() : void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("A>>B");
+    }
+
     public function testMissingLeadingCandidateInTie() :void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -182,6 +188,12 @@ class NBallotParserTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->instance->parse("A=");
+    }
+
+    public function testMissingTiedCandidate() : void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("A==B");
     }
 
     public function testBallotWithThreeAdjacentTotallyOrderedCandidates() : void
