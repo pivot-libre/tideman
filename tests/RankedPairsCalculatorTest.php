@@ -86,7 +86,7 @@ class RankedPairsCalculatorTest extends TestCase
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $actualWinners = $instance->calculate(sizeof($candidateListsForBallot), ...$ballots);
         $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
 
     public function testOneNBallotWithTenCountWithoutTies() : void
@@ -101,7 +101,7 @@ class RankedPairsCalculatorTest extends TestCase
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $actualWinners = $instance->calculate(sizeof($candidateListsForBallot), ...$ballots);
         $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
 
     public function testTenBallotsWithoutTies() : void
@@ -116,7 +116,7 @@ class RankedPairsCalculatorTest extends TestCase
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $actualWinners = $instance->calculate(sizeof($candidateListsForBallot), ...$ballots);
         $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
 
     public function testOneBallotWithTies() : void
@@ -130,7 +130,7 @@ class RankedPairsCalculatorTest extends TestCase
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $actualWinners = $instance->calculate(3, ...$ballots);
         $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
 
     public function testTenBallotsWithTies() : void
@@ -144,7 +144,7 @@ class RankedPairsCalculatorTest extends TestCase
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $actualWinners = $instance->calculate(3, ...$ballots);
         $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
 
     public function testOneNBallotsWithTenCountAndWithTies() : void
@@ -158,7 +158,7 @@ class RankedPairsCalculatorTest extends TestCase
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $actualWinners = $instance->calculate(3, ...$ballots);
         $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
 
     public function testPairTieBreakingWithNonTiedBallot() : void
@@ -180,7 +180,7 @@ class RankedPairsCalculatorTest extends TestCase
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
         $actualWinners = $instance->calculate(3, $ballot, $oppositeBallot);
         $expectedWinners = new CandidateList($this->alice, $this->bob, $this->claire);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
     
     public function testPairTieBreakingWitTiedBallot() : void
@@ -217,7 +217,7 @@ class RankedPairsCalculatorTest extends TestCase
             mt_srand();
         }
         $expectedWinners = new CandidateList($this->alice, $this->claire, $this->bob);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
         
         //ensure that randomness is affecting the result by re-calculating with a different
         //seed on the random number generator, and asserting different results
@@ -229,6 +229,6 @@ class RankedPairsCalculatorTest extends TestCase
             mt_srand();
         }
         $expectedWinners = new CandidateList($this->claire, $this->bob, $this->alice);
-        $this->assertEquals($expectedWinners, $actualWinners);
+        $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
 }

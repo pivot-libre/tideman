@@ -19,8 +19,13 @@ use PivotLibre\Tideman\TieBreaking\BallotTieBreaker;
 
 class RankedPairsCalculator
 {
+    private $tieBreakingBallot;
+
     private $tieBreakingPairComparator;
     private $tieBreakingCandidateComparator;
+
+    private $marginRegistrar;
+    private $winningVotesRegistrar;
 
     /**
      * Constructs a Ranked Pairs Calculator. If the parameterized tie-breaking Ballot contains ties,
@@ -36,70 +41,54 @@ class RankedPairsCalculator
             $ballotTieBreaker = new BallotTieBreaker();
             $myTieBreakingBallot = $ballotTieBreaker->breakTiesRandomly($myTieBreakingBallot);
         }
+        $this->tieBreakingBallot = $myTieBreakingBallot;
+
         $tieBreaker = new TotallyOrderedBallotPairTieBreaker(new CandidateComparator($myTieBreakingBallot));
         $this->tieBreakingPairComparator = new TieBreakingPairComparator($tieBreaker);
         $this->tieBreakingCandidateComparator = new CandidateComparator($myTieBreakingBallot);
+
+        $this->marginRegistrar = new MarginRegistrar();
+        $this->winningVotesRegistrar = new WinningVoteRegistrar();
     }
 
     /**
      * @param int number of winners to return.
-     * @param NBallot the ballots from the electorate.
-     * @return CandidateList in which the zeroth Candidate is the most preferred, the first Candidate is the second most
-     * preferred, and so on until the last Candidate who is the least preferred. Ties are broken according to the Ballot
-     * provided to the constructor.
+     * @param NBallot[] $nBallots
+     * @return Result
      */
-    public function calculate(int $numWinners, NBallot ...$nBallots) : CandidateList
+    public function calculate(int $numWinners, NBallot ...$nBallots) : Result
     {
         $agenda = new Agenda(...$nBallots);
-        $candidatesInOrder = [];
-        while (sizeof($candidatesInOrder) < $numWinners) {
-            $winnersOfTheRound = $this->getOneRoundOfWinners($agenda, ...$nBallots);
-            array_push($candidatesInOrder, ...$winnersOfTheRound);
-            $agenda->removeCandidates(...$winnersOfTheRound);
-        }
-        $winners = new CandidateList(...$candidatesInOrder);
-        return $winners;
-    }
+        $marginRegistry = $this->marginRegistrar->register($agenda, ...$nBallots);
+        $winningVotesRegistry = $this->winningVotesRegistrar->register($agenda, ...$nBallots);
 
-    /**
-     * @param Agenda of Candidates to consider in this round. Not all Candidates on the Ballots need be in the Agenda..
-     * Successive rounds of determining winners will have a smaller and smaller Agenda as fewer candidates
-     * are elegible to be winners.
-     * @param NBallot[] $nBallots
-     * @return CandidateList, usually of length one, but possibly greater if the result was a tie. Ties are broken
-     * according to the Ballot provided to the constructor.
-     */
-    public function getOneRoundOfWinners(Agenda $agenda, NBallot ...$nBallots) : CandidateList
-    {
-        // if only one Candidate remains, return that Candidate.
-        if (1 === $agenda->count()) {
-            return $agenda->getCandidates();
-        } else {
-            $pairRegistry = $this->getPairs($agenda, ...$nBallots);
-            $sortedPairList = $this->sortPairs($pairRegistry);
-            $rankedPairsGraph = new RankedPairsGraph();
-            $rankedPairsGraph->addCandidatesFromAgenda($agenda);
-            $rankedPairsGraph->addPairs($sortedPairList);
+        $sortedPairList = $this->sortPairs($marginRegistry);
+
+        $rankedPairsGraph = new RankedPairsGraph();
+        $rankedPairsGraph->addCandidatesFromAgenda($agenda);
+        $rankedPairsGraph->addPairs($sortedPairList);
+
+        //Build an array of CandidateLists.
+        //The first appended is the most preferred, the second the second-most preferred etc.
+        $rankedCandidateLists = [];
+
+        for ($winCounter = 0; $winCounter < $numWinners && !$rankedPairsGraph->isEmpty(); $winCounter++) {
             $winnersOfTheRound = $rankedPairsGraph->getWinningCandidates();
-            return $winnersOfTheRound;
+            $rankedCandidateLists[] = $winnersOfTheRound;
+            $rankedPairsGraph->removeCandidates(...$winnersOfTheRound);
         }
+
+        $ranking = new ListOfCandidateLists(...$rankedCandidateLists);
+
+        $result = new Result();
+        $result->setRanking($ranking)
+            ->setMarginsTally($marginRegistry)
+            ->setWinningVotesTally($winningVotesRegistry)
+            ->setTieBreakingBallot($this->tieBreakingBallot);
+
+        return $result;
     }
 
-    /**
-     * Calculate the pairwise comparisons in popular support, a.k.a. the Pairs.
-     *
-     * @param Agenda $agenda a set of candidates. This is a non-strict subset of the Candidates in $nBallots.
-     * @param NBallot[] $nBallots
-     * @return PairRegistry comparing popular support for all Candidates specified
-     * by $agenda. The length of the returned PairList should be equal to `N(N - 1)`, where `N` is the number of
-     * Candidates in $agenda.
-     */
-    public function getPairs(Agenda $agenda, NBallot ...$nBallots) : PairRegistry
-    {
-        $pairRegistrar = new MarginRegistrar();
-        $pairRegistry = $pairRegistrar->register($agenda, ...$nBallots);
-        return $pairRegistry;
-    }
 
     /**
      * Sorts all Pairs in order of descending "getVotes()". Breaks ties between Pairs with equal `getVotes()`.
