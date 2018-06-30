@@ -78,7 +78,7 @@ class RankedPairsCalculator
             $rankedPairsGraph->removeCandidates(...$winnersOfTheRound);
         }
 
-        $ranking = new ListOfCandidateLists(...$rankedCandidateLists);
+        $ranking = new CandidateRanking(...$rankedCandidateLists);
 
         $result = new Result();
         $result->setRanking($ranking)

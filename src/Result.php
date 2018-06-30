@@ -20,9 +20,9 @@ class Result
 
     /**
      * Get the final results of the election.
-     * @return ListOfCandidateLists
+     * @return CandidateRanking
      */
-    public function getRanking() : ListOfCandidateLists
+    public function getRanking() : CandidateRanking
     {
         return $this->ranking;
     }
@@ -54,10 +54,10 @@ class Result
     }
 
     /**
-     * @param ListOfCandidateLists $ranking
+     * @param CandidateRanking $ranking
      * @return $this
      */
-    public function setRanking(ListOfCandidateLists $ranking)
+    public function setRanking(CandidateRanking $ranking)
     {
         $this->ranking = $ranking;
         return $this;
