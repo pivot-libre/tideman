@@ -4,14 +4,14 @@
 namespace PivotLibre\Tideman;
 
 /**
- * Class ListOfCandidateLists
- *
+ * Class CandidateRanking
  * The most-preferred Candidates come first (low index). The least-preferred Candidates go
  * last (high index). Tied Candidates are in the same CandidateList.
+ * This is a list of CandidateLists.
  *
  * @package PivotLibre\Tideman
  */
-class ListOfCandidateLists extends GenericCollection
+class CandidateRanking extends GenericCollection
 {
     /**
      * @param The most-preferred Candidates come first (low index). The least-preferred Candidates go
