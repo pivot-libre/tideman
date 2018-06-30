@@ -58,7 +58,7 @@ class CondorcetChecker
     {
         $calculator = new RankedPairsCalculator($tie_breaker);
         $num_of_winners = self::countUniqueCandidates($ballots);
-        $winnerOrder = $calculator->calculate($num_of_winners, ...$ballots)->toArray();
+        $winnerOrder = $calculator->calculate($num_of_winners, ...$ballots)->getRanking()->toArray();
 
         # display result
         echo "Winning Order:\n";

@@ -176,4 +176,25 @@ class RankedPairsGraph
     {
         return $this->graph;
     }
+
+    /**
+     * @return bool true if there are more candidates, otherwise false
+     */
+    public function isEmpty() : bool
+    {
+        return $this->graph->getVertices()->isEmpty();
+    }
+
+    /**
+     * Remove candidates from the graph so that they are no longer considered. The parameters to this method are
+     * usually the same as the return value from @see RankedPairsGraph::getWinningCandidates() .
+     * @param \PivotLibre\Tideman\Candidate ...$candidates
+     */
+    public function removeCandidates(Candidate ...$candidates) : void
+    {
+        foreach ($candidates as $candidate) {
+            $vertex = $this->graph->getVertex($candidate->getId());
+            $vertex->destroy();
+        }
+    }
 }
