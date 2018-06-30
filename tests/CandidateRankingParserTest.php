@@ -4,7 +4,7 @@ namespace PivotLibre\Tideman;
 
 use PHPUnit\Framework\TestCase;
 
-class NBallotParserTest extends TestCase
+class CandidateRankingParserTest extends TestCase
 {
     private $instance;
     private $alice;
@@ -15,7 +15,7 @@ class NBallotParserTest extends TestCase
 
     public function setUp() : void
     {
-        $this->instance = new NBallotParser();
+        $this->instance = new CandidateRankingParser();
         $this->alice = new Candidate("A");
         $this->bob = new Candidate("B");
         $this->claire = new Candidate("C");
@@ -31,8 +31,7 @@ class NBallotParserTest extends TestCase
 
     public function testOneCandidateBallot() : void
     {
-        $expected = new NBallot(
-            1,
+        $expected = new CandidateRanking(
             new CandidateList($this->alice)
         );
         $actual = $this->instance->parse("A");
@@ -51,8 +50,7 @@ class NBallotParserTest extends TestCase
 
     public function testParseEasyBallot() : void
     {
-        $expected = new NBallot(
-            1,
+        $expected = new CandidateRanking(
             new CandidateList($this->alice),
             new CandidateList($this->bob)
         );
@@ -75,14 +73,12 @@ class NBallotParserTest extends TestCase
         //assertion equality is order-dependent, so we create both
         //permutations
 
-        $aTiedWithB = new NBallot(
-            1,
+        $aTiedWithB = new CandidateRanking(
             //alice and bob are tied
             new CandidateList($this->alice, $this->bob)
         );
 
-        $bTiedWithA = new NBallot(
-            1,
+        $bTiedWithA = new CandidateRanking(
             //alice and bob are tied
             new CandidateList($this->bob, $this->alice)
         );
@@ -111,8 +107,7 @@ class NBallotParserTest extends TestCase
 
     public function testThreeCandidateBallot() : void
     {
-        $expected = new NBallot(
-            1,
+        $expected = new CandidateRanking(
             new CandidateList($this->alice),
             new CandidateList($this->bob, $this->claire)
         );
@@ -133,8 +128,7 @@ class NBallotParserTest extends TestCase
 
     public function testFourCandidateBallot() : void
     {
-        $expected = new NBallot(
-            1,
+        $expected = new CandidateRanking(
             new CandidateList($this->alice),
             new CandidateList($this->bob, $this->claire),
             new CandidateList($this->dave)
@@ -198,8 +192,7 @@ class NBallotParserTest extends TestCase
 
     public function testBallotWithThreeAdjacentTotallyOrderedCandidates() : void
     {
-        $expected = new NBallot(
-            1,
+        $expected = new CandidateRanking(
             new CandidateList($this->alice),
             new CandidateList($this->bob),
             new CandidateList($this->claire),
@@ -212,8 +205,7 @@ class NBallotParserTest extends TestCase
 
     public function testBallotWithThreeAdjacentTiedCandidates() : void
     {
-        $expected = new NBallot(
-            1,
+        $expected = new CandidateRanking(
             new CandidateList(
                 $this->alice,
                 $this->bob,
