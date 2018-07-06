@@ -9,6 +9,10 @@ class CandidateRankingParser
 {
     private const ORDERED_DELIM = ">";
     private const EQUAL_DELIM = "=";
+    private const PROHIBITED_CHARACTERS = [
+      '<', // only one direction of comparison is supported
+      '*', // asterisks are used elsewhere to separate a ballot from how many times the same ballot occurred
+    ];
 
     /**
      * @param string $text
@@ -18,6 +22,7 @@ class CandidateRankingParser
      */
     public function parse(string $text) : CandidateRanking
     {
+        $this->throwIfProhibitedCharactersPresent($text);
         $listOfCandidateLists = [];
         $orderedTokens = $this->tokenize($text, self::ORDERED_DELIM);
 
@@ -65,5 +70,30 @@ class CandidateRankingParser
                 "Error parsing ranking of Candidates -- found blank where candidate id was expected"
             );
         }
+    }
+
+    /**
+     * @param string $text
+     * @throws InvalidArgumentException if $text contains anything in CandidateRankingParser::PROHIBITED_CHARACTERS
+     */
+    private function throwIfProhibitedCharactersPresent(string $text) : void
+    {
+        foreach (CandidateRankingParser::PROHIBITED_CHARACTERS as $prohibitedCharacter) {
+            if ($this->contains($prohibitedCharacter, $text)) {
+                throw new InvalidArgumentException(
+                    "Found illegal character '$prohibitedCharacter' in string '$text'"
+                );
+            }
+        }
+    }
+
+    /**
+     * @param string $needle
+     * @param string $haystack
+     * @return bool - true if $needle in $haystack, false otherwise
+     */
+    private function contains(string $needle, string $haystack)
+    {
+        return strpos($haystack, $needle) !== false;
     }
 }
