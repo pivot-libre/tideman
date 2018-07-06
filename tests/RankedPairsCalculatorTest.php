@@ -234,4 +234,18 @@ class RankedPairsCalculatorTest extends TestCase
         $expectedWinners = new CandidateList($this->claire, $this->bob, $this->alice);
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
+
+    public function testTideman1987Example5()
+    {
+        $expectedRanking = (new CandidateRankingParser())->parse("V>W>X>Y>Z");
+
+        $ballots = (new TestScenarioTideman1987Example2())->getBallots();
+        $tieBreakingBallot = $ballots[0];
+
+        $instance = new RankedPairsCalculator($tieBreakingBallot);
+        $results = $instance->calculate(sizeof($ballots), ...$ballots);
+        $actualRanking = $results->getRanking();
+
+        $this->assertEquals($expectedRanking, $actualRanking);
+    }
 }
