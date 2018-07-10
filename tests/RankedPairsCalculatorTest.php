@@ -268,4 +268,23 @@ class RankedPairsCalculatorTest extends TestCase
 
         $this->assertEquals($expectedRanking, $actualRanking);
     }
+
+    /**
+     * Scenario 2 from the test spreadsheet
+     * https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
+     */
+    public function testScenario2()
+    {
+        $expectedRanking = (new CandidateRankingParser())->parse("MM>BT>FE=CS>RR");
+
+        $ballots = (new TestScenario2())->getBallots();
+        $tieBreakingBallot = $ballots[0];
+
+        $instance = new RankedPairsCalculator($tieBreakingBallot);
+        $results = $instance->calculate(sizeof($ballots), ...$ballots);
+        $actualRanking = $results->getRanking();
+
+        $this->assertEquals($expectedRanking, $actualRanking);
+    }
+
 }
