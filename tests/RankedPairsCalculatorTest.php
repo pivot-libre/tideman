@@ -252,6 +252,8 @@ class RankedPairsCalculatorTest extends TestCase
     /**
      * Scenario 1 from the test spreadsheet
      * https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
+     * Drawing of graph:
+     * https://docs.google.com/drawings/d/1mtGlWgqr_h85qdvqSjC9eK0bRzbGYas-sLhuzAiDd3I/edit?usp=sharing
      */
     public function testScenario1()
     {
