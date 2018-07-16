@@ -234,4 +234,92 @@ class RankedPairsCalculatorTest extends TestCase
         $expectedWinners = new CandidateList($this->claire, $this->bob, $this->alice);
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
+
+    public function testTideman1987Example5()
+    {
+        $expectedRanking = (new CandidateRankingParser())->parse("V>W>X>Y>Z");
+
+        $ballots = (new TestScenarioTideman1987Example2())->getBallots();
+        $tieBreakingBallot = $ballots[0];
+
+        $instance = new RankedPairsCalculator($tieBreakingBallot);
+        $results = $instance->calculate(sizeof($ballots), ...$ballots);
+        $actualRanking = $results->getRanking();
+
+        $this->assertEquals($expectedRanking, $actualRanking);
+    }
+
+    /**
+     * Scenario 1 from the test spreadsheet
+     * https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
+     * Drawing of graph:
+     * https://docs.google.com/drawings/d/1mtGlWgqr_h85qdvqSjC9eK0bRzbGYas-sLhuzAiDd3I/edit?usp=sharing
+     */
+    public function testScenario1()
+    {
+        $expectedRanking = (new CandidateRankingParser())->parse("MM>SY=DD>YW>RR");
+
+        $ballots = (new TestScenario1())->getBallots();
+        $tieBreakingBallot = $ballots[0];
+
+        $instance = new RankedPairsCalculator($tieBreakingBallot);
+        $results = $instance->calculate(sizeof($ballots), ...$ballots);
+        $actualRanking = $results->getRanking();
+
+        $this->assertEquals($expectedRanking, $actualRanking);
+    }
+
+    /**
+     * Scenario 2 from the test spreadsheet
+     * https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
+     */
+    public function testScenario2()
+    {
+        $expectedRanking = (new CandidateRankingParser())->parse("MM>BT>FE=CS>RR");
+
+        $ballots = (new TestScenario2())->getBallots();
+        $tieBreakingBallot = $ballots[0];
+
+        $instance = new RankedPairsCalculator($tieBreakingBallot);
+        $results = $instance->calculate(sizeof($ballots), ...$ballots);
+        $actualRanking = $results->getRanking();
+
+        $this->assertEquals($expectedRanking, $actualRanking);
+    }
+
+    /**
+     * Scenario 3 from the test spreadsheet
+     * https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
+     */
+    public function testScenario3()
+    {
+        $expectedRanking = (new CandidateRankingParser())->parse("MN>MC>BT>FE=CS>RR");
+
+        $ballots = (new TestScenario3())->getBallots();
+        $tieBreakingBallot = $ballots[0];
+
+        $instance = new RankedPairsCalculator($tieBreakingBallot);
+        $results = $instance->calculate(sizeof($ballots), ...$ballots);
+        $actualRanking = $results->getRanking();
+
+        $this->assertEquals($expectedRanking, $actualRanking);
+    }
+
+    /**
+     * Scenario 4 from the test spreadsheet
+     * https://docs.google.com/spreadsheets/d/1634wP6-N8GG2Fig-yjIOk7vPBn4AijXOrjq6Z2T1K8M/edit?usp=sharing
+     */
+    public function testScenario4()
+    {
+        $expectedRanking = (new CandidateRankingParser())->parse("CW>BB>CS>BT=SY");
+
+        $ballots = (new TestScenario4())->getBallots();
+        $tieBreakingBallot = $ballots[0];
+
+        $instance = new RankedPairsCalculator($tieBreakingBallot);
+        $results = $instance->calculate(sizeof($ballots), ...$ballots);
+        $actualRanking = $results->getRanking();
+
+        $this->assertEquals($expectedRanking, $actualRanking);
+    }
 }
