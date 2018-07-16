@@ -218,4 +218,18 @@ class CandidateRankingParserTest extends TestCase
         $actual = $this->instance->parse("A=B=C=D>E");
         $this->assertEquals($expected, $actual);
     }
+
+    public function testBallotWithWrongAngleBracket() : void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("A<B");
+    }
+
+    public function testUnexpectedNBallotText() : void
+    {
+        //We should not successfully parse anything that should be parsed by NBallotParser, so we error out if we see
+        //anything with an asterisk.
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->parse("3*A>B>C");
+    }
 }
