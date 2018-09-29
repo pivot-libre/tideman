@@ -33,6 +33,10 @@ class CandidateRankingSerializer
         return $serializedCandidateRanking;
     }
 
+    /**
+     * @param CandidateList $candidateList a list of candidates whose candidates' ranks are equal
+     * @return string an '='-delimited sequence of candidate ids
+     */
     public function serializeEqualCandidates(CandidateList $candidateList) : string
     {
         $candidateIds = array_map(
@@ -45,6 +49,11 @@ class CandidateRankingSerializer
         return $serializedEquals;
     }
 
+    /**
+     * @param Candidate $candidate the candidate to extract the id from
+     * @return string candidate id
+     * @throws InvalidArgumentException if the candidate id is not serializable
+     */
     public function getCandidateId(Candidate $candidate) : string
     {
         $id = $candidate->getId();
@@ -52,6 +61,7 @@ class CandidateRankingSerializer
         $this->throwIfProhibitedCharactersPresent($id);
         return $id;
     }
+
     /**
      * @throws InvalidArgumentException if trimmed string is of zero length
      * @param string $str
