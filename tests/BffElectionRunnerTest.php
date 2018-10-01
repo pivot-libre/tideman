@@ -17,7 +17,7 @@ class BffElectionRunnerTest extends TestCase
     {
         $this->instance->setTieBreaker('A>B>C');
         $actual = $this->instance->run("A>B>C\nA>C>B");
-        $expected = 'A>B>C';
+        $expected = 'A>B=C';
         $this->assertEquals($expected, $actual);
     }
 }
