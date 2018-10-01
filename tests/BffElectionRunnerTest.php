@@ -69,4 +69,19 @@ class BffElectionRunnerTest extends TestCase
         $expected = 'A>B=C';
         $this->assertEquals($expected, $actual);
     }
+
+    public function testRunAllSimpleElection() : void
+    {
+        $this->instance->setTieBreaker("A>B>C");
+        $actual = $this->instance->runAll('A>B>C', "A>C>B");
+        $expected = 'A>B=C';
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testRunAllWithNewlines() : void
+    {
+        $this->expectException(\TypeError::class);
+        $this->instance->setTieBreaker("A>B>C \t ");
+        $actual = $this->instance->runAll("A>B>C\nA>C>B");
+    }
 }

@@ -29,35 +29,83 @@ class BffElectionRunner
      */
     public function run(string $bffBallots) : string
     {
-        $ballots = $this->parseMultiBallotString($bffBallots);
+        $bffBallotStrings = $this->splitOnNewLine($bffBallots);
+        $ballots = $this->parseMultipleBallotStrings(...$bffBallotStrings);
+        $result = $this->runHelper(...$ballots);
+        return $result;
+    }
+
+    /**
+     * @param string ...$bffBallots one BFF ballot per string
+     * @return string BFF-encoded result
+     */
+    public function runAll(string ...$bffBallots) : string {
+        $ballots = $this->parseMultipleBallotStrings($bffBallots);
+        $result = $this->runHelper(...$ballots);
+        return $result;
+    }
+
+    /**
+     * @param NBallot ...$ballots
+     * @return string BFF-encoded result
+     */
+    protected function runHelper(NBallot ... $ballots) : string
+    {
         $calculator = new RankedPairsCalculator($this->tieBreaker);
         $results = $calculator->calculate(count($ballots), ...$ballots);
         $ranking = $results->getRanking();
         $bffRanking = $this->candidateRankingSerializer->serialize($ranking);
-
         return $bffRanking;
+    }
+
+    /**
+     * @param string ...$strings to be trimmed and filtered
+     * @return array of strings of nonzero length
+     */
+    protected function trimAndRemoveBlankStrings(string ...$strings) : array
+    {
+        //trim each line
+        $strings = array_map("trim", $strings);
+        //filter out blank lines
+        $strings = array_filter($strings, function($line) {
+            return '' !== $line;
+        });
+        return $strings;
+    }
+
+    /**
+     * @param $string
+     * @return array of strings, split on common newline characters
+     */
+    protected function splitOnNewLine($string) : array
+    {
+        //input could come from many different OSs, so must support splitting on all common newline representations
+        $splitString = preg_split("/\r\n|\n|\r/", $string);
+        return $splitString;
     }
 
     /**
      * @param string newline-delimited ballots formatted according to BFF
      * @return array of NBallots
      */
-    public function parseMultiBallotString($bffString) : array
+    protected function parseMultipleBallotStrings(... $bffStrings) : array
     {
-        //parse ballots
-
-        //input could come from many different OSs, so must support splitting on all common newline representations
-        $splitBffBallots = preg_split("/\r\n|\n|\r/", $bffString);
-        //trim each line
-        $splitBffBallots = array_map("trim", $splitBffBallots);
-        //filter out blank lines
-        $splitBffBallots = array_filter($splitBffBallots, function($line) {
-            return '' !== $line;
-        });
+        $filteredBffs = $this->trimAndRemoveBlankStrings(...$bffStrings);
         //parse each line
         $ballots = array_map(function (string $bffBallot) {
-            return $this->nBallotParser->parse($bffBallot);
-        }, $splitBffBallots);
+            return $this->parseSingleBallotString($bffBallot);
+        }, $filteredBffs);
         return $ballots;
+    }
+
+    /**
+     * @param string $singleBffString
+     * @return NBallot
+     */
+    protected function parseSingleBallotString(string $singleBffString) : NBallot
+    {
+        $singleBffString = trim($singleBffString);
+        $ballot = $this->nBallotParser->parse($singleBffString);
+        return $ballot;
     }
 }
