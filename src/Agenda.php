@@ -13,7 +13,7 @@ class Agenda implements Countable
     /**
      * Creates an Agenda consisting of all unique Candidates from the parameterized Ballots.
      */
-    public function __construct(Ballot ...$ballots)
+    public function __construct(NBallot ...$ballots)
     {
         $this->candidateSet = new CandidateSet();
         $this->addCandidatesFromBallots(...$ballots);
@@ -41,7 +41,7 @@ class Agenda implements Countable
         $this->candidateSet->remove(...$candidates);
     }
 
-    public function addCandidatesFromBallots(Ballot ...$ballots)
+    public function addCandidatesFromBallots(NBallot ...$ballots)
     {
         foreach ($ballots as $ballot) {
             //a ballot has multiple CandidateLists

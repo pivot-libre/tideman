@@ -9,29 +9,32 @@ class CandidateComparator
     private $candidateIdToRank;
 
     /**
-     * @param a Ballot. The CandidateComparator will store a copy of the Ballot. The caller of this constructor may
+     * @param NBallot. The CandidateComparator will store a copy of the Ballot. The caller of this constructor may
      * subsequently modify the parameterized Ballot without affecting this CandidateComparator.
      */
-    public function __construct(Ballot $ballot)
+    public function __construct(NBallot $ballot)
     {
         $this->ballot = clone $ballot;
         $this->candidateIdToRank = $this->makeCandidateIdToRankMap($ballot);
     }
 
     /**
-     * @return a copy of the Ballot that this instance uses to inform its comparisons. The returned Ballot may be
+     * @return NBallot copy of the Ballot that this instance uses to inform its comparisons. The returned Ballot may be
      * modified without affecting this CandidateComparator.
      */
-    public function getBallot() : Ballot
+    public function getBallot() : NBallot
     {
         return clone $this->ballot;
     }
+
     /**
      * Return an associative array that maps Candidates' ids to an integer. The integer represents the rank of the
-     * Candidate within the Ballot. A smaller integer indicates higher preference. An integer of zero is the most
-     * preferred. Since a Ballot can contain ties, multiple Candidate ids can map to the same integer.
+     * Candidate within the NBallot. A smaller integer indicates higher preference. An integer of zero is the most
+     * preferred. Since a NBallot can contain ties, multiple Candidate ids can map to the same integer.
+     * @param NBallot $ballot
+     * @return array
      */
-    private function makeCandidateIdToRankMap(Ballot $ballot) : array
+    private function makeCandidateIdToRankMap(NBallot $ballot) : array
     {
         $this->candidateIdToRank = array();
         foreach ($ballot as $rank => $candidateList) {
@@ -53,8 +56,8 @@ class CandidateComparator
 
      /**
       * Return an associative array that maps Candidates' ids to an integer. The integer represents the rank of the
-      * Candidate within the Ballot. A smaller integer indicates higher preference. An integer of zero is the most
-      * preferred. Since a Ballot can contain ties, multiple Candidate ids can map to the same integer.
+      * Candidate within the NBallot. A smaller integer indicates higher preference. An integer of zero is the most
+      * preferred. Since a NBallot can contain ties, multiple Candidate ids can map to the same integer.
       *
       * The array returned is a clone of this instance's private copy, so the result can be modifed without impacting
       * the comparisons performed by this instance.

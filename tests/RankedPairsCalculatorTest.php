@@ -42,7 +42,7 @@ class RankedPairsCalculatorTest extends TestCase
             $this->assertContains($expectedCandidate, $actualCandidates);
         }
     }
-    protected function cloneBallot(Ballot $ballot, int $numBallots) : array
+    protected function cloneBallot(NBallot $ballot, int $numBallots) : array
     {
         $ballots = array();
         for ($i = 0; $i < $numBallots; $i++) {
@@ -240,7 +240,7 @@ class RankedPairsCalculatorTest extends TestCase
         $expectedRanking = (new CandidateRankingParser())->parse("V>W>X>Y>Z");
 
         $ballots = (new TestScenarioTideman1987Example2())->getBallots();
-        $tieBreakingBallot = $ballots[0];
+        $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
         $results = $instance->calculate(sizeof($ballots), ...$ballots);
@@ -260,7 +260,7 @@ class RankedPairsCalculatorTest extends TestCase
         $expectedRanking = (new CandidateRankingParser())->parse("MM>SY=DD>YW>RR");
 
         $ballots = (new TestScenario1())->getBallots();
-        $tieBreakingBallot = $ballots[0];
+        $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
         $results = $instance->calculate(sizeof($ballots), ...$ballots);
@@ -278,7 +278,7 @@ class RankedPairsCalculatorTest extends TestCase
         $expectedRanking = (new CandidateRankingParser())->parse("MM>BT>FE=CS>RR");
 
         $ballots = (new TestScenario2())->getBallots();
-        $tieBreakingBallot = $ballots[0];
+        $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
         $results = $instance->calculate(sizeof($ballots), ...$ballots);
@@ -296,7 +296,7 @@ class RankedPairsCalculatorTest extends TestCase
         $expectedRanking = (new CandidateRankingParser())->parse("MN>MC>BT>FE=CS>RR");
 
         $ballots = (new TestScenario3())->getBallots();
-        $tieBreakingBallot = $ballots[0];
+        $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
         $results = $instance->calculate(sizeof($ballots), ...$ballots);
@@ -314,7 +314,7 @@ class RankedPairsCalculatorTest extends TestCase
         $expectedRanking = (new CandidateRankingParser())->parse("CW>BB>CS>BT=SY");
 
         $ballots = (new TestScenario4())->getBallots();
-        $tieBreakingBallot = $ballots[0];
+        $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
         $results = $instance->calculate(sizeof($ballots), ...$ballots);
