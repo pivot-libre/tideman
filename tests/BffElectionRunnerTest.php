@@ -13,6 +13,14 @@ class BffElectionRunnerTest extends TestCase
         $this->instance = new BffElectionRunner();
     }
 
+    public function testRunTrivialElection() : void
+    {
+        $this->instance->setTieBreaker("A>B>C");
+        $actual = $this->instance->run('A>B>C');
+        $expected = 'A>B>C';
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testUnixLikeLineEndings() : void
     {
         $this->instance->setTieBreaker("A>B>C");
@@ -78,10 +86,18 @@ class BffElectionRunnerTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    public function testRunAllTrivialElection() : void
+    {
+        $this->instance->setTieBreaker("A>B>C");
+        $actual = $this->instance->runAll('A>B>C');
+        $expected = 'A>B>C';
+        $this->assertEquals($expected, $actual);
+    }
+
     public function testRunAllWithNewlines() : void
     {
-        $this->expectException(\TypeError::class);
-        $this->instance->setTieBreaker("A>B>C \t ");
+        $this->expectException(\InvalidArgumentException::class);
+        $this->instance->setTieBreaker("A>B>C");
         $actual = $this->instance->runAll("A>B>C\nA>C>B");
     }
 }

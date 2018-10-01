@@ -4,6 +4,7 @@ namespace PivotLibre\Tideman;
 class BffElectionRunner
 {
     private $ballotParser;
+    private $nBallotParser;
     private $candidateRankingSerializer;
     private $tieBreaker;
 
@@ -39,8 +40,9 @@ class BffElectionRunner
      * @param string ...$bffBallots one BFF ballot per string
      * @return string BFF-encoded result
      */
-    public function runAll(string ...$bffBallots) : string {
-        $ballots = $this->parseMultipleBallotStrings($bffBallots);
+    public function runAll(string ...$bffBallots) : string
+    {
+        $ballots = $this->parseMultipleBallotStrings(...$bffBallots);
         $result = $this->runHelper(...$ballots);
         return $result;
     }
@@ -52,7 +54,9 @@ class BffElectionRunner
     protected function runHelper(NBallot ... $ballots) : string
     {
         $calculator = new RankedPairsCalculator($this->tieBreaker);
-        $results = $calculator->calculate(count($ballots), ...$ballots);
+        $agenda = new Agenda(...$ballots);
+        $candidateCount = count($agenda->getCandidates());
+        $results = $calculator->calculate($candidateCount, ...$ballots);
         $ranking = $results->getRanking();
         $bffRanking = $this->candidateRankingSerializer->serialize($ranking);
         return $bffRanking;
@@ -67,7 +71,7 @@ class BffElectionRunner
         //trim each line
         $strings = array_map("trim", $strings);
         //filter out blank lines
-        $strings = array_filter($strings, function($line) {
+        $strings = array_filter($strings, function ($line) {
             return '' !== $line;
         });
         return $strings;
