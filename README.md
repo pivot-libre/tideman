@@ -30,8 +30,6 @@ In elections with a small number of voters, it is common to encounter margins of
 
 This implementation deviates from the 1989 paper in that it uses the tie-breaking ballot to break ties for all margins of identical strength, whereas the paper advocated that the tie-breaking rule be used only to break ties between margins whose differences were exactly zero.
 
-If this implementation finds that a completed graph contains multiple source nodes, then all of the candidates associated with the source nodes are considered winners and their order is determined by the tie-breaking ballot.
-
 ### Additional Reading
  *  [Wikipedia's Ranked Pairs article](https://en.wikipedia.org/wiki/Ranked_pairs)
  * Canadian MP Ron McKinnon's [condorcet.ca](https://condorcet.ca) offers an excellent layperson-oriented survey of Ranked Pairs. Be sure to explore the various in-page dropdown sections and tabs, as some important parts of the site’s content are hidden inside.
