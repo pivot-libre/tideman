@@ -129,5 +129,5 @@ abstract class PairRegistrar
         Candidate $candidateA,
         Candidate $candidateB,
         int $ballotCount
-    ) : void ;
+    ) : void;
 }
