@@ -68,11 +68,6 @@ class RankedPairsCalculatorTest extends TestCase
 
     public function testOneBallotWithoutTies() : void
     {
-        $candidateListsForBallot = [
-            new CandidateList($this->alice),
-            new CandidateList($this->bob),
-            new CandidateList($this->claire)
-        ];
         $ballot = new NBallot(
             1,
             ...$this->parser->parse(
@@ -88,11 +83,6 @@ class RankedPairsCalculatorTest extends TestCase
 
     public function testOneNBallotWithTenCountWithoutTies() : void
     {
-        $candidateListsForBallot = [
-            new CandidateList($this->alice),
-            new CandidateList($this->bob),
-            new CandidateList($this->claire)
-        ];
         $ballot = new NBallot(10, ...$this->parser->parse(
             "A>B>C"
         ));
@@ -105,11 +95,6 @@ class RankedPairsCalculatorTest extends TestCase
 
     public function testTenBallotsWithoutTies() : void
     {
-        $candidateListsForBallot = [
-            new CandidateList($this->alice),
-            new CandidateList($this->bob),
-            new CandidateList($this->claire)
-        ];
         $ballot = new NBallot(1, ...$this->parser->parse(
             "A>B>C"
         ));
@@ -122,10 +107,6 @@ class RankedPairsCalculatorTest extends TestCase
 
     public function testOneBallotWithTies() : void
     {
-        $candidateListsForBallot = [
-            new CandidateList($this->alice),
-            new CandidateList($this->bob, $this->claire)
-        ];
         $ballot = new NBallot(1, ...$this->parser->parse("A>B=C"));
         $ballots = [$ballot];
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
@@ -136,10 +117,6 @@ class RankedPairsCalculatorTest extends TestCase
 
     public function testTenBallotsWithTies() : void
     {
-        $candidateListsForBallot = [
-            new CandidateList($this->alice),
-            new CandidateList($this->bob, $this->claire)
-        ];
         $ballot = new NBallot(1, ...$this->parser->parse(
             "A>B=C"
         ));
