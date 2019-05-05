@@ -243,4 +243,29 @@ class PairRegistryTest extends TestCase
 
         $this->assertEquals($expectedPairList, $actualPairList);
     }
+
+    public function testEmptyRegistryAsArray() : void
+    {
+        $output = $this->instance->asArray();
+        $this->assertEquals([], $output);
+    }
+
+    public function testTwoCandidateRegistryAsArray() : void
+    {
+        $inputPairAB = new Pair($this->alice, $this->bob, 2);
+        $expectedPairAB = clone $inputPairAB;
+        $this->instance->register($inputPairAB);
+
+        $inputPairBA = new Pair($this->bob, $this->alice, -2);
+        $expectedPairBA = clone $inputPairBA;
+        $this->instance->register($inputPairBA);
+
+        $output = $this->instance->asArray();
+        $expected = [
+            'A' => ['B' => $expectedPairAB],
+            'B' => ['A' => $expectedPairBA]
+        ];
+            
+        $this->assertEquals($expected, $output);
+    }
 }

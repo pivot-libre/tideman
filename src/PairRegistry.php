@@ -171,4 +171,14 @@ class PairRegistry
         $dominatingPairsList = new PairList(...$dominatingPairs);
         return $dominatingPairsList;
     }
+
+    /**
+     * @return array<string, array<string, Pair>> The outer keys are the winning candidate ids.
+     *      The inner keys are the losing candidate ids.
+     */
+    public function asArray() : array
+    {
+
+        return $this->registry;
+    }
 }
