@@ -3,7 +3,7 @@ namespace PivotLibre\Tideman;
 
 use \InvalidArgumentException;
 
-class PairRegistry
+class PairRegistry implements \JsonSerializable
 {
     private $registry = [];
 
@@ -170,5 +170,14 @@ class PairRegistry
         }
         $dominatingPairsList = new PairList(...$dominatingPairs);
         return $dominatingPairsList;
+    }
+
+    /**
+     * @return array<string, array<string, Pair>> The outer keys are the winning candidate ids.
+     *      The inner keys are the losing candidate ids.
+     */
+    public function jsonSerialize()
+    {
+        return $this->registry;
     }
 }
