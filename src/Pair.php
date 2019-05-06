@@ -5,7 +5,7 @@ namespace PivotLibre\Tideman;
  * A Pair compares the popular support between two Candidates. The interpretation of $votes and $indifference can
  * vary depending on whether margins or winning votes are being used.
  */
-class Pair
+class Pair implements \JsonSerializable
 {
     private $winner;
     private $loser;
@@ -58,5 +58,16 @@ class Pair
     public function __toString() : string
     {
         return "(" . $this->winner->getId() . " --(" . $this->votes . ")--> " . $this->loser->getId() . ")";
+    }
+
+    public function jsonSerialize()
+    {
+        $jsonFriendly = [
+            'votes' => $this->votes,
+            'indifference' => $this->indifference,
+            'winner' => $this->winner,
+            'loser' => $this->loser
+        ];
+        return $jsonFriendly;
     }
 }

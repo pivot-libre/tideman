@@ -3,7 +3,7 @@ namespace PivotLibre\Tideman;
 
 use \InvalidArgumentException;
 
-class PairRegistry
+class PairRegistry implements \JsonSerializable
 {
     private $registry = [];
 
@@ -179,6 +179,14 @@ class PairRegistry
     public function asArray() : array
     {
 
+        return $this->registry;
+    }
+    
+    /**
+     * @see PairRegistry::asArray()
+     */
+    public function jsonSerialize()
+    {
         return $this->registry;
     }
 }
