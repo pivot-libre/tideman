@@ -246,26 +246,50 @@ class PairRegistryTest extends TestCase
 
     public function testEmptyRegistryAsArray() : void
     {
-        $output = $this->instance->asArray();
-        $this->assertEquals([], $output);
+        $output = json_encode($this->instance);
+        $deserializedOutput = json_decode($output, true);
+        $this->assertEquals([], $deserializedOutput);
     }
 
     public function testTwoCandidateRegistryAsArray() : void
     {
         $inputPairAB = new Pair($this->alice, $this->bob, 2);
-        $expectedPairAB = clone $inputPairAB;
+        $expectedPairAB = [
+            'votes' => 2,
+            'indifference' => 0,
+            'winner' => [
+                'id' => self::ALICE_ID,
+                'name' => self::ALICE_NAME
+            ],
+            'loser' => [
+                'id' => self::BOB_ID,
+                'name' => self::BOB_NAME
+            ]
+        ];
         $this->instance->register($inputPairAB);
 
         $inputPairBA = new Pair($this->bob, $this->alice, -2);
-        $expectedPairBA = clone $inputPairBA;
+        $expectedPairBA = [
+            'votes' => -2,
+            'indifference' => 0,
+            'loser' => [
+                'id' => self::ALICE_ID,
+                'name' => self::ALICE_NAME
+            ],
+            'winner' => [
+                'id' => self::BOB_ID,
+                'name' => self::BOB_NAME
+            ]
+        ];
         $this->instance->register($inputPairBA);
 
-        $output = $this->instance->asArray();
+        $output = json_encode($this->instance);
+        $deserializedOutput = json_decode($output, true);
         $expected = [
             'A' => ['B' => $expectedPairAB],
             'B' => ['A' => $expectedPairBA]
         ];
-            
-        $this->assertEquals($expected, $output);
+
+        $this->assertEquals($expected, $deserializedOutput);
     }
 }
