@@ -212,6 +212,29 @@ class RankedPairsCalculatorTest extends TestCase
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
 
+    public function testCustomAgendaRestrictsResultsToSubsetOfCandidates()
+    {
+        //ballot contains A, B, and C...
+        $ballots = [
+            (new NBallotParser())->parse('A>C>B')
+        ];
+
+        //but we set the agenda to only include two of them
+        $agenda = new Agenda();
+        $agenda->addCandidates($this->alice);
+        $agenda->addCandidates($this->bob);
+
+        //and we expect the result to only contain two of them
+        $expectedRanking = (new CandidateRankingParser())->parse('A>B');
+
+        $tieBreakingBallot = new Ballot(...$ballots[0]);
+
+        $instance = new RankedPairsCalculator($tieBreakingBallot);
+
+        $results = $instance->calculate(-1, $agenda, ...$ballots);
+        $this->assertEquals($expectedRanking, $results->getRanking());
+    }
+
     public function testTideman1987Example5()
     {
         $expectedRanking = (new CandidateRankingParser())->parse("V>W>X>Y>Z");
