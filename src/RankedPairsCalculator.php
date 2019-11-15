@@ -56,9 +56,9 @@ class RankedPairsCalculator
      * @param NBallot[] $nBallots
      * @return Result
      */
-    public function calculate(int $numWinners, NBallot ...$nBallots) : Result
+    public function calculate(int $numWinners, Agenda $agenda = null, NBallot ...$nBallots) : Result
     {
-        $agenda = new Agenda(...$nBallots);
+        $agenda = $agenda ?: new Agenda(...$nBallots);
         $numWinners = 0 > $numWinners ? count($agenda) : $numWinners;
         $marginRegistry = $this->marginRegistrar->register($agenda, ...$nBallots);
         $winningVotesRegistry = $this->winningVotesRegistrar->register($agenda, ...$nBallots);

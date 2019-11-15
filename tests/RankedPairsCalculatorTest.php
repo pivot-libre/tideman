@@ -76,7 +76,7 @@ class RankedPairsCalculatorTest extends TestCase
         );
         $ballots = [$ballot];
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
-        $actualWinners = $instance->calculate(-1, ...$ballots);
+        $actualWinners = $instance->calculate(-1, null, ...$ballots);
         $expectedWinners = $this->parser->parse("A>B>C");
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
@@ -88,7 +88,7 @@ class RankedPairsCalculatorTest extends TestCase
         ));
         $ballots = [$ballot];
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
-        $actualWinners = $instance->calculate(-1, ...$ballots);
+        $actualWinners = $instance->calculate(-1, null, ...$ballots);
         $expectedWinners = $this->parser->parse("A>B>C");
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
@@ -100,7 +100,7 @@ class RankedPairsCalculatorTest extends TestCase
         ));
         $ballots = $this->cloneBallot($ballot, 10);
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
-        $actualWinners = $instance->calculate(-1, ...$ballots);
+        $actualWinners = $instance->calculate(-1, null, ...$ballots);
         $expectedWinners = $this->parser->parse("A>B>C");
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
@@ -110,7 +110,7 @@ class RankedPairsCalculatorTest extends TestCase
         $ballot = new NBallot(1, ...$this->parser->parse("A>B=C"));
         $ballots = [$ballot];
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
-        $actualWinners = $instance->calculate(3, ...$ballots);
+        $actualWinners = $instance->calculate(3, null, ...$ballots);
         $expectedWinners = $this->parser->parse("A>B=C");
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
@@ -122,7 +122,7 @@ class RankedPairsCalculatorTest extends TestCase
         ));
         $ballots = $this->cloneBallot($ballot, 10);
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
-        $actualWinners = $instance->calculate(3, ...$ballots);
+        $actualWinners = $instance->calculate(3, null, ...$ballots);
         $expectedWinners = $this->parser->parse("A>B=C");
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
@@ -136,7 +136,7 @@ class RankedPairsCalculatorTest extends TestCase
         $ballot = new NBallot(10, ...$candidateListsForBallot);
         $ballots = [$ballot];
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
-        $actualWinners = $instance->calculate(3, ...$ballots);
+        $actualWinners = $instance->calculate(3, null, ...$ballots);
         $expectedWinners = $this->parser->parse("A>B=C");
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
@@ -158,7 +158,7 @@ class RankedPairsCalculatorTest extends TestCase
         $oppositeBallot = new NBallot(1, ...$candidateListsForBallot);
 
         $instance = new RankedPairsCalculator($this->tieBreakingBallot);
-        $actualWinners = $instance->calculate(3, $ballot, $oppositeBallot);
+        $actualWinners = $instance->calculate(3, null, $ballot, $oppositeBallot);
         $expectedWinners = $this->parser->parse("A>B>C");
         $this->assertEquals($expectedWinners, $actualWinners->getRanking());
     }
@@ -192,7 +192,7 @@ class RankedPairsCalculatorTest extends TestCase
         try {
             mt_srand(485);
             $instance = new RankedPairsCalculator($tiedTieBreakingBallot);
-            $actualWinners = $instance->calculate(3, $ballot, $oppositeBallot);
+            $actualWinners = $instance->calculate(3, null, $ballot, $oppositeBallot);
         } finally {
             mt_srand();
         }
@@ -204,7 +204,7 @@ class RankedPairsCalculatorTest extends TestCase
         try {
             mt_srand(95);
             $instance = new RankedPairsCalculator($tiedTieBreakingBallot);
-            $actualWinners = $instance->calculate(3, $ballot, $oppositeBallot);
+            $actualWinners = $instance->calculate(3, null, $ballot, $oppositeBallot);
         } finally {
             mt_srand();
         }
@@ -220,7 +220,7 @@ class RankedPairsCalculatorTest extends TestCase
         $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
-        $results = $instance->calculate(-1, ...$ballots);
+        $results = $instance->calculate(-1, null, ...$ballots);
         $actualRanking = $results->getRanking();
 
         $this->assertEquals($expectedRanking, $actualRanking);
@@ -240,7 +240,7 @@ class RankedPairsCalculatorTest extends TestCase
         $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
-        $results = $instance->calculate(-1, ...$ballots);
+        $results = $instance->calculate(-1, null, ...$ballots);
         $actualRanking = $results->getRanking();
 
         $this->assertEquals($expectedRanking, $actualRanking);
@@ -258,7 +258,7 @@ class RankedPairsCalculatorTest extends TestCase
         $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
-        $results = $instance->calculate(-1, ...$ballots);
+        $results = $instance->calculate(-1, null, ...$ballots);
         $actualRanking = $results->getRanking();
 
         $this->assertEquals($expectedRanking, $actualRanking);
@@ -276,7 +276,7 @@ class RankedPairsCalculatorTest extends TestCase
         $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
-        $results = $instance->calculate(-1, ...$ballots);
+        $results = $instance->calculate(-1, null, ...$ballots);
         $actualRanking = $results->getRanking();
 
         $this->assertEquals($expectedRanking, $actualRanking);
@@ -294,7 +294,7 @@ class RankedPairsCalculatorTest extends TestCase
         $tieBreakingBallot = new Ballot(...$ballots[0]);
 
         $instance = new RankedPairsCalculator($tieBreakingBallot);
-        $results = $instance->calculate(-1, ...$ballots);
+        $results = $instance->calculate(-1, null, ...$ballots);
         $actualRanking = $results->getRanking();
 
         $this->assertEquals($expectedRanking, $actualRanking);

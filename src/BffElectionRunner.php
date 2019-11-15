@@ -56,7 +56,7 @@ class BffElectionRunner
         $calculator = new RankedPairsCalculator($this->tieBreaker);
         $agenda = new Agenda(...$ballots);
         $candidateCount = count($agenda->getCandidates());
-        $results = $calculator->calculate($candidateCount, ...$ballots);
+        $results = $calculator->calculate($candidateCount, $agenda, ...$ballots);
         $ranking = $results->getRanking();
         $bffRanking = $this->candidateRankingSerializer->serialize($ranking);
         return $bffRanking;
