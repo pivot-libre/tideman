@@ -51,7 +51,7 @@ class BffElectionRunner
      * @param NBallot ...$ballots
      * @return string BFF-encoded result
      */
-    protected function runHelper(NBallot ... $ballots) : string
+    protected function runHelper(NBallot ...$ballots) : string
     {
         $calculator = new RankedPairsCalculator($this->tieBreaker);
         $agenda = new Agenda(...$ballots);
@@ -92,7 +92,7 @@ class BffElectionRunner
      * @param string newline-delimited ballots formatted according to BFF
      * @return array of NBallots
      */
-    protected function parseMultipleBallotStrings(... $bffStrings) : array
+    protected function parseMultipleBallotStrings(...$bffStrings) : array
     {
         $filteredBffs = $this->trimAndRemoveBlankStrings(...$bffStrings);
         //parse each line
