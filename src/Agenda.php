@@ -6,7 +6,7 @@ use \Countable;
 /**
  * This class should be used to represent all of the Candidates in an election
  */
-class Agenda implements Countable
+class Agenda implements Countable, \JsonSerializable
 {
     private $candidateSet;
 
@@ -62,5 +62,13 @@ class Agenda implements Countable
     public function count() : int
     {
         return $this->candidateSet->count();
+    }
+
+    /**
+     * @return mixed[] List of associative arrays that describe candidates
+     */
+    public function jsonSerialize()
+    {
+        return array_values($this->candidateSet->toArray());
     }
 }
