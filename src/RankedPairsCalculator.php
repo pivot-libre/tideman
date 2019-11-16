@@ -53,6 +53,7 @@ class RankedPairsCalculator
 
     /**
      * @param int number of winners to return. Specify a negative number to determine the rank for all candidates
+     * @param Agenda|null $agenda optional agenda. If not provided, the agenda will be derived from the NBallots
      * @param NBallot[] $nBallots
      * @return Result
      */
