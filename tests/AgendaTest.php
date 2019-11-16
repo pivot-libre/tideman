@@ -112,4 +112,25 @@ class AgendaTest extends TestCase
         $instance->removeCandidates($this->alice, $this->claire);
         $this->assertOnlyContainsCandidates($instance->getCandidates(), array($this->bob));
     }
+
+    public function testSerializeEmptyAgenda() : void
+    {
+        $agenda = new Agenda();
+        $actual = json_decode(json_encode($agenda), true);
+        $this->assertEquals([], $actual);
+    }
+
+    public function testSerializeAgenda() : void
+    {
+        $agenda = new Agenda();
+        $agenda->addCandidates($this->alice, $this->bob, $this->claire);
+        $actual = json_decode(json_encode($agenda), true);
+        $expected = [
+            $this->alice->jsonSerialize(),
+            $this->bob->jsonSerialize(),
+            $this->claire->jsonSerialize()
+        ];
+
+        $this->assertEquals($expected, $actual);
+    }
 }
