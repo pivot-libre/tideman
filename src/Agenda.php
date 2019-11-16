@@ -69,6 +69,8 @@ class Agenda implements Countable, \JsonSerializable
      */
     public function jsonSerialize()
     {
-        return array_values($this->candidateSet->toArray());
+        $values = array_values($this->candidateSet->toArray());
+        asort($values);
+        return $values;
     }
 }
