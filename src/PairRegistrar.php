@@ -76,7 +76,7 @@ abstract class PairRegistrar
 
         foreach ($nBallots as $nBallot) {
             $comparator = new CandidateComparator($nBallot);
-            $ballotCount = $nBallot->getCount();
+            $ballotCount = $nBallot->getMultiplier();
             $candidatesList = $agenda->getCandidates();
             $candidates = $candidatesList->toArray();
             $candidatesCount = count($candidates);
@@ -99,7 +99,7 @@ abstract class PairRegistrar
      * @return int - 0 if comparisonResult is 0
      * -1 if comparisonResult is positive
      * 1 if comparisonResult is negative
-     * The result of this function can be multiplied by NBallot->getCount() to determine how much
+     * The result of this function can be multiplied by NBallot->getMultiplier() to determine how much
      * a Pair should be incremented.
      */
     public function getComparisonFactor(int $comparisonResult) : int

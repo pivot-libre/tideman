@@ -12,6 +12,6 @@ class NBallotTest extends BallotTest
         $this->setUpValues();
         $this->instance = new NBallot($expectedCount, ...$this->values);
         $this->concreteType = NBallot::class;
-        $this->assertEquals($expectedCount, $this->instance->getCount());
+        $this->assertEquals($expectedCount, $this->instance->getMultiplier());
     }
 }
