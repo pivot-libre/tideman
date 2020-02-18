@@ -10,6 +10,18 @@ use PivotLibre\Tideman\PairRegistry;
  */
 abstract class PairRegistrar
 {
+    //Stores the
+    protected $candidateComparatorConcreteType;
+
+
+    /**
+     * @param $candidateComparatorConcreteType an optional subclass of CandidateComparator. Determines whether
+     * comparisons against unknown candidates throw exceptions or relegates the unknown candidates to last place.
+     */
+    public function __construct($candidateComparatorConcreteType = StrictCandidateComparator::class)
+    {
+        $this->candidateComparatorConcreteType = $candidateComparatorConcreteType;
+    }
     /**
      * Register a Pair for all possible pairs of Candidates described in an Agenda. If the agenda contains N
      * Candidates, then this method should register (N^2) - N = N(N - 1) Candidates.
@@ -75,7 +87,7 @@ abstract class PairRegistrar
         $registry = $this->initializeRegistry($agenda);
 
         foreach ($nBallots as $nBallot) {
-            $comparator = new CandidateComparator($nBallot);
+            $comparator = new $this->candidateComparatorConcreteType($nBallot);
             $ballotCount = $nBallot->getMultiplier();
             $candidatesList = $agenda->getCandidates();
             $candidates = $candidatesList->toArray();

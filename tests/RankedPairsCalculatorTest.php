@@ -322,4 +322,10 @@ class RankedPairsCalculatorTest extends TestCase
 
         $this->assertEquals($expectedRanking, $actualRanking);
     }
+
+    public function testBadUnknownCandidateBehavior()
+    {
+        $this->expectException(InvalidArgumentException::class);
+        new RankedPairsCalculator(new Ballot(), 'FOOBAR');
+    }
 }

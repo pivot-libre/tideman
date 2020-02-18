@@ -38,7 +38,7 @@ class TotallyOrderedBallotPairTieBreakerTest extends TestCase
             new CandidateList($this->bob),
             new CandidateList($this->claire)
         );
-        $candidateComparator = new CandidateComparator($tieBreakingBallot);
+        $candidateComparator = new StrictCandidateComparator($tieBreakingBallot);
         $this->instance = new TotallyOrderedBallotPairTieBreaker($candidateComparator);
     }
 
@@ -46,7 +46,7 @@ class TotallyOrderedBallotPairTieBreakerTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
         $badTieBreakingBallot = new Ballot(new CandidateList($this->alice, $this->bob));
-        $badComparator = new CandidateComparator($badTieBreakingBallot);
+        $badComparator = new StrictCandidateComparator($badTieBreakingBallot);
         new TotallyOrderedBallotPairTieBreaker($badComparator);
     }
     public function testNonTiedBallots() : void

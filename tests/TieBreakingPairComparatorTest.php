@@ -38,7 +38,7 @@ class TieBreakingPairComparatorTest extends TestCase
             new CandidateList($this->claire),
             new CandidateList($this->dave)
         );
-        $candidateComparator = new CandidateComparator($tieBreakingBallot);
+        $candidateComparator = new StrictCandidateComparator($tieBreakingBallot);
         $tieBreaker = new TotallyOrderedBallotPairTieBreaker($candidateComparator);
         $this->instance = new TieBreakingPairComparator($tieBreaker);
 
