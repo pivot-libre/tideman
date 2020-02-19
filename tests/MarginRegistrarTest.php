@@ -25,7 +25,7 @@ class MarginRegistrarTest extends TestCase
         $this->alice = new Candidate(self::ALICE_ID, self::ALICE_NAME);
         $this->bob = new Candidate(self::BOB_ID, self::BOB_NAME);
         $this->claire = new Candidate(self::CLAIRE_ID, self::CLAIRE_NAME);
-        $this->instance = new MarginRegistrar();
+        $this->instance = new MarginRegistrar(TolerantCandidateComparator::class);
     }
 
     public function testUpdatePairInRegistry() : void

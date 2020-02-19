@@ -65,8 +65,8 @@ class RankedPairsCalculator
         $this->tieBreakingPairComparator = new TieBreakingPairComparator($tieBreaker);
         $this->tieBreakingCandidateComparator = new $this->candidateComparatorConcreteType($myTieBreakingBallot);
 
-        $this->marginRegistrar = new MarginRegistrar();
-        $this->winningVotesRegistrar = new WinningVoteRegistrar();
+        $this->marginRegistrar = new MarginRegistrar($this->candidateComparatorConcreteType);
+        $this->winningVotesRegistrar = new WinningVoteRegistrar($this->candidateComparatorConcreteType);
     }
 
     /**

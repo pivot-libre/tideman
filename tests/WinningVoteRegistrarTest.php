@@ -28,7 +28,7 @@ class WinningVoteRegistrarTest extends TestCase
 
         $this->agenda = new Agenda();
         $this->agenda->addCandidates($this->alice, $this->bob, $this->claire);
-        $this->instance = new WinningVoteRegistrar();
+        $this->instance = new WinningVoteRegistrar(TolerantCandidateComparator::class);
         $this->registry = $this->instance->initializeRegistry($this->agenda);
     }
 
