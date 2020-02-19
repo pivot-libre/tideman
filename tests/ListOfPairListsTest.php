@@ -46,7 +46,7 @@ class ListOfPairListsTest extends GenericCollectionTestCase
             new CandidateList($this->dave)
         );
 
-        $candidateComparator = new StrictCandidateComparator($tieBreakingBallot);
+        $candidateComparator = new TolerantCandidateComparator($tieBreakingBallot);
         $tieBreaker = new TotallyOrderedBallotPairTieBreaker($candidateComparator);
         $this->tieBreakingPairComparator = new TieBreakingPairComparator($tieBreaker);
 
