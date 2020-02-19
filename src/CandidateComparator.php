@@ -3,10 +3,10 @@ namespace PivotLibre\Tideman;
 
 use \InvalidArgumentException;
 
-class CandidateComparator
+abstract class CandidateComparator
 {
-    private $ballot;
-    private $candidateIdToRank;
+    protected $ballot;
+    protected $candidateIdToRank;
 
     /**
      * @param NBallot. The CandidateComparator will store a copy of the Ballot. The caller of this constructor may
@@ -34,7 +34,7 @@ class CandidateComparator
      * @param NBallot $ballot
      * @return array
      */
-    private function makeCandidateIdToRankMap(NBallot $ballot) : array
+    protected function makeCandidateIdToRankMap(NBallot $ballot) : array
     {
         $this->candidateIdToRank = array();
         foreach ($ballot as $rank => $candidateList) {
@@ -54,20 +54,6 @@ class CandidateComparator
         return $this->candidateIdToRank;
     }
 
-     /**
-      * Return an associative array that maps Candidates' ids to an integer. The integer represents the rank of the
-      * Candidate within the NBallot. A smaller integer indicates higher preference. An integer of zero is the most
-      * preferred. Since a NBallot can contain ties, multiple Candidate ids can map to the same integer.
-      *
-      * The array returned is a clone of this instance's private copy, so the result can be modifed without impacting
-      * the comparisons performed by this instance.
-      */
-    public function getCandidateIdToRankMap() : array
-    {
-        $copy = $this->candidateIdToRank;
-        return $copy;
-    }
-
     /**
      * @param Candidate $a
      * @param Candidate $b
@@ -78,28 +64,18 @@ class CandidateComparator
      */
     public function compare(Candidate $a, Candidate $b) : int
     {
-        $aId = $a->getId();
-        $bId = $b->getId();
-        if (!isset($this->candidateIdToRank[$aId])) {
-            throw new InvalidArgumentException(
-                "Candidate's Id should be in the map of ID to Rank.\n"
-                . " Candidate: " . $a . "\n"
-                . " Mapping: " . var_export($this->candidateIdToRank, true)
-            );
-        } elseif (!isset($this->candidateIdToRank[$bId])) {
-            throw new InvalidArgumentException(
-                "Candidate's Id should be in the map of ID to Rank.\n"
-                . " Candidate: " . $b . "\n"
-                . " Mapping: " . var_export($this->candidateIdToRank, true)
-            );
-        } else {
-            $aRank = $this->candidateIdToRank[$aId];
-            $bRank = $this->candidateIdToRank[$bId];
+        $aRank = $this->getRank($a);
+        $bRank = $this->getRank($b);
 
-            $result = $aRank - $bRank;
-            return $result;
-        }
+        $result = $aRank - $bRank;
+        return $result;
     }
+
+    /**
+     * @param Candidate $candidate
+     * @return int zero-based index of the candidate within the comparator's ballot
+     */
+    abstract protected function getRank(Candidate $candidate) : int;
 
     /**
      * A simple wrapper that simplifies referencing this instance's compare() method.

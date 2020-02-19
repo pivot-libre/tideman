@@ -19,8 +19,10 @@ use PivotLibre\Tideman\TieBreaking\BallotTieBreaker;
 
 class RankedPairsCalculator
 {
-    private $tieBreakingBallot;
+    //subclass of CandidateComparator
+    private $candidateComparatorConcreteType;
 
+    private $tieBreakingBallot;
     private $tieBreakingPairComparator;
     private $tieBreakingCandidateComparator;
 
@@ -31,9 +33,12 @@ class RankedPairsCalculator
      * Constructs a Ranked Pairs Calculator. If the parameterized tie-breaking Ballot contains ties,
      * they will be resolved randomly. This instance retains a copy of the tie-breaking Ballot so that
      * the caller may modify the parameterized Ballot without affecting this instance.
-     * @param tieBreakingBallot
+     * @param Ballot tieBreakingBallot
+     * @param string optional either "STRICT" or "TOLERANT". Defaults to "STRICT". "STRICT" causes tallying to fail if
+     * a Ballot contains a candidate that is not on the agenda. "TOLERANT" causes all unknown candidates to tie for
+     * last place.
      */
-    public function __construct(Ballot $tieBreakingBallot)
+    public function __construct(Ballot $tieBreakingBallot, string $unknownCandidateBehavior = 'STRICT')
     {
         //make a copy so that the caller could modify it safely
         $myTieBreakingBallot = clone $tieBreakingBallot;
@@ -41,11 +46,24 @@ class RankedPairsCalculator
             $ballotTieBreaker = new BallotTieBreaker();
             $myTieBreakingBallot = $ballotTieBreaker->breakTiesRandomly($myTieBreakingBallot);
         }
-        $this->tieBreakingBallot = $myTieBreakingBallot;
 
-        $tieBreaker = new TotallyOrderedBallotPairTieBreaker(new CandidateComparator($myTieBreakingBallot));
+        $this->tieBreakingBallot = $myTieBreakingBallot;
+        $behaviorToClass = [
+            'STRICT' => StrictCandidateComparator::class,
+            'TOLERANT' => TolerantCandidateComparator::class
+        ];
+        if (!isset($behaviorToClass[$unknownCandidateBehavior])) {
+            throw new InvalidArgumentException(
+                "'$unknownCandidateBehavior' is not a valid unknown candidate behavior. Must be 'STRICT' or 'TOLERANT'"
+            );
+        }
+        $this->candidateComparatorConcreteType = $behaviorToClass[$unknownCandidateBehavior];
+
+        $tieBreaker = new TotallyOrderedBallotPairTieBreaker(
+            new $this->candidateComparatorConcreteType($myTieBreakingBallot)
+        );
         $this->tieBreakingPairComparator = new TieBreakingPairComparator($tieBreaker);
-        $this->tieBreakingCandidateComparator = new CandidateComparator($myTieBreakingBallot);
+        $this->tieBreakingCandidateComparator = new $this->candidateComparatorConcreteType($myTieBreakingBallot);
 
         $this->marginRegistrar = new MarginRegistrar();
         $this->winningVotesRegistrar = new WinningVoteRegistrar();
