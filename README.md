@@ -25,10 +25,8 @@ See [tests/RankedPairsCalculatorTest.php](tests/RankedPairsCalculatorTest.php) f
 
 The original 1987 Ranked Pairs paper lacked a tie-breaking rule. The follow-up 1989 paper added a tie-breaking rule.
 
-### Tie-Breaking
-In elections with a small number of voters, it is common to encounter margins of equal difference. The sort order of margins of equal difference needs to be determined by a tie-breaking rule. In this case, the tie-breaking rule is to sort the tied margins according to a tie-breaking ballot. If the tie-breaking ballot contains ties itself, the ties within this ballot are broken randomly using [PHP's default random number generator](http://php.net/manual/en/function.mt-rand.php).
-
-This implementation deviates from the 1989 paper in that it uses the tie-breaking ballot to break ties for all margins of identical strength, whereas the paper advocated that the tie-breaking rule be used only to break ties between margins whose differences were exactly zero.
+### Pairwise Tie-Breaking
+When ranking pairs of candidates, it is possible that the difference in popular support between two candidates is equal to the difference in popular support between two other candidates. In that case, the tie between the pairs of candidates must be broken by a pairwise tie-breaking rule. This library breaks pairwise ties according to a user-specified tie-breaking Ballot object. If the user of the library specifies a tie-breaking Ballot object that contains ties within it (i.e. ties between candidates), the library breaks all of that Ballot object's ties using [PHP's default random number generator](http://php.net/manual/en/function.mt-rand.php). The library does not enforce the source of the tie-breaking Ballot object. If a user wished to follow the tie-breaking rule specified in Zavist, Tideman 1989, they should randomly select a Ballot object from among those submitted by the electorate, and use it as the tie-breaking Ballot object.
 
 ### Additional Reading
  *  [Wikipedia's Ranked Pairs article](https://en.wikipedia.org/wiki/Ranked_pairs)
